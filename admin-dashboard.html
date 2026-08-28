@@ -61,7 +61,7 @@
     /* ════════════════════════════════════════════════
        LAYOUT
     ════════════════════════════════════════════════ */
-    .admin-wrap { display:flex; min-height:100vh; }
+    .admin-wrap { display:flex; min-height:100vh; overflow-x:hidden; }
 
     /* ════════════════════════════════════════════════
        SIDEBAR
@@ -97,7 +97,7 @@
     /* ════════════════════════════════════════════════
        MAIN CONTENT
     ════════════════════════════════════════════════ */
-    .main-content { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+    .main-content { margin-left:var(--sidebar-w); flex:1; min-width:0; display:flex; flex-direction:column; min-height:100vh; }
 
     /* ════ TOPBAR ════ */
     .topbar {
@@ -125,7 +125,7 @@
     .topbar-profile-role { font-size:0.62rem; color:var(--cyan); }
 
     /* ════ PAGE BODY ════ */
-    .page-body { padding:24px; flex:1; }
+    .page-body { padding:24px; flex:1; min-width:0; }
 
     /* ════════════════════════════════════════════════
        PANELS (tab content)
@@ -138,7 +138,7 @@
     /* ════════════════════════════════════════════════
        CARDS
     ════════════════════════════════════════════════ */
-    .card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-xl); }
+    .card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-xl); min-width:0; }
     .card-pad { padding:20px; }
     .card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
     .card-title { font-size:0.85rem; font-weight:700; color:var(--text); }
@@ -354,8 +354,16 @@
       .page-body{ padding:12px; }
       .topbar-breadcrumb{ display:none; }
       .topbar-profile-name,.topbar-profile-role{ display:none; }
+      .topbar-profile .ph{ display:none; }
       .topbar-actions{ gap:4px; }
-      .card-header > div:last-child .form-control{ flex:1 1 100%; }
+      .stat-card-top{ flex-wrap:wrap; gap:8px; }
+      .card-header{ flex-direction:column; align-items:flex-start; }
+      .card-header > div:last-child{ width:100%; flex-wrap:wrap; gap:8px; }
+      .card-header > div:last-child .form-control,
+      .card-header > div:last-child select,
+      .card-header > div:last-child input{ flex:1 1 100%; max-width:none; }
+      .page-title-bar > div:last-child{ gap:6px; }
+      .page-title-bar > div:last-child .btn{ flex:1 1 100%; justify-content:center; }
       .modal-box{ width:calc(100% - 16px); margin:8px; }
       .modal-header,.modal-body,.modal-footer{ padding:14px; }
       .modal-footer{ flex-wrap:wrap; }
