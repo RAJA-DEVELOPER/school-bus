@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms &amp; Conditions — SafeRide Schools</title>
+  <meta name="description" content="Read the SafeRide Schools Terms and Conditions covering service agreements, user responsibilities, payment terms, and liability." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    .policy-layout { display:grid; grid-template-columns:1fr 280px; gap:var(--space-12); align-items:start; }
+    .policy-content h2 { font-family:var(--font-display); font-size:var(--text-2xl); color:var(--color-text); margin:var(--space-8) 0 var(--space-4); padding-top:var(--space-4); border-top:2px solid var(--color-border); }
+    .policy-content h2:first-child { border-top:none; margin-top:0; }
+    .policy-content h3 { font-family:var(--font-body); font-size:var(--text-lg); font-weight:700; color:var(--color-text); margin:var(--space-5) 0 var(--space-3); }
+    .policy-content p  { font-size:var(--text-md); color:var(--color-text-muted); line-height:1.8; margin-bottom:var(--space-5); }
+    .policy-content ul { margin:0 0 var(--space-5) var(--space-6); }
+    .policy-content ul li { font-size:var(--text-md); color:var(--color-text-muted); line-height:1.8; margin-bottom:var(--space-2); }
+    .policy-nav { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); position:sticky; top:calc(var(--nav-height) + var(--space-4)); }
+    .policy-nav h4 { font-size:var(--text-sm); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:var(--space-4); color:var(--color-text-muted); }
+    .policy-nav-link { display:block; padding:var(--space-2) var(--space-3); font-size:var(--text-sm); color:var(--color-text-muted); border-radius:var(--radius-md); text-decoration:none; transition:all var(--trans-fast); margin-bottom:2px; }
+    @media(max-width:1024px){
+      .policy-layout{grid-template-columns:1fr;}
+      .policy-nav{position:static; margin-bottom:var(--space-6);}
+    }
+    @media(max-width:768px){
+      .policy-content h2{font-size:var(--text-xl);}
+      .policy-nav{padding:var(--space-5);}
+    }
+    @media(max-width:480px){
+      .policy-content h2{font-size:var(--text-lg); margin:var(--space-6) 0 var(--space-3);}
+      .policy-content h3{font-size:var(--text-base);}
+      .policy-content p, .policy-content ul li{font-size:var(--text-sm); line-height:1.7;}
+      .policy-nav{padding:var(--space-4);}
+    }
+    @media(max-width:320px){
+      .policy-nav{padding:12px;}
+      .policy-content ul{margin-left:var(--space-4);}
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<div id="page-transition"></div>
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+
+<!-- ════════════════════════════════ NAVBAR ════════════════════════════════ -->
+<header class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+    </a>
+    <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="home2.html" class="nav-link">Home 2</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="theme-toggle" class="nav-toggle-btn" aria-label="Toggle dark mode" title="Dark Mode"><i class="ph ph-moon"></i></button>
+      <button id="rtl-toggle" class="nav-toggle-btn" aria-label="Toggle RTL" title="Switch to RTL"><i class="ph ph-text-align-right"></i></button>
+      <div class="nav-item profile-menu" id="profile-menu">
+        <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+        <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+          <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+          <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+          <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+  </div>
+</header>
+<nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+  <a href="home2.html" class="nav-link"><i class="ph ph-house-line"></i> Home 2</a>
+  <a href="about.html" class="nav-link"><i class="ph ph-info"></i> About Us</a>
+  <a href="services.html" class="nav-link"><i class="ph ph-bus"></i> Services</a>
+  <a href="blog.html" class="nav-link"><i class="ph ph-newspaper"></i> Blog</a>
+  <a href="contact.html" class="nav-link"><i class="ph ph-phone"></i> Contact</a>
+</nav>
+
+<!-- ════════════════════════════════ PAGE HERO ════════════════════════════════ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Terms &amp; Conditions</span></div>
+      <h1>Terms &amp; Conditions</h1>
+      <p>Last updated: August 1, 2026 · These terms govern your use of SafeRide Schools' transport services and platform.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ CONTENT ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="policy-layout">
+      <div class="policy-content" data-reveal="left">
+        <h2 id="agreement">1. Agreement to Terms</h2>
+        <p>By accessing or using SafeRide Schools' services, website, or parent application (collectively, "Services"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, you may not use our Services.</p>
+        <p>These Terms constitute a legally binding agreement between you ("User," "Parent," or "Guardian") and SafeRide Schools, Inc. ("SafeRide," "Company," "we," or "us"), a company incorporated in the State of Illinois.</p>
+
+        <h2 id="services">2. Description of Services</h2>
+        <p>SafeRide Schools provides school transport services including, but not limited to:</p>
+        <ul>
+          <li>Student pickup and drop-off transportation to and from enrolled schools</li>
+          <li>Real-time GPS bus tracking via the parent dashboard and mobile app</li>
+          <li>Smart ID boarding confirmation and parent notification services</li>
+          <li>CCTV footage access (Premium and Family plans)</li>
+          <li>Route planning and schedule management</li>
+          <li>24/7 emergency transport support</li>
+        </ul>
+        <p>Services are provided on a subscription basis and are subject to route availability in your area. SafeRide reserves the right to modify, suspend, or discontinue any part of the Services with 30 days' notice.</p>
+
+        <h2 id="eligibility">3. Eligibility and Enrollment</h2>
+        <h3>3.1 Parental Authority</h3>
+        <p>To enroll a student, you must be the student's parent, legal guardian, or an authorized school administrator. By enrolling a student, you represent that you have the legal authority to consent to transport services on their behalf.</p>
+        <h3>3.2 Student Eligibility</h3>
+        <p>Transport services are available to students enrolled in schools within our service areas. SafeRide reserves the right to deny enrollment or terminate services for students who pose a documented safety risk to other riders or drivers.</p>
+
+        <h2 id="subscription">4. Subscription and Payment</h2>
+        <h3>4.1 Billing</h3>
+        <p>Subscriptions are billed monthly or annually in advance. Prices are as listed on our Subscription Plans page and are subject to change with 30 days' notice.</p>
+        <h3>4.2 Payment Methods</h3>
+        <p>We accept major credit and debit cards, ACH bank transfers, and other methods listed on our platform. Payment processing is handled by Stripe and is PCI DSS compliant.</p>
+        <h3>4.3 Late Payment</h3>
+        <p>If payment fails, we will retry your payment method over 3 business days. If payment is not received after 5 days, services may be suspended until the outstanding balance is settled.</p>
+        <h3>4.4 Refund Policy</h3>
+        <p>Monthly plans are non-refundable for the current billing cycle. Annual plans may be refunded on a prorated basis within the first 30 days. Refunds for service failures are governed by the SafeRide Guarantee as described on our website.</p>
+
+        <h2 id="conduct">5. User Responsibilities and Conduct</h2>
+        <p>As a parent or guardian, you agree to:</p>
+        <ul>
+          <li>Ensure your student is ready at the designated stop at least 5 minutes before their scheduled pickup time</li>
+          <li>Keep your contact information up to date in the parent dashboard</li>
+          <li>Notify us of any changes to your student's school schedule, special needs, or authorized pickup persons</li>
+          <li>Instruct your student to follow driver instructions and bus safety rules at all times</li>
+          <li>Not share your login credentials with unauthorized individuals</li>
+          <li>Report any safety concerns promptly to our team</li>
+        </ul>
+
+        <h2 id="safety">6. Safety Rules and Conduct on Buses</h2>
+        <p>Students are expected to follow all bus safety rules, including: remaining seated while the bus is in motion, wearing seatbelts where provided, following driver instructions, refraining from physical aggression, loud disruptive behavior, or the use of unauthorized electronic devices. Repeated violations may result in suspension of transport services.</p>
+
+        <h2 id="liability">7. Limitation of Liability</h2>
+        <p>SafeRide Schools shall not be liable for: delays caused by traffic, weather, or third-party road incidents; acts of students beyond the bus (i.e., before boarding or after alighting); force majeure events; or indirect, incidental, or consequential damages arising from use of our Services.</p>
+        <p>Our maximum aggregate liability for any claim arising from these Terms shall not exceed the amount you paid to SafeRide in the 3 months preceding the claim.</p>
+
+        <h2 id="termination">8. Termination</h2>
+        <p>Either party may terminate the service relationship with written notice. SafeRide may immediately terminate services without notice for serious misconduct, non-payment, or activities that compromise the safety of students or staff.</p>
+
+        <h2 id="governing">9. Governing Law</h2>
+        <p>These Terms shall be governed by and construed in accordance with the laws of the State of Illinois, without regard to conflict of law provisions. Any disputes shall be resolved through binding arbitration in Springfield, Illinois, unless you elect small claims court for matters within that court's jurisdiction.</p>
+
+        <h2 id="changes">10. Changes to Terms</h2>
+        <p>SafeRide reserves the right to modify these Terms at any time. Material changes will be communicated via email and in-app notification at least 30 days before taking effect. Continued use of the Services after changes take effect constitutes acceptance of the revised Terms.</p>
+
+        <h2 id="contact">11. Contact</h2>
+        <p>For questions about these Terms, contact our legal team:</p>
+        <div class="card" style="padding:var(--space-5)">
+          <div style="font-weight:700">Legal Department</div>
+          <div style="color:var(--color-text-muted);font-size:var(--text-sm)">SafeRide Schools, Inc.<br/>1234 Transport Way, Suite 500<br/>Springfield, IL 62701<br/><a href="mailto:legal@saferideschools.com" style="color:var(--emerald)">legal@saferideschools.com</a></div>
+        </div>
+      </div>
+      <aside>
+        <div class="policy-nav">
+          <h4>Quick Navigation</h4>
+          <a href="#agreement" class="policy-nav-link">1. Agreement to Terms</a>
+          <a href="#services" class="policy-nav-link">2. Services</a>
+          <a href="#eligibility" class="policy-nav-link">3. Eligibility</a>
+          <a href="#subscription" class="policy-nav-link">4. Subscription &amp; Payment</a>
+          <a href="#conduct" class="policy-nav-link">5. User Responsibilities</a>
+          <a href="#safety" class="policy-nav-link">6. Safety Rules</a>
+          <a href="#liability" class="policy-nav-link">7. Limitation of Liability</a>
+          <a href="#termination" class="policy-nav-link">8. Termination</a>
+          <a href="#governing" class="policy-nav-link">9. Governing Law</a>
+          <a href="#changes" class="policy-nav-link">10. Changes</a>
+          <a href="#contact" class="policy-nav-link">11. Contact</a>
+        </div>
+        <div class="card" style="padding:var(--space-5);margin-top:var(--space-4);text-align:center">
+          <div style="font-size:2rem;margin-bottom:var(--space-3)"><i class="ph ph-scales"></i></div>
+          <div style="font-weight:700;font-size:var(--text-sm);margin-bottom:var(--space-2)">Questions?</div>
+          <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin-bottom:var(--space-3)">Our team is happy to explain any part of these terms.</p>
+          <a href="contact.html" class="btn btn-primary btn-sm" style="width:100%">Contact Us</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+        </a>
+        <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link"><i class="ph ph-caret-right"></i> Home</a></li>
+          <li><a href="home2.html" class="footer-link"><i class="ph ph-caret-right"></i> Home 2</a></li>
+          <li><a href="about.html" class="footer-link"><i class="ph ph-caret-right"></i> About Us</a></li>
+          <li><a href="services.html" class="footer-link"><i class="ph ph-caret-right"></i> Services</a></li>
+          <li><a href="blog.html" class="footer-link"><i class="ph ph-caret-right"></i> Blog &amp; News</a></li>
+          <li><a href="contact.html" class="footer-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal &amp; Support</h4>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.html" class="footer-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="footer-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="footer-link"><i class="ph ph-caret-right"></i> Sitemap</a></li>
+          <li><a href="parent-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Parent Portal</a></li>
+          <li><a href="admin-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>24/7 Contact</h4>
+        <div class="footer-contact-item"><i class="ph ph-map-pin icon"></i><span>1234 Transport Way, Suite 500<br>Springfield, IL 62701</span></div>
+        <div class="footer-contact-item"><i class="ph ph-phone icon"></i><span>+1 (800) SAFERIDE</span></div>
+        <div class="footer-contact-item"><i class="ph ph-envelope icon"></i><span>hello@saferideschools.com</span></div>
+        <div class="footer-contact-item"><i class="ph ph-warning-circle icon"></i><span style="color:var(--cyan);font-weight:600">Emergency: 1-800-911-RIDE</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 SafeRide Schools Inc. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/animations.js"></script>
+</body>
+</html>

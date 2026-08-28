@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sitemap — SafeRide Schools</title>
+  <meta name="description" content="Navigate all pages of the SafeRide Schools website — services, routes, blog, legal, and more." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    .sitemap-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-6); }
+    .sitemap-section { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); display:flex; flex-direction:column; }
+    .sitemap-section h3 { font-family:var(--font-body); font-size:var(--text-sm); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--emerald); margin-bottom:var(--space-4); padding-bottom:var(--space-3); border-bottom:2px solid var(--color-border); display:flex; align-items:center; gap:var(--space-2); }
+    .sitemap-links { list-style:none; display:flex; flex-direction:column; gap:var(--space-2); padding:0; margin:0; }
+    .sitemap-link { display:flex; align-items:center; gap:var(--space-2); font-size:var(--text-sm); color:var(--color-text-muted); text-decoration:none; padding:var(--space-2) var(--space-3); border-radius:var(--radius-md); transition:all var(--trans-fast); }
+    .sitemap-link:hover { background:var(--color-surface-2); color:var(--emerald); padding-left:var(--space-4); }
+    .sitemap-link i { font-size:0.75rem; color:var(--emerald); flex-shrink:0; }
+    @media(max-width:1024px){ .sitemap-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:768px){ .sitemap-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:480px){
+      .sitemap-grid{grid-template-columns:1fr;}
+      #quick-search-row{flex-direction:column;}
+      #quick-search-row .btn{width:100%; justify-content:center;}
+      .xml-note-card{flex-direction:column;align-items:flex-start;text-align:left;}
+    }
+    @media(max-width:360px){
+      .sitemap-section{padding:var(--space-4);}
+      .sitemap-link{font-size:var(--text-xs);}
+    }
+    @media(max-width:320px){
+      .sitemap-section{padding:12px;}
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<div id="page-transition"></div>
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+
+<!-- ════════════════════════════════ NAVBAR ════════════════════════════════ -->
+<header class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+    </a>
+    <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="home2.html" class="nav-link">Home 2</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="theme-toggle" class="nav-toggle-btn" aria-label="Toggle dark mode" title="Dark Mode"><i class="ph ph-moon"></i></button>
+      <button id="rtl-toggle" class="nav-toggle-btn" aria-label="Toggle RTL" title="Switch to RTL"><i class="ph ph-text-align-right"></i></button>
+      <div class="nav-item profile-menu" id="profile-menu">
+        <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+        <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+          <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+          <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+          <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+  </div>
+</header>
+<nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+  <a href="home2.html" class="nav-link"><i class="ph ph-house-line"></i> Home 2</a>
+  <a href="about.html" class="nav-link"><i class="ph ph-info"></i> About Us</a>
+  <a href="services.html" class="nav-link"><i class="ph ph-bus"></i> Services</a>
+  <a href="blog.html" class="nav-link"><i class="ph ph-newspaper"></i> Blog</a>
+  <a href="contact.html" class="nav-link"><i class="ph ph-phone"></i> Contact</a>
+</nav>
+
+<!-- ════════════════════════════════ PAGE HERO ════════════════════════════════ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Sitemap</span></div>
+      <h1>Website Sitemap</h1>
+      <p>A complete map of every page on the SafeRide Schools website. Use this to quickly navigate to any section.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SITEMAP GRID ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="sitemap-grid grid-equal" data-stagger>
+
+      <!-- Main Pages -->
+      <div class="sitemap-section card-fill">
+        <h3><i class="ph ph-house"></i> Main Pages</h3>
+        <ul class="sitemap-links">
+          <li><a href="index.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Home (Version 1)</a></li>
+          <li><a href="home2.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Home (Version 2)</a></li>
+          <li><a href="about.html" class="sitemap-link"><i class="ph ph-caret-right"></i> About SafeRide</a></li>
+          <li><a href="services.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Services &amp; Fleet</a></li>
+          <li><a href="contact.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+          <li><a href="login.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Portal Login</a></li>
+          <li><a href="parent-dashboard.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Parent Dashboard</a></li>
+          <li><a href="admin-dashboard.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="sitemap-section card-fill">
+        <h3><i class="ph ph-bus"></i> Services</h3>
+        <ul class="sitemap-links">
+          <li><a href="services.html" class="sitemap-link"><i class="ph ph-caret-right"></i> All Transport Services</a></li>
+          <li><a href="services.html#daily-transport" class="sitemap-link"><i class="ph ph-caret-right"></i> Daily School Transit</a></li>
+          <li><a href="services.html#gps-tracking" class="sitemap-link"><i class="ph ph-caret-right"></i> Live GPS Tracking</a></li>
+          <li><a href="services.html#smart-id" class="sitemap-link"><i class="ph ph-caret-right"></i> Smart ID Boarding</a></li>
+          <li><a href="services.html#cctv-monitoring" class="sitemap-link"><i class="ph ph-caret-right"></i> CCTV Monitoring</a></li>
+          <li><a href="services.html#special-events" class="sitemap-link"><i class="ph ph-caret-right"></i> Excursions &amp; Charters</a></li>
+          <li><a href="services.html#mobile-suite" class="sitemap-link"><i class="ph ph-caret-right"></i> Parent Mobile App</a></li>
+        </ul>
+      </div>
+
+      <!-- Blog -->
+      <div class="sitemap-section card-fill">
+        <h3><i class="ph ph-newspaper"></i> Blog &amp; News</h3>
+        <ul class="sitemap-links">
+          <li><a href="blog.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Blog Home</a></li>
+          <li><a href="blog-details.html" class="sitemap-link"><i class="ph ph-caret-right"></i> GPS Safety Innovation</a></li>
+          <li><a href="blog-details.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Driver Monitoring Tech</a></li>
+          <li><a href="blog-details.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Morning Routine Tips</a></li>
+          <li><a href="blog-details.html" class="sitemap-link"><i class="ph ph-caret-right"></i> AI Route Optimization</a></li>
+          <li><a href="blog-details.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Electric Fleet Transition</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal & Utility -->
+      <div class="sitemap-section card-fill">
+        <h3><i class="ph ph-shield-check"></i> Legal &amp; Utility</h3>
+        <ul class="sitemap-links">
+          <li><a href="privacy-policy.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Sitemap (this page)</a></li>
+          <li><a href="404.html" class="sitemap-link"><i class="ph ph-caret-right"></i> 404 Error Page</a></li>
+          <li><a href="maintenance.html" class="sitemap-link"><i class="ph ph-caret-right"></i> Maintenance Notice</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- XML Sitemap note -->
+    <div class="card xml-note-card" style="margin-top:var(--space-10);padding:var(--space-6);display:flex;align-items:center;gap:var(--space-5);flex-wrap:wrap" data-reveal="up">
+      <div style="font-size:2.5rem"><i class="ph ph-map-trifold"></i></div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:var(--text-md);margin-bottom:var(--space-1)">XML Sitemap for Search Engines</div>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin:0">Looking for our machine-readable XML sitemap for SEO crawlers? Access our structured sitemap file.</p>
+      </div>
+      <a href="sitemap.html" class="btn btn-outline btn-sm">View Structured Map</a>
+    </div>
+
+    <!-- Quick Search -->
+    <div style="text-align:center;margin-top:var(--space-10)" data-reveal="up">
+      <h2 style="font-size:var(--text-xl);margin-bottom:var(--space-4)">Can't Find What You're Looking For?</h2>
+       <div id="quick-search-row" style="display:flex;gap:var(--space-3);max-width:480px;margin:0 auto">
+        <div class="input-icon-wrap" style="flex:1">
+          <i class="ph ph-magnifying-glass input-icon"></i>
+          <input class="form-control" placeholder="Search the website…" id="site-search" aria-label="Search the website" />
+        </div>
+        <button class="btn btn-primary" type="button">Search</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ QUICK NAV SECTION ════════════════════════════════ -->
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">Quick Access</span>
+      <h2 class="section-title">Most Visited Pages</h2>
+      <p class="section-subtitle">Jump straight to the most popular destinations across our portal.</p>
+    </div>
+    <div class="grid grid-4 grid-equal" data-stagger>
+      <a href="parent-dashboard.html" class="card hover-lift card-fill" style="text-decoration:none;text-align:center;padding:var(--space-7)">
+        <div style="font-size:2.2rem;margin-bottom:var(--space-3)"><i class="ph ph-map-pin"></i></div>
+        <h4 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;color:var(--color-text);margin-bottom:4px">Live Tracking</h4>
+        <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin:0">Parent Dashboard &amp; Map</p>
+      </a>
+      <a href="services.html" class="card hover-lift card-fill" style="text-decoration:none;text-align:center;padding:var(--space-7)">
+        <div style="font-size:2.2rem;margin-bottom:var(--space-3)"><i class="ph ph-bus"></i></div>
+        <h4 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;color:var(--color-text);margin-bottom:4px">Our Services</h4>
+        <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin:0">Fleet, Safety &amp; Tech</p>
+      </a>
+      <a href="login.html" class="card hover-lift card-fill" style="text-decoration:none;text-align:center;padding:var(--space-7)">
+        <div style="font-size:2.2rem;margin-bottom:var(--space-3)"><i class="ph ph-lock-key"></i></div>
+        <h4 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;color:var(--color-text);margin-bottom:4px">Parent Portal</h4>
+        <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin:0">Log in or register</p>
+      </a>
+      <a href="contact.html" class="card hover-lift card-fill" style="text-decoration:none;text-align:center;padding:var(--space-7)">
+        <div style="font-size:2.2rem;margin-bottom:var(--space-3)"><i class="ph ph-phone"></i></div>
+        <h4 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;color:var(--color-text);margin-bottom:4px">Contact Us</h4>
+        <p style="font-size:var(--text-xs);color:var(--color-text-muted);margin:0">24/7 support &amp; dispatch</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+        </a>
+        <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link"><i class="ph ph-caret-right"></i> Home</a></li>
+          <li><a href="home2.html" class="footer-link"><i class="ph ph-caret-right"></i> Home 2</a></li>
+          <li><a href="about.html" class="footer-link"><i class="ph ph-caret-right"></i> About Us</a></li>
+          <li><a href="services.html" class="footer-link"><i class="ph ph-caret-right"></i> Services</a></li>
+          <li><a href="blog.html" class="footer-link"><i class="ph ph-caret-right"></i> Blog &amp; News</a></li>
+          <li><a href="contact.html" class="footer-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal &amp; Support</h4>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.html" class="footer-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="footer-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="footer-link"><i class="ph ph-caret-right"></i> Sitemap</a></li>
+          <li><a href="parent-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Parent Portal</a></li>
+          <li><a href="admin-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>24/7 Contact</h4>
+        <div class="footer-contact-item"><i class="ph ph-map-pin icon"></i><span>1234 Transport Way, Suite 500<br>Springfield, IL 62701</span></div>
+        <div class="footer-contact-item"><i class="ph ph-phone icon"></i><span>+1 (800) SAFERIDE</span></div>
+        <div class="footer-contact-item"><i class="ph ph-envelope icon"></i><span>hello@saferideschools.com</span></div>
+        <div class="footer-contact-item"><i class="ph ph-warning-circle icon"></i><span style="color:var(--cyan);font-weight:600">Emergency: 1-800-911-RIDE</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 SafeRide Schools Inc. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/animations.js"></script>
+</body>
+</html>

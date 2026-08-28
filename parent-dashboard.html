@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Dashboard — SafeRide Schools</title>
+  <meta name="description" content="SafeRide Schools parent dashboard — live GPS tracking, boarding confirmations, route details, payment management, and notifications." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    /* ── Dashboard Layout ── */
+    body { overflow-x:hidden; }
+    .dash-topbar { position:fixed; top:0; left:260px; right:0; height:64px; background:var(--color-surface); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 var(--space-8); z-index:var(--z-raised); box-shadow:var(--shadow-sm); transition:left var(--trans-slow); }
+    .dash-topbar.expanded { left:72px; }
+    .dash-header-left { display:flex; align-items:center; gap:var(--space-4); }
+    .dash-page-title { font-size:var(--text-lg); font-weight:700; color:var(--color-text); }
+    .dash-header-right { display:flex; align-items:center; gap:var(--space-4); }
+    .dash-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:var(--text-sm); cursor:pointer; }
+    /* ── Overview Cards ── */
+    .overview-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-5); margin-bottom:var(--space-8); }
+    .ov-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); display:flex; align-items:flex-start; gap:var(--space-4); }
+    .ov-card-icon { width:52px; height:52px; border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+    .ov-card-icon.teal   { background:rgba(18,60,67,0.1); }
+    .ov-card-icon.emerald{ background:rgba(22,138,114,0.1); }
+    .ov-card-icon.cyan   { background:rgba(85,214,190,0.15); }
+    .ov-card-icon.gold   { background:rgba(214,179,106,0.15); }
+    .ov-label { font-size:var(--text-xs); color:var(--color-text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
+    .ov-value { font-size:var(--text-xl); font-weight:700; color:var(--color-text); line-height:1.2; margin:4px 0; }
+    .ov-sub   { font-size:var(--text-xs); color:var(--color-text-light); }
+    /* ── Live Tracker ── */
+    .tracker-map { background:linear-gradient(135deg,#0d1417 0%,#123c43 100%); border-radius:var(--radius-xl); padding:var(--space-8); position:relative; overflow:hidden; min-height:300px; border:1px solid rgba(85,214,190,0.2); }
+    .tracker-road { position:absolute; bottom:40%; left:0; right:0; height:3px; background:rgba(85,214,190,0.2); border-radius:2px; }
+    .tracker-road-completed { position:absolute; bottom:40%; left:0; width:55%; height:3px; background:linear-gradient(90deg,var(--emerald),var(--cyan)); border-radius:2px; }
+    .tracker-bus-el { position:absolute; bottom:calc(40% - 14px); left:52%; transform:translateX(-50%); font-size:1.8rem; filter:drop-shadow(0 0 8px rgba(85,214,190,0.6)); transition:left 2s ease; }
+    .tracker-stops-row { display:flex; justify-content:space-between; align-items:flex-end; padding:0 var(--space-4) var(--space-4); position:absolute; bottom:0; left:0; right:0; }
+    .t-stop { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); }
+    .t-stop-dot { width:12px; height:12px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); background:transparent; }
+    .t-stop-dot.done { background:var(--emerald); border-color:var(--emerald); }
+    .t-stop-dot.active { background:var(--cyan); border-color:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+    .t-stop-label { font-size:9px; color:rgba(255,255,255,0.6); text-align:center; max-width:70px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .tracker-stats { display:flex; gap:var(--space-4); margin-top:var(--space-4); }
+    .tracker-stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); padding:var(--space-3) var(--space-4); flex:1; text-align:center; }
+    .tracker-stat-val { font-size:var(--text-lg); font-weight:700; color:var(--cyan); }
+    .tracker-stat-label { font-size:var(--text-xs); color:rgba(255,255,255,0.5); }
+    /* ── Notifications ── */
+    .notif-card { display:flex; gap:var(--space-4); padding:var(--space-5); border:1px solid var(--color-border); border-radius:var(--radius-lg); background:var(--color-surface); margin-bottom:var(--space-3); cursor:pointer; transition:all var(--trans-fast); position:relative; }
+    .notif-card.unread { border-left:3px solid var(--emerald); background:rgba(22,138,114,0.04); }
+    .notif-card:hover { box-shadow:var(--shadow-md); transform:translateX(4px); }
+    .notif-icon { width:44px; height:44px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+    .notif-title { font-weight:700; font-size:var(--text-sm); color:var(--color-text); }
+    .notif-time  { font-size:var(--text-xs); color:var(--color-text-light); }
+    .notif-desc  { font-size:var(--text-sm); color:var(--color-text-muted); margin-top:4px; }
+    .notif-unread-dot { position:absolute; top:var(--space-4); right:var(--space-4); width:8px; height:8px; border-radius:50%; background:var(--emerald); }
+    .notif-badge { background:var(--color-error); color:#fff; border-radius:var(--radius-full); font-size:10px; font-weight:700; padding:2px 6px; }
+    /* ── Receipts ── */
+    .receipt-row { display:flex; align-items:center; gap:var(--space-4); padding:var(--space-4) var(--space-5); border:1px solid var(--color-border); border-radius:var(--radius-lg); background:var(--color-surface); margin-bottom:var(--space-3); }
+    .receipt-info { flex:1; }
+    .receipt-info strong { display:block; font-size:var(--text-sm); font-weight:700; color:var(--color-text); }
+    .receipt-info span { font-size:var(--text-xs); color:var(--color-text-muted); }
+    .receipt-amount { font-size:var(--text-md); font-weight:700; color:var(--emerald); flex-shrink:0; }
+    /* ── Log ── */
+    .log-day { margin-bottom:var(--space-6); }
+    .log-date-header { font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--color-text-light); padding-bottom:var(--space-3); border-bottom:1px solid var(--color-border); margin-bottom:var(--space-4); }
+    .log-event { display:flex; gap:var(--space-4); padding:var(--space-4) 0; }
+    .log-event + .log-event { border-top:1px solid var(--color-border); }
+    .log-event-icon { width:36px; height:36px; border-radius:var(--radius-md); background:var(--color-surface-2); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+    .log-event-body strong { font-size:var(--text-sm); font-weight:700; color:var(--color-text); }
+    .log-event-body span  { font-size:var(--text-sm); color:var(--color-text-muted); }
+    .log-event-meta { font-size:var(--text-xs); color:var(--color-text-light); margin-top:4px; }
+    /* ── Profile Settings ── */
+    .pref-row { display:flex; align-items:center; justify-content:space-between; padding:var(--space-4) 0; border-bottom:1px solid var(--color-border); }
+    .pref-label { font-size:var(--text-sm); font-weight:600; color:var(--color-text); }
+    .pref-desc  { font-size:var(--text-xs); color:var(--color-text-muted); margin-top:2px; }
+    .toggle-switch { position:relative; display:inline-block; width:44px; height:24px; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; inset:0; background:var(--color-border); border-radius:12px; cursor:pointer; transition:background var(--trans-base); }
+    .toggle-slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform var(--trans-base); }
+    .toggle-switch input:checked + .toggle-slider { background:var(--emerald); }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
+    /* ── Responsive ── */
+    @media(max-width:1024px){
+      .dashboard-sidebar { position:relative; transform:none; width:100%; min-height:auto; top:0; }
+      .dashboard-main { margin-left:0; padding-top:var(--space-8); }
+      .dash-topbar { position:static; left:0; right:0; flex-wrap:wrap; gap:var(--space-3); padding:0 var(--space-5); }
+      .overview-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media(max-width:768px){
+      .overview-grid { grid-template-columns:1fr; }
+      .dash-topbar { flex-direction:column; align-items:flex-start; gap:var(--space-3); padding:var(--space-4) var(--space-4); }
+      .dash-header-right { width:100%; flex-wrap:wrap; justify-content:space-between; }
+      [style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; }
+      .panel-head { flex-wrap:wrap; gap:var(--space-3); }
+      .driver-row { flex-wrap:wrap; }
+      .driver-row .btn { width:100%; justify-content:center; }
+    }
+    @media(max-width:480px){
+      .tracker-map { padding:var(--space-5); min-height:240px; }
+      .tracker-stats { flex-wrap:wrap; }
+      .tracker-stat { min-width:calc(50% - var(--space-2)); }
+      .dash-header-right { gap:var(--space-2); }
+      .notif-card { padding:var(--space-4); }
+      .receipt-row { flex-wrap:wrap; gap:var(--space-3); }
+      .receipt-row .btn { width:100%; justify-content:center; }
+    }
+    @media(max-width:360px){
+      .dash-topbar { padding:var(--space-3); }
+      .ov-card { padding:var(--space-4); gap:var(--space-3); }
+      .ov-card-icon { width:42px; height:42px; font-size:1.15rem; }
+      .pref-row { flex-direction:column; align-items:flex-start; gap:var(--space-3); }
+    }
+    @media(max-width:320px){
+      .dashboard-main { padding:var(--space-4) 8px; }
+      .ov-card { padding:12px; gap:8px; }
+      .ov-value { font-size:var(--text-lg); }
+      .dash-page-title { font-size:var(--text-md); }
+      .tracker-stat { min-width:100%; }
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+
+<div class="dashboard-wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="dashboard-sidebar" role="navigation" aria-label="Dashboard navigation">
+    <div style="padding:var(--space-5) var(--space-5) var(--space-4);border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:var(--space-4);">
+      <a href="index.html" class="nav-logo"><div class="nav-logo-icon"><i class="ph ph-bus"></i></div><div class="nav-logo-text">SafeRide <span>Schools</span></div></a>
+    </div>
+
+    <div class="sidebar-section-label">Overview</div>
+    <div class="sidebar-nav-item active" data-panel="panel-overview"><span class="icon"><i class="ph ph-chart-bar"></i></span><span class="nav-label">Dashboard</span></div>
+    <div class="sidebar-nav-item" data-panel="panel-tracking"><span class="icon"><i class="ph ph-map-pin"></i></span><span class="nav-label">Live GPS Tracking</span></div>
+    <div class="sidebar-nav-item" data-panel="panel-route"><span class="icon"><i class="ph ph-map-trifold"></i></span><span class="nav-label">Assigned Route</span></div>
+
+    <div class="sidebar-section-label">Activity</div>
+    <div class="sidebar-nav-item" data-panel="panel-notifications"><span class="icon"><i class="ph ph-bell"></i></span><span class="nav-label">Notifications <span class="notif-badge" style="margin-left:auto">2</span></span></div>
+    <div class="sidebar-nav-item" data-panel="panel-boarding"><span class="icon"><i class="ph ph-check-circle"></i></span><span class="nav-label">Boarding Log</span></div>
+
+    <div class="sidebar-section-label">Account</div>
+    <div class="sidebar-nav-item" data-panel="panel-payment"><span class="icon"><i class="ph ph-credit-card"></i></span><span class="nav-label">Subscription &amp; Payment</span></div>
+    <div class="sidebar-nav-item" data-panel="panel-profile"><span class="icon"><i class="ph ph-user"></i></span><span class="nav-label">Profile &amp; Settings</span></div>
+
+    <div style="margin-top:auto;padding:var(--space-6) var(--space-5);border-top:1px solid rgba(255,255,255,0.08);">
+      <a href="index.html" class="sidebar-nav-item" style="color:rgba(255,255,255,0.5)"><span class="icon"><i class="ph ph-house"></i></span><span class="nav-label">Back to Website</span></a>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <main class="dashboard-main" id="dashboard-main" role="main">
+
+    <!-- Topbar -->
+    <div class="dash-topbar" id="dash-topbar">
+      <div class="dash-header-left">
+        <h1 class="dash-page-title" id="dash-page-title">Dashboard</h1>
+      </div>
+      <div class="dash-header-right">
+        <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--color-text-muted);">
+          <span class="status-dot status-active"></span> Bus #24 On Route
+        </div>
+        <button id="theme-toggle" class="nav-toggle-btn" style="background:var(--color-surface-2);color:var(--color-text);" title="Dark Mode"><i class="ph ph-moon"></i></button>
+        <button id="rtl-toggle" class="nav-toggle-btn" style="background:var(--color-surface-2);color:var(--color-text);" title="RTL"><i class="ph ph-text-align-right"></i></button>
+        <div class="dash-avatar" title="Emma Thompson's Parent Account">EP</div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: OVERVIEW ─── -->
+    <div id="panel-overview" class="dash-panel" style="padding-top:var(--space-6);">
+      <div class="overview-grid" id="child-info-card">
+        <div class="ov-card">
+          <div class="ov-card-icon teal"><i class="ph ph-student"></i></div>
+          <div><div class="ov-label">Student</div><div class="ov-value child-name">Emma Thompson</div><div class="ov-sub child-grade">5th Grade · <span class="child-id">SR-2024-0847</span></div></div>
+        </div>
+        <div class="ov-card" id="bus-info-card">
+          <div class="ov-card-icon emerald"><i class="ph ph-bus"></i></div>
+          <div><div class="ov-label">Assigned Bus</div><div class="ov-value bus-number">Bus #24</div><div class="ov-sub">Driver: <span class="bus-driver">Michael Chen</span> · <span class="bus-students">28/35</span></div></div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon cyan"><i class="ph ph-map-pin"></i></div>
+          <div><div class="ov-label">Next Stop ETA</div><div class="ov-value tracker-eta">7 mins</div><div class="ov-sub">Sunrise Park Stop · 7:18 AM</div></div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-card-icon gold"><i class="ph ph-shield-check"></i></div>
+          <div><div class="ov-label">Today's Status</div><div class="ov-value" style="color:var(--color-success)">On Board <i class="ph ph-check"></i></div><div class="ov-sub">Boarded 7:18 AM</div></div>
+        </div>
+      </div>
+
+      <!-- Quick Notification Row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-2);"><i class="ph ph-bell" style="color:var(--emerald)"></i> Recent Activity</h3>
+          <div class="notif-card unread" style="margin-bottom:var(--space-3)">
+            <div class="notif-icon" style="background:rgba(34,197,94,0.12)"><i class="ph ph-check-circle"></i></div>
+            <div class="notif-body"><div class="notif-header" style="display:flex;justify-content:space-between"><strong class="notif-title">Emma Boarded</strong><span class="notif-time">7:18 AM</span></div><p class="notif-desc">Emma boarded Bus #24 at Sunrise Park stop.</p></div>
+            <div class="notif-unread-dot"></div>
+          </div>
+          <div class="notif-card" style="margin-bottom:var(--space-3)">
+            <div class="notif-icon" style="background:rgba(85,214,190,0.12)"><i class="ph ph-map-pin"></i></div>
+            <div class="notif-body"><div class="notif-header" style="display:flex;justify-content:space-between"><strong class="notif-title">Arriving in 3 min</strong><span class="notif-time">7:15 AM</span></div><p class="notif-desc">Bus #24 is approaching Sunrise Park stop.</p></div>
+          </div>
+          <a href="#" class="btn btn-outline btn-sm" style="width:100%;margin-top:var(--space-2)" onclick="document.querySelector('[data-panel=panel-notifications]').click();return false">View All Notifications →</a>
+        </div>
+
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-2);"><i class="ph ph-route" style="color:var(--emerald)"></i> Today's Schedule</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border)"><span style="font-size:var(--text-sm);font-weight:600">Morning Pickup</span><div style="text-align:right"><div style="font-size:var(--text-sm);font-weight:700;color:var(--emerald)">7:18 AM</div><span class="badge badge-success">Completed</span></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border)"><span style="font-size:var(--text-sm);font-weight:600">School Arrival</span><div style="text-align:right"><div style="font-size:var(--text-sm);font-weight:700;color:var(--emerald)">7:35 AM</div><span class="badge badge-success">Completed</span></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border)"><span style="font-size:var(--text-sm);font-weight:600">Afternoon Return</span><div style="text-align:right"><div style="font-size:var(--text-sm);font-weight:700;color:var(--gold)">3:45 PM</div><span class="badge badge-warning">Scheduled</span></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) 0"><span style="font-size:var(--text-sm);font-weight:600">Home Drop-off</span><div style="text-align:right"><div style="font-size:var(--text-sm);font-weight:700;color:var(--color-text-light)">~4:12 PM</div><span class="badge badge-teal">Estimated</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: LIVE TRACKING ─── -->
+    <div id="panel-tracking" class="dash-panel" hidden style="padding-top:var(--space-6);">
+      <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);">
+        <div><h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text)">Live GPS Tracking</h2><p style="color:var(--color-text-muted)">Bus #24 · Route A – North Suburbs</p></div>
+        <div style="display:flex;align-items:center;gap:var(--space-2);background:rgba(22,138,114,0.1);border:1px solid rgba(22,138,114,0.3);border-radius:var(--radius-full);padding:6px 16px;">
+          <span class="status-dot status-active"></span>
+          <span class="bus-ticker" style="font-size:var(--text-xs);font-weight:700;color:var(--emerald)">● LIVE</span>
+        </div>
+      </div>
+
+      <div id="live-tracker" class="dash-card" style="padding:0;overflow:hidden;margin-bottom:var(--space-6);">
+        <div class="tracker-map">
+          <div style="position:relative;z-index:2;">
+            <!-- Map grid lines (decorative) -->
+            <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(85,214,190,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(85,214,190,0.05) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
+            <div style="padding:var(--space-6);display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.5);margin-bottom:4px;">CURRENT LOCATION</div>
+                <div style="font-size:var(--text-md);font-weight:700;color:#fff;">Approaching Sunrise Park Stop</div>
+                <div style="font-size:var(--text-sm);color:var(--cyan);margin-top:4px;"><i class="ph ph-map-pin"></i> Elm Street & Oak Avenue</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.5);margin-bottom:4px;">ETA TO YOUR STOP</div>
+                <div class="tracker-eta" style="font-size:var(--text-3xl);font-weight:700;color:var(--cyan);font-family:var(--font-display);">7 mins</div>
+              </div>
+            </div>
+
+            <!-- Route Progress Bar -->
+            <div style="padding:0 var(--space-6) var(--space-2);">
+              <div style="display:flex;justify-content:space-between;font-size:var(--text-xs);color:rgba(255,255,255,0.5);margin-bottom:var(--space-2);"><span><i class="ph ph-flag-checkered"></i> Depot Start</span><span><i class="ph ph-student"></i> Lincoln School</span></div>
+              <div class="progress-bar" style="background:rgba(255,255,255,0.1);height:8px;">
+                <div class="progress-fill" data-width="58%" style="background:linear-gradient(90deg,var(--emerald),var(--cyan));"></div>
+              </div>
+              <div style="text-align:center;margin-top:var(--space-2);font-size:var(--text-xs);color:rgba(255,255,255,0.5);">Stop 3 of 5 · 58% of route complete</div>
+            </div>
+
+            <!-- Stop indicators -->
+            <div class="tracker-stops" style="padding:var(--space-5) var(--space-6);display:flex;gap:var(--space-4);overflow-x:auto;"></div>
+          </div>
+        </div>
+
+        <div class="tracker-stats" style="padding:var(--space-5);background:var(--color-surface);gap:var(--space-4);">
+          <div class="tracker-stat"><div class="tracker-stat-val tracker-speed">32 km/h</div><div class="tracker-stat-label">Speed</div></div>
+          <div class="tracker-stat"><div class="tracker-stat-val tracker-dist">1.4 km</div><div class="tracker-stat-label">Distance Away</div></div>
+          <div class="tracker-stat"><div class="tracker-stat-val" style="color:var(--color-success)">28</div><div class="tracker-stat-label">Students Aboard</div></div>
+          <div class="tracker-stat"><div class="tracker-stat-val tracker-status" style="color:var(--cyan)">On Route</div><div class="tracker-stat-label">Status</div></div>
+        </div>
+      </div>
+
+      <!-- Driver Info -->
+      <div class="dash-card">
+        <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-5);">Driver Information</h3>
+        <div class="driver-row" style="display:flex;align-items:center;gap:var(--space-5);">
+          <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;flex-shrink:0;"><img src="assets/images/driver-portrait.jpg" alt="Michael Chen" style="width:100%;height:100%;object-fit:cover;" /></div>
+          <div style="flex:1;">
+            <div style="font-size:var(--text-lg);font-weight:700;color:var(--color-text);">Michael Chen</div>
+            <div style="font-size:var(--text-sm);color:var(--emerald);margin-bottom:var(--space-2);">Verified Driver · 8 Years Experience</div>
+            <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+              <span class="badge badge-success"><i class="ph ph-check"></i> Background Cleared</span>
+              <span class="badge badge-emerald">CDL Class B</span>
+              <span class="badge badge-teal">First Aid Certified</span>
+            </div>
+          </div>
+          <a href="tel:+15550123456" class="btn btn-primary" style="flex-shrink:0"><i class="ph ph-phone"></i> Call Driver</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: NOTIFICATIONS ─── -->
+    <div id="panel-notifications" class="dash-panel" hidden style="padding-top:var(--space-6);">
+      <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-6);">
+        <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text)">Notifications</h2>
+        <button id="mark-all-read" class="btn btn-outline btn-sm">Mark All as Read</button>
+        <div class="nav-item profile-menu" id="profile-menu">
+          <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+          <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+            <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+            <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+            <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+          </div>
+        </div></div>
+      <div id="notifications-panel"></div>
+    </div>
+
+    <!-- ─── PANEL: BOARDING LOG ─── -->
+    <div id="panel-boarding" class="dash-panel" hidden style="padding-top:var(--space-6);">
+      <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text);margin-bottom:var(--space-6)">Boarding &amp; Alighting Log</h2>
+      <div class="dash-card">
+        <div id="boarding-log"></div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: ROUTE ─── -->
+    <div id="panel-route" class="dash-panel" hidden style="padding-top:var(--space-6);">
+      <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text);margin-bottom:var(--space-6)">Assigned Route Details</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-5);">Route A — North Suburbs</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--emerald);margin-top:6px;flex-shrink:0"></div>
+              <div><div style="font-weight:600;font-size:var(--text-sm)">Depot Start — 6:45 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Transport Facility, Westend</div></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--cyan);margin-top:6px;flex-shrink:0"></div>
+              <div><div style="font-weight:600;font-size:var(--text-sm)">Oak Hill Residential — 7:05 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Corner of Oak Hill Rd & Pine Ave</div></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--cyan);margin-top:6px;flex-shrink:0"></div>
+              <div><div style="font-weight:600;font-size:var(--text-sm)">Maple Grove Ave — 7:12 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Maple Grove Ave & 5th Street</div></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start;background:rgba(85,214,190,0.08);border:1px solid rgba(85,214,190,0.3);border-radius:var(--radius-md);padding:var(--space-3)">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--cyan);margin-top:5px;flex-shrink:0;box-shadow:0 0 8px var(--cyan)"></div>
+              <div><div style="font-weight:700;font-size:var(--text-sm);color:var(--emerald)"><i class="ph ph-star"></i> Sunrise Park (YOUR STOP) — 7:18 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Sunrise Park Main Entrance</div></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--color-border);margin-top:6px;flex-shrink:0"></div>
+              <div><div style="font-weight:600;font-size:var(--text-sm)">Central Library — 7:25 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Main Street & Library Lane</div></div>
+            </div>
+            <div style="display:flex;gap:var(--space-3);align-items:flex-start">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--teal);margin-top:6px;flex-shrink:0"></div>
+              <div><div style="font-weight:700;font-size:var(--text-sm)"><i class="ph ph-student"></i> Lincoln Middle School — 7:35 AM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">1200 School Drive, Springfield</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-5);">Pickup Window</h3>
+          <div style="background:linear-gradient(135deg,rgba(22,138,114,0.1),rgba(85,214,190,0.08));border:1px solid rgba(85,214,190,0.3);border-radius:var(--radius-lg);padding:var(--space-6);text-align:center;margin-bottom:var(--space-5)">
+            <div style="font-size:3rem;margin-bottom:var(--space-2)"><i class="ph ph-clock"></i></div>
+            <div style="font-size:var(--text-3xl);font-weight:700;color:var(--emerald);font-family:var(--font-display)">7:15 – 7:20 AM</div>
+            <div style="font-size:var(--text-sm);color:var(--color-text-muted);margin-top:var(--space-2)">Please arrive 3 minutes early. Bus waits maximum 90 seconds.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)">
+            <div class="dash-card" style="text-align:center;padding:var(--space-4)"><div style="font-size:var(--text-lg);font-weight:700;color:var(--teal)">3:45 PM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Afternoon Pickup</div></div>
+            <div class="dash-card" style="text-align:center;padding:var(--space-4)"><div style="font-size:var(--text-lg);font-weight:700;color:var(--teal)">~4:12 PM</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Est. Drop-off</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: PAYMENT ─── -->
+    <div id="panel-payment" class="dash-panel" hidden style="padding-top:var(--space-6);" id="payment-section">
+      <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text);margin-bottom:var(--space-6)">Subscription &amp; Payments</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);margin-bottom:var(--space-6)">
+        <div class="dash-card" style="background:linear-gradient(135deg,var(--teal),var(--emerald));border:none;color:#fff">
+          <div style="font-size:var(--text-xs);color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2)">Current Plan</div>
+          <div style="font-size:var(--text-2xl);font-weight:700;color:#fff;font-family:var(--font-display);margin-bottom:var(--space-2)">Premium Family</div>
+          <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:var(--space-4)"><span style="font-size:var(--text-3xl);font-weight:700;color:var(--cyan)">$89</span><span style="color:rgba(255,255,255,0.7)">/month</span></div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-2)">
+            <span style="font-size:var(--text-sm);color:rgba(255,255,255,0.8)"><i class="ph ph-check"></i> 3 students covered</span>
+            <span style="font-size:var(--text-sm);color:rgba(255,255,255,0.8)"><i class="ph ph-check"></i> Live GPS for all students</span>
+            <span style="font-size:var(--text-sm);color:rgba(255,255,255,0.8)"><i class="ph ph-check"></i> Priority support</span>
+          </div>
+          <div style="margin-top:var(--space-5);padding-top:var(--space-4);border-top:1px solid rgba(255,255,255,0.2);display:flex;justify-content:space-between;">
+            <span style="font-size:var(--text-xs);color:rgba(255,255,255,0.7)">Renews: Jan 15, 2027</span>
+            <span class="badge" style="background:rgba(34,197,94,0.25);color:#86efac">Active</span>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-4)">Payment Method</h3>
+          <div style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);border:2px solid var(--emerald);border-radius:var(--radius-lg);background:rgba(22,138,114,0.06);margin-bottom:var(--space-4)">
+            <div style="font-size:2rem"><i class="ph ph-credit-card"></i></div>
+            <div><div style="font-weight:700;font-size:var(--text-sm)">Visa ending in ••••4821</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Expires 08/28</div></div>
+            <span class="badge badge-success" style="margin-left:auto">Default</span>
+          </div>
+          
+          <button class="btn btn-outline-dark btn-sm" style="width:100%">Update Payment Method</button>
+        </div>
+      </div>
+
+      <div class="dash-card" id="payment-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-5)">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700">Payment History &amp; Receipts</h3>
+          <span style="font-size:var(--text-xs);color:var(--color-text-muted)">Last 4 months</span>
+        </div>
+        <div id="receipts-list"></div>
+      </div>
+    </div>
+
+    <!-- ─── PANEL: PROFILE ─── -->
+    <div id="panel-profile" class="dash-panel" hidden style="padding-top:var(--space-6);">
+      <h2 style="font-size:var(--text-xl);font-weight:700;color:var(--color-text);margin-bottom:var(--space-6)">Profile &amp; Settings</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);">
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-5)">Personal Information</h3>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div class="form-group"><label class="form-label">Parent Name</label><input class="form-control" value="Emily Parker Thompson" /></div>
+            <div class="form-group"><label class="form-label">Email Address</label><input class="form-control" type="email" value="emily.thompson@email.com" /></div>
+            <div class="form-group"><label class="form-label">Phone Number</label><input class="form-control" type="tel" value="+1 (555) 234-5678" /></div>
+            <div class="form-group"><label class="form-label">Home Address</label><input class="form-control" value="142 Sunrise Park Ave, Springfield, IL" /></div>
+            <button id="save-profile" class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3 style="font-family:var(--font-body);font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-5)">Notification Preferences</h3>
+          <div>
+            <div class="pref-row"><div><div class="pref-label">Bus Arrival Alert (5 min)</div><div class="pref-desc">Notify when bus is 5 minutes away</div></div><label class="toggle-switch pref-toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <div class="pref-row"><div><div class="pref-label">Boarding Confirmation</div><div class="pref-desc">Alert when Emma boards the bus</div></div><label class="toggle-switch pref-toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <div class="pref-row"><div><div class="pref-label">School Arrival</div><div class="pref-desc">Confirm safe arrival at school</div></div><label class="toggle-switch pref-toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <div class="pref-row"><div><div class="pref-label">Route Delays</div><div class="pref-desc">Notify of traffic delays and changes</div></div><label class="toggle-switch pref-toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <div class="pref-row"><div><div class="pref-label">Payment Receipts</div><div class="pref-desc">Email receipts for all transactions</div></div><label class="toggle-switch pref-toggle"><input type="checkbox" checked /><span class="toggle-slider"></span></label></div>
+            <div class="pref-row" style="border:none"><div><div class="pref-label">Emergency Alerts</div><div class="pref-desc">Always enabled — cannot be disabled</div></div><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider" style="opacity:0.6;cursor:not-allowed"></span></label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/dashboard.js"></script>
+<script>
+  // Topbar topbar sync with sidebar
+  document.querySelector('.dashboard-sidebar') && (function(){
+    const topbar = document.getElementById('dash-topbar');
+    document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
+      setTimeout(() => {
+        const collapsed = document.querySelector('.dashboard-sidebar').classList.contains('collapsed');
+        if(topbar) topbar.classList.toggle('expanded', collapsed);
+      }, 50);
+    });
+  })();
+</script>
+</body>
+</html>

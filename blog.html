@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog &amp; News — SafeRide Schools</title>
+  <meta name="description" content="Read the latest SafeRide Schools blog — safety tips, transport technology updates, parenting guides, and company news." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    .blog-layout { display:grid; grid-template-columns:1fr 340px; gap:var(--space-10); align-items:start; }
+    .blog-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-6); }
+    .blog-filters { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-bottom:var(--space-8); }
+    .route-filter-btn { border-radius:var(--radius-full); padding:var(--space-2) var(--space-5); font-size:var(--text-sm); font-weight:600; border:2px solid var(--color-border); background:transparent; color:var(--color-text-muted); cursor:pointer; transition:all var(--trans-base); }
+    .route-filter-btn:hover { border-color:var(--emerald); color:var(--emerald); }
+    .route-filter-btn.active { border-color:var(--emerald); background:var(--emerald); color:#fff; }
+    .blog-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); overflow:hidden; transition:all var(--trans-base); display:flex; flex-direction:column; }
+    .blog-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-xl); border-color:var(--emerald); }
+    .blog-card-img { height:220px; overflow:hidden; flex-shrink:0; }
+    .blog-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s ease; }
+    .blog-card:hover .blog-card-img img { transform:scale(1.06); }
+    .blog-card-body { padding:var(--space-5); flex:1; display:flex; flex-direction:column; }
+    .blog-category { display:inline-block; font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--emerald); background:rgba(22,138,114,0.1); padding:3px 10px; border-radius:var(--radius-full); margin-bottom:var(--space-3); width:fit-content; }
+    .blog-title { font-family:var(--font-display); font-size:var(--text-lg); color:var(--color-text); margin-bottom:var(--space-3); line-height:1.3; }
+    .blog-title a { color:inherit; text-decoration:none; }
+    .blog-title a:hover { color:var(--emerald); }
+    .blog-excerpt { font-size:var(--text-sm); color:var(--color-text-muted); line-height:1.7; margin-bottom:var(--space-4); }
+    .blog-meta { display:flex; align-items:center; justify-content:space-between; font-size:var(--text-xs); color:var(--color-text-light); margin-top:auto; padding-top:var(--space-3); border-top:1px solid var(--color-border); }
+    .blog-author { display:flex; align-items:center; gap:var(--space-2); }
+    .blog-avatar { width:28px; height:28px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; color:#fff; font-size:var(--text-xs); font-weight:700; }
+    
+    .blog-card.featured { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; }
+    .blog-card.featured .blog-card-img { height:100%; min-height:280px; }
+    .blog-card.featured .blog-title { font-size:var(--text-2xl); }
+    
+    /* Sidebar */
+    .sidebar-widget { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); margin-bottom:var(--space-5); }
+    .sidebar-widget h4 { font-family:var(--font-body); font-size:var(--text-base); font-weight:700; margin-bottom:var(--space-5); padding-bottom:var(--space-3); border-bottom:2px solid var(--emerald); }
+    .recent-post { display:flex; gap:var(--space-3); align-items:center; padding:var(--space-3) 0; border-bottom:1px solid var(--color-border); }
+    .recent-post:last-child { border-bottom:none; }
+    .recent-post-img { width:60px; height:60px; border-radius:var(--radius-md); overflow:hidden; flex-shrink:0; }
+    .recent-post-img img { width:100%; height:100%; object-fit:cover; }
+    .recent-post-title { font-size:var(--text-sm); font-weight:600; color:var(--color-text); line-height:1.4; }
+    .recent-post-title a { color:inherit; text-decoration:none; }
+    .recent-post-date { font-size:var(--text-xs); color:var(--color-text-light); margin-top:4px; }
+    .tag-cloud { display:flex; flex-wrap:wrap; gap:var(--space-2); }
+    .tag { padding:4px 12px; border:1px solid var(--color-border); border-radius:var(--radius-full); font-size:var(--text-xs); font-weight:600; color:var(--color-text-muted); cursor:pointer; transition:all var(--trans-base); }
+    .tag:hover { background:var(--emerald); border-color:var(--emerald); color:#fff; }
+    .category-list li { display:flex; justify-content:space-between; padding:var(--space-3) 0; border-bottom:1px solid var(--color-border); font-size:var(--text-sm); }
+    .category-list li:last-child { border-bottom:none; }
+    .category-list a { color:var(--color-text-muted); text-decoration:none; transition:color var(--trans-fast); }
+    .category-list a:hover { color:var(--emerald); }
+    
+    @media(max-width:1024px){
+      .blog-layout{grid-template-columns:1fr;}
+      .blog-card.featured{display:block;}
+      .blog-card.featured .blog-card-img{height:280px;}
+    }
+    @media(max-width:768px){
+      .blog-grid{grid-template-columns:1fr;}
+      .blog-card.featured .blog-title{font-size:var(--text-xl);}
+    }
+    @media(max-width:480px){
+      .blog-card-img{height:180px;}
+      .blog-filters{gap:var(--space-2);}
+      .route-filter-btn{padding:6px 14px; font-size:var(--text-xs);}
+    }
+    @media(max-width:360px){
+      .blog-card-body{padding:var(--space-4);}
+      .blog-card-img{height:160px;}
+      .recent-post-img{width:50px; height:50px;}
+      .recent-post-title{font-size:var(--text-xs);}
+    }
+    @media(max-width:320px){
+      .blog-card-body{padding:12px;}
+      .blog-card-img{height:140px;}
+      .blog-title{font-size:var(--text-base);}
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<div id="page-transition"></div>
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+
+<!-- ════════════════════════════════ NAVBAR ════════════════════════════════ -->
+<header class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+    </a>
+    <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="home2.html" class="nav-link">Home 2</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html" class="nav-link active">Blog</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="theme-toggle" class="nav-toggle-btn" aria-label="Toggle dark mode" title="Dark Mode"><i class="ph ph-moon"></i></button>
+      <button id="rtl-toggle" class="nav-toggle-btn" aria-label="Toggle RTL" title="Switch to RTL"><i class="ph ph-text-align-right"></i></button>
+      <div class="nav-item profile-menu" id="profile-menu">
+        <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+        <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+          <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+          <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+          <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+  </div>
+</header>
+<nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+  <a href="home2.html" class="nav-link"><i class="ph ph-house-line"></i> Home 2</a>
+  <a href="about.html" class="nav-link"><i class="ph ph-info"></i> About Us</a>
+  <a href="services.html" class="nav-link"><i class="ph ph-bus"></i> Services</a>
+  <a href="blog.html" class="nav-link active"><i class="ph ph-newspaper"></i> Blog</a>
+  <a href="contact.html" class="nav-link"><i class="ph ph-phone"></i> Contact</a>
+</nav>
+
+<!-- ════════════════════════════════ PAGE HERO ════════════════════════════════ -->
+<section class="page-hero page-hero--blog">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Blog &amp; News</span></div>
+      <h1>SafeRide Blog &amp; News</h1>
+      <p>Safety tips, transport technology updates, parenting guides, and the latest news from SafeRide Schools.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ BLOG LAYOUT ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="blog-layout">
+      <!-- Main Content -->
+      <div>
+        <!-- Category Filter -->
+        <div class="blog-filters" data-reveal="up">
+          <button class="route-filter-btn active" data-category="all">All Posts</button>
+          <button class="route-filter-btn" data-category="safety">Safety</button>
+          <button class="route-filter-btn" data-category="technology">Technology</button>
+          <button class="route-filter-btn" data-category="parenting">Parenting</button>
+          <button class="route-filter-btn" data-category="company-news">Company News</button>
+        </div>
+
+        <div class="blog-grid grid-equal" data-stagger>
+          <!-- Featured Post -->
+          <div class="blog-card featured hover-lift card-fill" data-category="technology">
+            <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1588075592446-265fd1e6e76f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNjaG9vbHxlbnwwfHwwfHx8MA%3D%3D" alt="GPS Technology in School Buses" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Technology</span>
+              <h2 class="blog-title"><a href="blog-details.html?post=real-time-gps">How Real-Time GPS is Transforming School Bus Safety in 2025</a></h2>
+              <p class="blog-excerpt">Modern GPS technology has fundamentally changed what parents expect from school transport services. We explore how SafeRide's dual-redundant GPS system is setting new industry benchmarks for transparency and child safety.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">SC</div><span>Sarah Chen, CEO · Aug 15, 2026</span></div>
+                <span>8 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Regular Posts -->
+          <div class="blog-card hover-lift card-fill" data-category="parenting">
+            <div class="blog-card-img"><img src="assets/images/blog-2.jpg" alt="Safe morning routine tips" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Parenting</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=stress-free-morning">10 Tips for a Stress-Free School Morning Routine</a></h3>
+              <p class="blog-excerpt">From bus stop etiquette to backpack safety — our transport experts share the best practices for a smooth, stress-free start to every school day.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">MR</div><span>Maria Rodriguez · Aug 8, 2026</span></div>
+                <span>5 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card hover-lift card-fill" data-category="company-news">
+            <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c2Nob29sfGVufDB8fDB8fHww" alt="Electric school bus fleet" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Company News</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=electric-buses">SafeRide Adds 15 Electric Buses to Our Growing Green Fleet</a></h3>
+              <p class="blog-excerpt">We're proud to announce the expansion of our electric fleet with 15 new zero-emission buses, reducing our carbon footprint by a further 35% on pilot routes.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">DK</div><span>David Kim · Jul 28, 2026</span></div>
+                <span>4 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card hover-lift card-fill" data-category="safety">
+            <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1527058918112-6e17a8213943?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2Nob29sJTIwYnVzfGVufDB8fDB8fHww" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Safety</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=ai-driver-monitoring">AI Driver Monitoring: The Technology Keeping Your Driver Alert</a></h3>
+              <p class="blog-excerpt">Our DMS (Driver Monitoring System) cameras use facial recognition AI to detect drowsiness and phone use. Here's how the technology works.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">JP</div><span>Dr. James Park · Jul 15, 2026</span></div>
+                <span>6 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card hover-lift card-fill" data-category="parenting">
+            <div class="blog-card-img"><img src="https://images.unsplash.com/photo-1628471047004-f4fe9a1d9e18?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2Nob29sJTIwYnVzfGVufDB8fDB8fHww" alt="Back to school prep" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Parenting</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=back-to-school-2026">Back to School 2026: Complete Parent Transport Guide</a></h3>
+              <p class="blog-excerpt">Everything parents need to know for the new school year — enrollment deadlines, route changes, Smart ID cards, and app setup.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">SC</div><span>Sarah Chen · Jul 1, 2026</span></div>
+                <span>7 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card hover-lift card-fill" data-category="technology">
+            <div class="blog-card-img"><img src="https://plus.unsplash.com/premium_photo-1733342428046-d0880c00a681?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c2Nob29sJTIwYnVzfGVufDB8fDB8fHww" alt="Route optimization" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Technology</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=ai-route-optimization">How Our AI Optimizes 47 Routes Nightly for Maximum Safety</a></h3>
+              <p class="blog-excerpt">Every night at 2AM, our AI analyzes 47 routes using traffic patterns, weather data, and school schedules to ensure the safest paths.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">JP</div><span>Dr. James Park · Jun 20, 2026</span></div>
+                <span>9 min read</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card hover-lift card-fill" data-category="safety">
+            <div class="blog-card-img"><img src="https://plus.unsplash.com/premium_photo-1733306554441-c5bc3339056b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzN8fHNjaG9vbCUyMGJ1c3xlbnwwfHwwfHx8MA%3D%3D" alt="Emergency evacuation drill" loading="lazy"/></div>
+            <div class="blog-card-body">
+              <span class="blog-category">Safety</span>
+              <h3 class="blog-title"><a href="blog-details.html?post=evacuation-drills">Quarterly Evacuation Drills: Why We Practice What Keeps Kids Safe</a></h3>
+              <p class="blog-excerpt">Our quarterly emergency evacuation drills ensure every driver and student knows exactly what to do. Here's a look inside our latest district-wide safety simulation.</p>
+              <div class="blog-meta">
+                <div class="blog-author"><div class="blog-avatar">MR</div><span>Maria Rodriguez · Jun 5, 2026</span></div>
+                <span>5 min read</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside data-reveal="right">
+        <!-- Search -->
+        <div class="sidebar-widget">
+          <h4>Search Articles</h4>
+          <div class="input-icon-wrap">
+            <i class="ph ph-magnifying-glass input-icon"></i>
+            <input class="form-control" placeholder="Search blog…" />
+          </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="sidebar-widget" style="background:linear-gradient(135deg,var(--teal),var(--emerald));border:none">
+          <h4 style="color:#fff;border-bottom-color:rgba(255,255,255,0.3)">Newsletter</h4>
+          <p style="font-size:var(--text-sm);color:rgba(255,255,255,0.8);margin-bottom:var(--space-4)">Get safety tips and company news straight to your inbox. No spam, ever.</p>
+          <form class="newsletter-form" novalidate style="display:flex;flex-direction:column;gap:var(--space-3)">
+            <input class="form-control" type="email" placeholder="Your email address" data-validate="required|email" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:#fff" />
+            <span class="form-error" style="display:none"></span>
+            <button type="submit" class="btn btn-gold" style="width:100%">Subscribe</button>
+          </form>
+        </div>
+
+        <!-- Categories -->
+        <div class="sidebar-widget">
+          <h4>Categories</h4>
+          <ul class="category-list" style="list-style:none">
+            <li><a href="#">Safety &amp; Compliance</a><span style="font-size:var(--text-xs);color:var(--color-text-light)">14</span></li>
+            <li><a href="#">Technology &amp; Innovation</a><span style="font-size:var(--text-xs);color:var(--color-text-light)">11</span></li>
+            <li><a href="#">Parenting &amp; Tips</a><span style="font-size:var(--text-xs);color:var(--color-text-light)">18</span></li>
+            <li><a href="#">Company News</a><span style="font-size:var(--text-xs);color:var(--color-text-light)">9</span></li>
+            <li><a href="#">Green Transport</a><span style="font-size:var(--text-xs);color:var(--color-text-light)">6</span></li>
+          </ul>
+        </div>
+
+        <!-- Recent Posts -->
+        <div class="sidebar-widget">
+          <h4>Recent Posts</h4>
+          <div class="recent-post"><div class="recent-post-img"><img src="https://plus.unsplash.com/premium_photo-1683120799060-dc4fb3af939c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTN8fHNjaG9vbCUyMGJ1c3xlbnwwfHwwfHx8MA%3D%3D" alt="" loading="lazy"/></div><div><div class="recent-post-title"><a href="blog-details.html?post=real-time-gps">How Real-Time GPS is Transforming School Bus Safety</a></div><div class="recent-post-date">Aug 15, 2026</div></div></div>
+          <div class="recent-post"><div class="recent-post-img"><img src="https://plus.unsplash.com/premium_photo-1663040225613-98b7801c48a2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fHNjaG9vbHxlbnwwfHwwfHx8MA%3D%3D" alt="" loading="lazy"/></div><div><div class="recent-post-title"><a href="blog-details.html?post=stress-free-morning">10 Tips for a Stress-Free School Morning Routine</a></div><div class="recent-post-date">Aug 8, 2026</div></div></div>
+          <div class="recent-post"><div class="recent-post-img"><img src="https://images.unsplash.com/photo-1582203513826-d5887ec1a982?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTI4fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="" loading="lazy"/></div><div><div class="recent-post-title"><a href="blog-details.html?post=electric-buses">SafeRide Adds 15 Electric Buses to Green Fleet</a></div><div class="recent-post-date">Jul 28, 2026</div></div></div>
+        </div>
+
+        <!-- Tags -->
+        <div class="sidebar-widget">
+          <h4>Popular Tags</h4>
+          <div class="tag-cloud">
+            <span class="tag">GPS Tracking</span><span class="tag">Safety</span><span class="tag">School Bus</span><span class="tag">Parents</span><span class="tag">Technology</span><span class="tag">Electric</span><span class="tag">AI</span><span class="tag">Driver Safety</span><span class="tag">Routes</span><span class="tag">CCTV</span><span class="tag">Notifications</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+        </a>
+        <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link"><i class="ph ph-caret-right"></i> Home</a></li>
+          <li><a href="home2.html" class="footer-link"><i class="ph ph-caret-right"></i> Home 2</a></li>
+          <li><a href="about.html" class="footer-link"><i class="ph ph-caret-right"></i> About Us</a></li>
+          <li><a href="services.html" class="footer-link"><i class="ph ph-caret-right"></i> Services</a></li>
+          <li><a href="blog.html" class="footer-link"><i class="ph ph-caret-right"></i> Blog &amp; News</a></li>
+          <li><a href="contact.html" class="footer-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal &amp; Support</h4>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.html" class="footer-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="footer-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="footer-link"><i class="ph ph-caret-right"></i> Sitemap</a></li>
+          <li><a href="parent-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Parent Portal</a></li>
+          <li><a href="admin-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>24/7 Contact</h4>
+        <div class="footer-contact-item"><i class="ph ph-map-pin icon"></i><span>1234 Transport Way, Suite 500<br>Springfield, IL 62701</span></div>
+        <div class="footer-contact-item"><i class="ph ph-phone icon"></i><span>+1 (800) SAFERIDE</span></div>
+        <div class="footer-contact-item"><i class="ph ph-envelope icon"></i><span>hello@saferideschools.com</span></div>
+        <div class="footer-contact-item"><i class="ph ph-warning-circle icon"></i><span style="color:var(--cyan);font-weight:600">Emergency: 1-800-911-RIDE</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 SafeRide Schools Inc. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/animations.js"></script>
+  <script src="assets/js/forms.js"></script>
+  <script>
+    (function () {
+      var filterBtns = document.querySelectorAll('.route-filter-btn');
+      var cards = document.querySelectorAll('.blog-grid .blog-card');
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var cat = btn.getAttribute('data-category');
+          filterBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          cards.forEach(function (card) {
+            var c = card.getAttribute('data-category');
+            card.style.display = (cat === 'all' || c === cat) ? '' : 'none';
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

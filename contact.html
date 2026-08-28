@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — SafeRide Schools</title>
+  <meta name="description" content="Contact SafeRide Schools — reach our team for enrollment, support, route inquiries, and emergency assistance." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    .contact-layout { display:grid; grid-template-columns:1fr 1.4fr; gap:var(--space-12); align-items:start; }
+    .contact-info-card { background:linear-gradient(145deg,var(--teal-dark),var(--teal)); border-radius:var(--radius-2xl); padding:var(--space-10); color:#fff; position:sticky; top:calc(var(--nav-height) + var(--space-6)); }
+    .contact-info-card h3 { color:#fff; margin-bottom:var(--space-8); }
+    .contact-detail { display:flex; gap:var(--space-4); align-items:flex-start; padding:var(--space-5) 0; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .contact-detail:last-of-type { border-bottom:none; }
+    .contact-detail-icon { width:48px; height:48px; border-radius:var(--radius-md); background:rgba(85,214,190,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem; color:var(--cyan); }
+    .contact-detail-text h4 { font-size:var(--text-sm); font-weight:700; color:#fff; margin-bottom:4px; }
+    .contact-detail-text p  { font-size:var(--text-sm); color:rgba(255,255,255,0.7); }
+    .contact-form-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-2xl); padding:var(--space-10); box-shadow:var(--shadow-lg); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-5); }
+    .office-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-6); }
+    .office-card { border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); background:var(--color-surface); transition:all var(--trans-base); display:flex; flex-direction:column; }
+    .office-card:hover { border-color:var(--emerald); box-shadow:var(--shadow-md); transform:translateY(-4px); }
+    .office-icon { font-size:2rem; margin-bottom:var(--space-3); }
+    @media(max-width:1024px){
+      .contact-layout{grid-template-columns:1fr;}
+      .contact-info-card{position:relative;top:0;}
+      .office-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media(max-width:768px){
+      .form-row{grid-template-columns:1fr;}
+      .office-grid{grid-template-columns:1fr;}
+      .contact-form-card{padding:var(--space-8);}
+      .contact-info-card{padding:var(--space-8);}
+      .map-embed{height:320px;}
+    }
+    @media(max-width:480px){
+      .contact-form-card{padding:var(--space-6);}
+      .contact-info-card{padding:var(--space-6);}
+      .map-embed{height:260px;}
+      .contact-detail{padding:var(--space-4) 0;}
+    }
+    @media(max-width:360px){
+      .contact-form-card{padding:var(--space-5);}
+      .contact-info-card{padding:var(--space-5);}
+      .contact-detail-icon{width:40px; height:40px; font-size:1rem;}
+    }
+    @media(max-width:320px){
+      .contact-form-card{padding:14px;}
+      .contact-info-card{padding:14px;}
+      .contact-detail{gap:var(--space-2);}
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<div id="page-transition"></div>
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+<div id="cookie-bar" role="alert"><p> We use cookies to improve your experience. <a href="privacy-policy.html">Learn more</a></p><div style="display:flex;gap:12px;flex-shrink:0;"><button id="cookie-accept" class="btn btn-primary btn-sm">Accept All</button></div></div>
+
+<!-- ════════════════════════════════ NAVBAR ════════════════════════════════ -->
+<header class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+    </a>
+    <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="home2.html" class="nav-link">Home 2</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="contact.html" class="nav-link active">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="theme-toggle" class="nav-toggle-btn" aria-label="Toggle dark mode" title="Dark Mode"><i class="ph ph-moon"></i></button>
+      <button id="rtl-toggle" class="nav-toggle-btn" aria-label="Toggle RTL" title="Switch to RTL"><i class="ph ph-text-align-right"></i></button>
+      <div class="nav-item profile-menu" id="profile-menu">
+        <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+        <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+          <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+          <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+          <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+  </div>
+</header>
+<nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+  <a href="home2.html" class="nav-link"><i class="ph ph-house-line"></i> Home 2</a>
+  <a href="about.html" class="nav-link"><i class="ph ph-info"></i> About Us</a>
+  <a href="services.html" class="nav-link"><i class="ph ph-bus"></i> Services</a>
+  <a href="blog.html" class="nav-link"><i class="ph ph-newspaper"></i> Blog</a>
+  <a href="contact.html" class="nav-link active"><i class="ph ph-phone"></i> Contact</a>
+</nav>
+
+<!-- ════════════════════════════════ PAGE HERO ════════════════════════════════ -->
+<section class="page-hero page-hero--contact">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Contact</span></div>
+      <h1>Get in Touch with Our Team</h1>
+      <p>Have a question about enrollment, routes, or safety? Our team is available Monday–Friday 6AM–8PM and on emergency lines 24/7.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 1: EMERGENCY BANNER ════════════════════════════════ -->
+<section style="background:linear-gradient(90deg,#b91c1c,#991b1b);padding:var(--space-4) 0">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3)">
+    <div style="display:flex;align-items:center;gap:var(--space-3);color:#fff">
+      <span style="font-size:1.3rem"><i class="ph ph-siren"></i></span>
+      <strong>Emergency Transport Line — Available 24/7</strong>
+      <span style="opacity:0.85">For immediate assistance with a student in transit</span>
+    </div>
+    <a href="tel:+18009113733" class="btn" style="background:#fff;color:#b91c1c;font-weight:700;flex-shrink:0"><i class="ph ph-phone"></i> 1-800-911-RIDE</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 2: CONTACT FORM + INFO ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+      <!-- Info Panel -->
+      <div class="contact-info-card" data-reveal="left">
+        <h3>Contact Information</h3>
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><i class="ph ph-phone"></i></div>
+          <div class="contact-detail-text"><h4>Main Office</h4><p>+1 (800) SAFERIDE<br />Mon–Fri: 6:00 AM – 8:00 PM CST</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><i class="ph ph-warning-circle"></i></div>
+          <div class="contact-detail-text"><h4>Emergency Hotline</h4><p><strong style="color:var(--cyan)">1-800-911-RIDE</strong><br />24/7, 365 days a year</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><i class="ph ph-envelope"></i></div>
+          <div class="contact-detail-text"><h4>General Inquiries</h4><p>hello@saferideschools.com<br />Response within 4 business hours</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><i class="ph ph-map-pin"></i></div>
+          <div class="contact-detail-text"><h4>Headquarters</h4><p>1234 Transport Way, Suite 500<br />Springfield, IL 62701</p></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon"><i class="ph ph-headset"></i></div>
+          <div class="contact-detail-text"><h4>School Partnerships</h4><p>partnerships@saferideschools.com<br />District &amp; school admin inquiries</p></div>
+        </div>
+        <div style="margin-top:var(--space-8);padding-top:var(--space-6);border-top:1px solid rgba(255,255,255,0.1)">
+          <div style="font-size:var(--text-sm);color:rgba(255,255,255,0.7);margin-bottom:var(--space-4)">Follow us on social media</div>
+          <div style="display:flex;gap:var(--space-3)">
+            <a href="#" class="social-link" style="background:rgba(255,255,255,0.1);color:#fff"><i class="ph ph-facebook-logo"></i></a>
+            <a href="#" class="social-link" style="background:rgba(255,255,255,0.1);color:#fff"><i class="ph ph-twitter-logo"></i></a>
+            <a href="#" class="social-link" style="background:rgba(255,255,255,0.1);color:#fff"><i class="ph ph-instagram-logo"></i></a>
+            <a href="#" class="social-link" style="background:rgba(255,255,255,0.1);color:#fff"><i class="ph ph-linkedin-logo"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-card" data-reveal="right">
+        <h2 style="font-size:var(--text-2xl);margin-bottom:var(--space-2)">Send Us a Message</h2>
+        <p style="color:var(--color-text-muted);margin-bottom:var(--space-8)">Fill out the form below and we'll respond within 4 business hours.</p>
+        <form id="contact-form" novalidate>
+          <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="contact-fname">First Name *</label>
+                <input id="contact-fname" class="form-control" placeholder="Jane" data-validate="required" />
+                <span class="form-error" style="display:none"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contact-lname">Last Name *</label>
+                <input id="contact-lname" class="form-control" placeholder="Smith" data-validate="required" />
+                <span class="form-error" style="display:none"></span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="contact-email">Email Address *</label>
+                <input id="contact-email" class="form-control" type="email" placeholder="jane@email.com" data-validate="required|email" />
+                <span class="form-error" style="display:none"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="contact-phone">Phone Number</label>
+                <input id="contact-phone" class="form-control" type="tel" placeholder="+1 (555) 000-0000" data-validate="phone" />
+                <span class="form-error" style="display:none"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-subject">Subject *</label>
+              <select id="contact-subject" class="form-control" data-validate="required">
+                <option value="">Select a topic...</option>
+                <option>Enrollment &amp; Subscription</option>
+                <option>Route &amp; Stop Information</option>
+                <option>Driver or Safety Concern</option>
+                <option>Billing &amp; Payment</option>
+                <option>Technical Support</option>
+                <option>School Partnership Inquiry</option>
+                <option>Other</option>
+              </select>
+              <span class="form-error" style="display:none"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-message">Message *</label>
+              <textarea id="contact-message" class="form-control" rows="5" placeholder="How can we help you?" data-validate="required|min:20" style="resize:vertical"></textarea>
+              <span class="form-error" style="display:none"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-3)">
+              <input type="checkbox" id="contact-consent" style="width:16px;height:16px;accent-color:var(--emerald)" required />
+              <label for="contact-consent" style="font-size:var(--text-sm);color:var(--color-text-muted);cursor:pointer">I agree to the <a href="privacy-policy.html" style="color:var(--emerald)">Privacy Policy</a> and consent to being contacted by SafeRide Schools.</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%" id="contact-submit">
+              <i class="ph ph-paper-plane-tilt"></i> Send Message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 3: MAP ════════════════════════════════ -->
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">Find Us</span>
+      <h2 class="section-title">Our Headquarters</h2>
+      <p class="section-subtitle">Located centrally in Springfield with dedicated parking and customer greeting area.</p>
+    </div>
+    <div class="hq-grid" data-reveal="up">
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps?q=1234+Transport+Way+Suite+500+Springfield+IL+62701&amp;output=embed" title="SafeRide Schools Headquarters location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="hq-info">
+        <span class="badge badge-emerald" style="display:inline-flex;align-items:center;gap:var(--space-2);width:fit-content;margin-bottom:var(--space-4)"><i class="ph ph-map-pin"></i> Headquarters</span>
+        <h3 class="hq-name">SafeRide Schools HQ</h3>
+        <p class="hq-addr">1234 Transport Way, Suite 500<br />Springfield, IL 62701</p>
+        <div class="hq-row">
+          <i class="ph ph-phone"></i>
+          <div><span class="hq-label">Call us</span><a href="tel:+15551000000">(555) 100-0000</a></div>
+        </div>
+        <div class="hq-row">
+          <i class="ph ph-envelope-simple"></i>
+          <div><span class="hq-label">Email</span><a href="mailto:hello@saferide.com">hello@saferide.com</a></div>
+        </div>
+        <div class="hq-row">
+          <i class="ph ph-clock"></i>
+          <div><span class="hq-label">Office hours</span><span class="hq-value">Mon – Fri, 7:00 AM – 7:00 PM</span></div>
+        </div>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=1234+Transport+Way+Suite+500+Springfield+IL+62701" target="_blank" rel="noopener" class="btn btn-primary"><i class="ph ph-navigation-arrow"></i> Get Directions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 4: OFFICES ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">Regional Offices</span>
+      <h2 class="section-title">We're Local in Every District We Serve</h2>
+      <p class="section-subtitle">Field dispatch teams positioned throughout the county for rapid response.</p>
+    </div>
+    <div class="office-grid grid-equal" data-stagger>
+      <div class="office-card card-fill">
+        <div class="office-icon"><i class="ph ph-buildings"></i></div>
+        <h4 style="font-weight:700;font-size:var(--text-base);margin-bottom:var(--space-2)">North District Office</h4>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-3)">450 Oak Hill Blvd, Suite 12<br />Springfield North, IL 62702</p>
+        <a href="tel:+15551001001" style="font-size:var(--text-sm);color:var(--emerald);font-weight:600;margin-top:auto">(555) 100-1001</a>
+      </div>
+      <div class="office-card card-fill">
+        <div class="office-icon"><i class="ph ph-buildings"></i></div>
+        <h4 style="font-weight:700;font-size:var(--text-base);margin-bottom:var(--space-2)">East District Office</h4>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-3)">820 Eastview Heights Rd<br />Springfield East, IL 62703</p>
+        <a href="tel:+15551002002" style="font-size:var(--text-sm);color:var(--emerald);font-weight:600;margin-top:auto">(555) 100-2002</a>
+      </div>
+      <div class="office-card card-fill">
+        <div class="office-icon"><i class="ph ph-buildings"></i></div>
+        <h4 style="font-weight:700;font-size:var(--text-base);margin-bottom:var(--space-2)">West District Office</h4>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-3)">215 Westfield Commons Dr<br />Springfield West, IL 62704</p>
+        <a href="tel:+15551003003" style="font-size:var(--text-sm);color:var(--emerald);font-weight:600;margin-top:auto">(555) 100-3003</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 5: FAQ ════════════════════════════════ -->
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">Common Questions</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Quick answers to common questions about enrollment, drivers, and safety.</p>
+    </div>
+    <div style="max-width:720px;margin:0 auto" data-stagger>
+      <div class="faq-item"><button class="faq-question">How do I enroll my child in SafeRide?<div class="faq-icon"><i class="ph ph-plus"></i></div></button><div class="faq-answer"><div class="faq-answer-inner">Visit our Subscription Plans page, choose your plan, and complete the online enrollment form. Enrollment takes under 5 minutes. Your child will receive their Smart ID card within 3 business days.</div></div></div>
+      <div class="faq-item"><button class="faq-question">What's the response time for support messages?<div class="faq-icon"><i class="ph ph-plus"></i></div></button><div class="faq-answer"><div class="faq-answer-inner">We respond to all inquiries within 4 business hours (Mon–Fri 6AM–8PM CST). For urgent matters, please call our main line or use the emergency hotline for active transport issues.</div></div></div>
+      <div class="faq-item"><button class="faq-question">How do I report a safety concern about a driver?<div class="faq-icon"><i class="ph ph-plus"></i></div></button><div class="faq-answer"><div class="faq-answer-inner">Safety concerns are treated with highest priority. You can report via the Parent Dashboard (Report Issue button), call our main line, or email safety@saferideschools.com. All reports are reviewed within 2 hours and escalated to our Safety Director immediately.</div></div></div>
+      <div class="faq-item"><button class="faq-question">Can I request a specific pickup time or stop location?<div class="faq-icon"><i class="ph ph-plus"></i></div></button><div class="faq-answer"><div class="faq-answer-inner">Premium and Family plan subscribers can submit route change requests through the Parent Dashboard. Our team reviews and responds within 2 business days. Stop changes depend on available route coverage in your area.</div></div></div>
+      <div class="faq-item"><button class="faq-question">Is my personal data safe with SafeRide?<div class="faq-icon"><i class="ph ph-plus"></i></div></button><div class="faq-answer"><div class="faq-answer-inner">Absolutely. We are fully COPPA and GDPR compliant. All data is encrypted with 256-bit AES, stored on SOC 2 Type II certified servers, and never sold to third parties. Read our full Privacy Policy for details.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 6: HOURS ════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3 grid-equal" data-stagger>
+      <div class="card card-fill" style="text-align:center;padding:var(--space-8)">
+        <div style="font-size:2.5rem;margin-bottom:var(--space-3)"><i class="ph ph-sun"></i></div>
+        <h3 style="font-family:var(--font-body);font-size:var(--text-md);font-weight:700;margin-bottom:var(--space-2)">Main Office Hours</h3>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted)">Monday – Friday<br /><strong style="color:var(--emerald)">6:00 AM – 8:00 PM CST</strong></p>
+      </div>
+      <div class="card card-fill" style="text-align:center;padding:var(--space-8);border-color:var(--emerald)">
+        <div style="font-size:2.5rem;margin-bottom:var(--space-3)"><i class="ph ph-siren"></i></div>
+        <h3 style="font-family:var(--font-body);font-size:var(--text-md);font-weight:700;margin-bottom:var(--space-2)">Emergency Line</h3>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted)">Every Day<br /><strong style="color:#ef4444">24 Hours / 7 Days</strong></p>
+      </div>
+      <div class="card card-fill" style="text-align:center;padding:var(--space-8)">
+        <div style="font-size:2.5rem;margin-bottom:var(--space-3)"><i class="ph ph-chat-circle"></i></div>
+        <h3 style="font-family:var(--font-body);font-size:var(--text-md);font-weight:700;margin-bottom:var(--space-2)">Live Chat Support</h3>
+        <p style="font-size:var(--text-sm);color:var(--color-text-muted)">Monday – Saturday<br /><strong style="color:var(--emerald)">7:00 AM – 6:00 PM CST</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+        </a>
+        <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link"><i class="ph ph-caret-right"></i> Home</a></li>
+          <li><a href="home2.html" class="footer-link"><i class="ph ph-caret-right"></i> Home 2</a></li>
+          <li><a href="about.html" class="footer-link"><i class="ph ph-caret-right"></i> About Us</a></li>
+          <li><a href="services.html" class="footer-link"><i class="ph ph-caret-right"></i> Services</a></li>
+          <li><a href="blog.html" class="footer-link"><i class="ph ph-caret-right"></i> Blog &amp; News</a></li>
+          <li><a href="contact.html" class="footer-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal &amp; Support</h4>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.html" class="footer-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="footer-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="footer-link"><i class="ph ph-caret-right"></i> Sitemap</a></li>
+          <li><a href="parent-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Parent Portal</a></li>
+          <li><a href="admin-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>24/7 Contact</h4>
+        <div class="footer-contact-item"><i class="ph ph-map-pin icon"></i><span>1234 Transport Way, Suite 500<br>Springfield, IL 62701</span></div>
+        <div class="footer-contact-item"><i class="ph ph-phone icon"></i><span>+1 (800) SAFERIDE</span></div>
+        <div class="footer-contact-item"><i class="ph ph-envelope icon"></i><span>hello@saferideschools.com</span></div>
+        <div class="footer-contact-item"><i class="ph ph-warning-circle icon"></i><span style="color:var(--cyan);font-weight:600">Emergency: 1-800-911-RIDE</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 SafeRide Schools Inc. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/forms.js"></script>
+</body>
+</html>

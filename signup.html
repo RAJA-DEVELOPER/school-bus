@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — SafeRide Schools Parent Portal</title>
+  <meta name="description" content="Create your SafeRide Schools parent account to start tracking your child's school bus in real time, get boarding alerts, and manage your subscription." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" /><link rel="stylesheet" href="assets/css/components.css" /><link rel="stylesheet" href="assets/css/layout.css" /><link rel="stylesheet" href="assets/css/animations.css" /><link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    body { min-height:100vh; display:flex; flex-direction:column; }
+    .login-page { flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:100vh; }
+    .login-brand { background:linear-gradient(145deg,var(--teal-dark) 0%,var(--teal) 50%,#1a6b56 100%); padding:var(--space-10) var(--space-12); display:flex; flex-direction:column; position:relative; overflow:hidden; }
+    .login-brand::before { content:''; position:absolute; top:-50%; right:-20%; width:500px; height:500px; border-radius:50%; background:rgba(85,214,190,0.06); }
+    .login-brand-content { position:relative; z-index:1; flex:0 0 auto; overflow-y:auto; padding-right:var(--space-2); }
+    .login-brand-content::-webkit-scrollbar { width:6px; }
+    .login-brand-content::-webkit-scrollbar-thumb { background:rgba(85,214,190,0.3); border-radius:3px; }
+    .login-brand h2 { font-family:var(--font-display); font-size:var(--text-2xl); color:#fff; margin:var(--space-8) 0 var(--space-4); }
+    .login-brand p { color:rgba(255,255,255,0.75); font-size:var(--text-md); line-height:1.7; margin-bottom:var(--space-6); }
+    .login-features { display:flex; flex-direction:column; gap:var(--space-3); }
+    .login-feat { display:flex; align-items:center; gap:var(--space-3); color:rgba(255,255,255,0.85); font-size:var(--text-sm); }
+    .login-feat-icon { width:34px; height:34px; border-radius:var(--radius-md); background:rgba(85,214,190,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .login-panel { padding:var(--space-12); display:flex; align-items:center; justify-content:center; background:var(--color-bg); }
+    .login-form-wrap { width:100%; max-width:440px; }
+    .login-form-wrap h1 { font-size:var(--text-2xl); margin-bottom:var(--space-2); }
+    .login-form-wrap > p { margin-bottom:var(--space-8); }
+    .social-login { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3); margin-bottom:var(--space-5); }
+    .social-btn { display:flex; align-items:center; justify-content:center; gap:var(--space-2); padding:var(--space-3); border:1px solid var(--color-border); border-radius:var(--radius-lg); font-size:var(--text-sm); font-weight:600; color:var(--color-text); background:var(--color-surface); cursor:pointer; text-decoration:none; transition:all var(--trans-base); }
+    .social-btn:hover { background:var(--color-surface-2); border-color:var(--emerald); }
+    .social-ico { display:inline-flex; align-items:center; justify-content:center; }
+    .divider { display:flex; align-items:center; gap:var(--space-3); margin:var(--space-5) 0; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--color-border); }
+    .divider span { font-size:var(--text-xs); color:var(--color-text-light); font-weight:600; white-space:nowrap; }
+    .trust-badges { display:flex; gap:var(--space-4); margin-top:var(--space-6); justify-content:center; flex-wrap:wrap; }
+    @media(max-width:1024px){
+      .login-brand{ padding:var(--space-8) var(--space-8); }
+      .login-panel{ padding:var(--space-8); }
+    }
+    @media(max-width:900px){
+      .login-page{grid-template-columns:1fr;}
+      .login-brand{display:none;}
+    }
+    @media(max-width:768px){
+      .login-panel{ padding:var(--space-8) var(--space-6); align-items:flex-start; }
+      .login-form-wrap{ max-width:520px; }
+    }
+    @media(max-width:480px){
+      .login-panel{ padding:var(--space-6) var(--space-4); }
+      .login-form-wrap h1{ font-size:var(--text-xl); }
+      .social-login{ grid-template-columns:1fr; }
+      .social-btn{ width:100%; justify-content:center; }
+      .login-form-wrap > p{ margin-bottom:var(--space-6); }
+    }
+    @media(max-width:360px){
+      .login-panel{ padding:var(--space-5) var(--space-3); }
+      .login-form-wrap h1{ font-size:var(--text-lg); }
+    }
+    @media(max-width:320px){
+      .login-panel{ padding:14px 10px; }
+      .trust-badges{ gap:var(--space-2); }
+      .social-btn{ font-size:var(--text-xs); padding:10px; }
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+<div id="page-transition"></div>
+
+<div class="login-page">
+  <!-- Brand Panel -->
+  <div class="login-brand">
+    <div class="login-brand-content">
+      <a href="index.html" class="nav-logo"><div class="nav-logo-icon"><i class="ph ph-bus"></i></div><div class="nav-logo-text">SafeRide <span>Schools</span></div></a>
+      <h2>Create Your SafeRide Account</h2>
+      <p>Join thousands of parents who trust SafeRide to keep their children safe on every ride — with live GPS, boarding alerts, and peace of mind.</p>
+      <div class="login-features">
+        <div class="login-feat"><div class="login-feat-icon"><i class="ph ph-map-pin"></i></div> Live GPS bus tracking, updated every 5 seconds</div>
+        <div class="login-feat"><div class="login-feat-icon"><i class="ph ph-check-circle"></i></div> Instant boarding and alighting confirmations</div>
+        <div class="login-feat"><div class="login-feat-icon"><i class="ph ph-bell"></i></div> Push notifications to your phone</div>
+        <div class="login-feat"><div class="login-feat-icon"><i class="ph ph-credit-card"></i></div> Simple subscription management</div>
+      </div>
+    </div>
+    <div style="position:relative;border-radius:var(--radius-xl);overflow:hidden;max-height:220px;flex-shrink:0;margin-top:var(--space-6)">
+      <img src="assets/images/parent-app.jpg" alt="Parent using SafeRide app" style="width:100%;height:220px;object-fit:cover;object-position:top;border-radius:var(--radius-xl)" />
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(18,60,67,0.7) 0%,transparent 60%);border-radius:var(--radius-xl)"></div>
+    </div>
+  </div>
+
+  <!-- Signup Form Panel -->
+  <div class="login-panel">
+    <div class="login-form-wrap">
+      <div id="signup-form-section">
+        <h1>Get Started</h1>
+        <p class="text-muted">Create your parent account in under a minute</p>
+
+        <div class="social-login">
+          <a href="index.html" class="social-btn"><span class="social-ico" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="20" height="20"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001 6.19 5.238 6.19 5.238C39.99 39.592 44 34.792 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+          </span> Google</a>
+          <a href="index.html" class="social-btn"><span class="social-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="#111"><path d="M17.05 13.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.71-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.18-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.74 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.7.71 2.86.69 1.18-.02 1.93-1.08 2.65-2.15.84-1.23 1.18-2.42 1.2-2.48-.03-.01-2.3-.88-2.32-3.5zM14.74 6.9c.6-.74 1.01-1.76.9-2.78-.87.04-1.93.58-2.56 1.31-.56.65-1.05 1.69-.92 2.69.97.08 1.96-.49 2.58-1.22z"/></svg>
+          </span> Apple</a>
+        </div>
+
+        <div class="divider"><span>or sign up with email</span></div>
+
+        <form id="signup-form" novalidate>
+          <div style="display:flex;flex-direction:column;gap:var(--space-5)">
+            <div class="form-group">
+              <label class="form-label" for="signup-name">Full Name</label>
+              <div class="input-icon-wrap">
+                <i class="ph ph-user input-icon"></i>
+                <input id="signup-name" class="form-control" type="text" placeholder="Jane Doe" data-validate="required" autocomplete="name" />
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-email">Email Address</label>
+              <div class="input-icon-wrap">
+                <i class="ph ph-envelope input-icon"></i>
+                <input id="signup-email" class="form-control" type="email" placeholder="your@email.com" data-validate="required|email" autocomplete="email" />
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-phone">Phone Number</label>
+              <div class="input-icon-wrap">
+                <i class="ph ph-phone input-icon"></i>
+                <input id="signup-phone" class="form-control" type="tel" placeholder="(555) 123-4567" data-validate="required|phone" autocomplete="tel" />
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-password">Password</label>
+              <div class="input-icon-wrap" style="position:relative">
+                <i class="ph ph-lock input-icon"></i>
+                <input id="signup-password" class="form-control" type="password" placeholder="At least 8 characters" data-validate="required|password" autocomplete="new-password" style="padding-right:48px" />
+                <button type="button" data-password-toggle="signup-password" style="position:absolute;right:var(--space-3);top:50%;transform:translateY(-50%);color:var(--color-text-light);font-size:1rem;background:none;border:none;cursor:pointer"><i class="ph ph-eye"></i></button>
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-confirm">Confirm Password</label>
+              <div class="input-icon-wrap" style="position:relative">
+                <i class="ph ph-lock input-icon"></i>
+                <input id="signup-confirm" class="form-control" type="password" placeholder="Re-enter your password" data-validate="required" autocomplete="new-password" style="padding-right:48px" />
+                <button type="button" data-password-toggle="signup-confirm" style="position:absolute;right:var(--space-3);top:50%;transform:translateY(-50%);color:var(--color-text-light);font-size:1rem;background:none;border:none;cursor:pointer"><i class="ph ph-eye"></i></button>
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signup-plan">Choose Your Plan</label>
+              <div class="input-icon-wrap">
+                <i class="ph ph-tag input-icon"></i>
+                <select id="signup-plan" class="form-control" data-validate="required">
+                  <option value="">Select a plan…</option>
+                  <option value="basic">Basic — $4.99/mo</option>
+                  <option value="standard">Standard — $9.99/mo</option>
+                  <option value="premium">Premium — $14.99/mo</option>
+                </select>
+              </div>
+              <span class="form-error" style="display:none"></span>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:var(--space-3)">
+              <input type="checkbox" id="terms" style="width:16px;height:16px;accent-color:var(--emerald);margin-top:3px;flex-shrink:0" />
+              <label for="terms" style="font-size:var(--text-sm);color:var(--color-text-muted);cursor:pointer;line-height:1.6">I agree to the <a href="terms-conditions.html" style="color:var(--emerald);font-weight:600">Terms &amp; Conditions</a> and <a href="privacy-policy.html" style="color:var(--emerald);font-weight:600">Privacy Policy</a>.</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%" id="signup-submit"><i class="ph ph-user-plus"></i> Create Account</button>
+          </div>
+        </form>
+
+        <div style="text-align:center;margin-top:var(--space-6)">
+          <span style="font-size:var(--text-sm);color:var(--color-text-muted)">Already have an account? </span>
+          <a href="login.html" style="font-size:var(--text-sm);color:var(--emerald);font-weight:700;text-decoration:none">Sign In</a>
+        </div>
+
+        <div class="trust-badges">
+          <span class="badge badge-success"><i class="ph ph-lock"></i> SSL Secured</span>
+          <span class="badge badge-teal"><i class="ph ph-shield-check"></i> 2FA Available</span>
+          <span class="badge badge-emerald"><i class="ph ph-eye-slash"></i> Privacy First</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script><script src="assets/js/animations.js"></script><script src="assets/js/forms.js"></script>
+</body></html>

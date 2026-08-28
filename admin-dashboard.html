@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" dir="ltr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — SafeRide Schools Operations Center</title>
+  <meta name="description" content="SafeRide Schools administration dashboard — fleet management, driver oversight, route analytics, financials, and student records." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" />
+  <style>
+    /* ════════════════════════════════════════════════
+       DESIGN TOKENS
+    ════════════════════════════════════════════════ */
+    :root {
+      --teal:#123C43; --teal-dark:#0b2428; --teal-mid:#1a5460;
+      --emerald:#168A72; --emerald-light:#1aab8c;
+      --cyan:#55D6BE; --cyan-dim:rgba(85,214,190,0.15);
+      --gold:#D6B36A; --gold-dim:rgba(214,179,106,0.15);
+      --red:#ef4444; --red-dim:rgba(239,68,68,0.15);
+      --orange:#f59e0b; --orange-dim:rgba(245,158,11,0.15);
+      --blue:#3b82f6; --blue-dim:rgba(59,130,246,0.15);
+      --purple:#8b5cf6; --purple-dim:rgba(139,92,246,0.15);
+      --green:#22c55e; --green-dim:rgba(34,197,94,0.15);
+
+      /* Dark UI surfaces */
+      --bg:#0d1a1d;
+      --surface-1:#111f23;
+      --surface-2:#162830;
+      --surface-3:#1d3540;
+      --border:rgba(85,214,190,0.1);
+      --border-hover:rgba(85,214,190,0.3);
+      --text:#e8f4f1;
+      --text-muted:rgba(232,244,241,0.72);
+      --text-light:rgba(232,244,241,0.55);
+
+      --sidebar-w:260px;
+      --topbar-h:64px;
+      --font:'Plus Jakarta Sans',sans-serif;
+      --font-display:'DM Serif Display',serif;
+      --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-xl:20px; --radius-2xl:28px;
+      --shadow-card:0 2px 16px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+      --shadow-glow:0 0 30px rgba(85,214,190,0.15);
+      --trans:150ms ease;
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--font); background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; overflow-x:hidden; }
+    a { text-decoration:none; color:inherit; }
+    button { font-family:var(--font); cursor:pointer; border:none; background:none; }
+    ul,ol { list-style:none; }
+    input,select,textarea { font-family:var(--font); }
+    img { max-width:100%; display:block; }
+
+    /* ════ SCROLLBAR ════ */
+    ::-webkit-scrollbar { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:var(--surface-1); }
+    ::-webkit-scrollbar-thumb { background:var(--teal-mid); border-radius:99px; }
+
+    /* ════════════════════════════════════════════════
+       LAYOUT
+    ════════════════════════════════════════════════ */
+    .admin-wrap { display:flex; min-height:100vh; }
+
+    /* ════════════════════════════════════════════════
+       SIDEBAR
+    ════════════════════════════════════════════════ */
+    .sidebar {
+      width:var(--sidebar-w); flex-shrink:0; background:var(--surface-1);
+      border-right:1px solid var(--border); display:flex; flex-direction:column;
+      position:fixed; top:0; left:0; height:100vh; z-index:200;
+      transition:transform var(--trans);
+    }
+    .sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .sidebar-logo-icon { width:36px; height:36px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .sidebar-logo-text { font-family:var(--font-display); font-size:1.05rem; color:var(--text); line-height:1.2; }
+    .sidebar-logo-text small { display:block; font-family:var(--font); font-size:0.65rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--cyan); }
+    .sidebar-nav { flex:1; overflow-y:auto; padding:16px 12px; display:flex; flex-direction:column; gap:2px; }
+    .nav-section-label { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-light); padding:12px 8px 6px; }
+    .sidebar-link {
+      display:flex; align-items:center; gap:10px; padding:9px 12px;
+      border-radius:var(--radius-md); color:var(--text-muted); font-size:0.82rem; font-weight:600;
+      transition:all var(--trans); position:relative;
+    }
+    .sidebar-link:hover { background:var(--cyan-dim); color:var(--text); }
+    .sidebar-link.active { background:linear-gradient(135deg,rgba(22,138,114,0.25),rgba(85,214,190,0.1)); color:var(--cyan); }
+    .sidebar-link.active::before { content:''; position:absolute; left:-12px; top:50%; transform:translateY(-50%); width:3px; height:60%; background:var(--cyan); border-radius:0 4px 4px 0; }
+    .sidebar-link i { font-size:1rem; flex-shrink:0; width:18px; text-align:center; }
+    .sidebar-link .badge-pill { margin-left:auto; background:var(--red); color:#fff; font-size:0.6rem; font-weight:700; padding:2px 7px; border-radius:99px; }
+    .sidebar-footer { padding:16px; border-top:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .sidebar-avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:#fff; flex-shrink:0; }
+    .sidebar-user-info { flex:1; min-width:0; }
+    .sidebar-user-name { font-size:0.8rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sidebar-user-role { font-size:0.65rem; color:var(--emerald); font-weight:600; }
+
+    /* ════════════════════════════════════════════════
+       MAIN CONTENT
+    ════════════════════════════════════════════════ */
+    .main-content { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+
+    /* ════ TOPBAR ════ */
+    .topbar {
+      height:var(--topbar-h); background:var(--surface-1); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:16px; padding:0 24px;
+      position:sticky; top:0; z-index:100;
+    }
+    .topbar-hamburger { display:none; width:36px; height:36px; border-radius:var(--radius-md); background:var(--surface-2); align-items:center; justify-content:center; font-size:1rem; color:var(--text-muted); cursor:pointer; border:1px solid var(--border); }
+    .topbar-breadcrumb { font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center; gap:6px; }
+    .topbar-breadcrumb .sep { opacity:0.35; }
+    .topbar-breadcrumb .current { color:var(--text); font-weight:600; }
+    .topbar-spacer { flex:1; }
+    .topbar-search { display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:0 14px; height:36px; width:260px; }
+    .topbar-search input { background:none; border:none; outline:none; color:var(--text); font-size:0.8rem; flex:1; }
+    .topbar-search input::placeholder { color:var(--text-light); }
+    .topbar-search i { color:var(--text-light); font-size:0.9rem; }
+    .topbar-actions { display:flex; align-items:center; gap:8px; }
+    .topbar-icon-btn { width:36px; height:36px; border-radius:var(--radius-md); background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:1rem; transition:all var(--trans); position:relative; cursor:pointer; }
+    .topbar-icon-btn:hover { background:var(--surface-3); color:var(--text); border-color:var(--border-hover); }
+    .notif-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; background:var(--red); border-radius:50%; border:2px solid var(--surface-1); }
+    .topbar-profile { display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 8px; border-radius:var(--radius-md); border:1px solid var(--border); background:var(--surface-2); transition:all var(--trans); }
+    .topbar-profile:hover { border-color:var(--border-hover); }
+    .topbar-profile-avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; color:#fff; }
+    .topbar-profile-name { font-size:0.75rem; font-weight:700; }
+    .topbar-profile-role { font-size:0.62rem; color:var(--cyan); }
+
+    /* ════ PAGE BODY ════ */
+    .page-body { padding:24px; flex:1; }
+
+    /* ════════════════════════════════════════════════
+       PANELS (tab content)
+    ════════════════════════════════════════════════ */
+    .panel { display:none; }
+    .panel.active { display:block; }
+    .panel-fade { animation:fadeIn 0.25s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ════════════════════════════════════════════════
+       CARDS
+    ════════════════════════════════════════════════ */
+    .card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-xl); }
+    .card-pad { padding:20px; }
+    .card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .card-title { font-size:0.85rem; font-weight:700; color:var(--text); }
+    .card-body { padding:20px; }
+
+    /* ════ STAT CARDS ════ */
+    .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+    .stat-card { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-xl); padding:20px; position:relative; overflow:hidden; transition:all var(--trans); }
+    .stat-card:hover { border-color:var(--border-hover); transform:translateY(-2px); box-shadow:var(--shadow-card); }
+    .stat-card::after { content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px; border-radius:50%; opacity:0.07; }
+    .stat-card.teal::after  { background:var(--cyan); }
+    .stat-card.green::after { background:var(--green); }
+    .stat-card.gold::after  { background:var(--gold); }
+    .stat-card.red::after   { background:var(--red); }
+    .stat-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .stat-icon { width:40px; height:40px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .stat-trend { display:flex; align-items:center; gap:4px; font-size:0.7rem; font-weight:700; padding:3px 8px; border-radius:99px; }
+    .stat-trend.up   { background:var(--green-dim); color:var(--green); }
+    .stat-trend.down { background:var(--red-dim);   color:var(--red);   }
+    .stat-value { font-family:var(--font-display); font-size:1.9rem; color:var(--text); line-height:1; margin-bottom:4px; }
+    .stat-label { font-size:0.72rem; color:var(--text-muted); font-weight:600; }
+
+    /* ════ GRID HELPERS ════ */
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .grid-12 { display:grid; grid-template-columns:1fr 2fr; gap:16px; }
+    .grid-21 { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+    .gap-16 { gap:16px; }
+
+    /* ════ BADGE ════ */
+    .badge { display:inline-flex; align-items:center; gap:4px; font-size:0.65rem; font-weight:700; padding:3px 9px; border-radius:99px; }
+    .badge-green  { background:var(--green-dim);  color:var(--green); }
+    .badge-red    { background:var(--red-dim);    color:var(--red); }
+    .badge-orange { background:var(--orange-dim); color:var(--orange); }
+    .badge-cyan   { background:var(--cyan-dim);   color:var(--cyan); }
+    .badge-gold   { background:var(--gold-dim);   color:var(--gold); }
+    .badge-blue   { background:var(--blue-dim);   color:var(--blue); }
+    .badge-purple { background:var(--purple-dim); color:var(--purple); }
+    .dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
+    /* ════ TABLE ════ */
+    .data-table { width:100%; border-collapse:collapse; }
+    .data-table thead th { padding:10px 14px; text-align:left; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-light); border-bottom:1px solid var(--border); white-space:nowrap; }
+    .data-table tbody td { padding:12px 14px; font-size:0.8rem; border-bottom:1px solid rgba(85,214,190,0.05); vertical-align:middle; }
+    .data-table tbody tr:hover td { background:rgba(85,214,190,0.03); }
+    .data-table tbody tr:last-child td { border-bottom:none; }
+
+    /* Table overflow: scroll horizontally inside card instead of clipping body */
+    .table-responsive { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .table-responsive .data-table { min-width:520px; }
+    .table-responsive .data-table tbody td .td-avatar-img { flex-shrink:0; }
+    .td-avatar { display:flex; align-items:center; gap:10px; }
+    .td-avatar-img { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
+    .td-avatar-img img { width:100%; height:100%; object-fit:cover; }
+    .td-name { font-weight:700; font-size:0.8rem; }
+    .td-sub  { font-size:0.68rem; color:var(--text-muted); }
+    .td-action { display:flex; gap:6px; }
+    .btn-icon { width:28px; height:28px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:0.85rem; transition:all var(--trans); cursor:pointer; border:1px solid transparent; }
+    .btn-icon.edit    { background:var(--blue-dim);  color:var(--blue);  border-color:rgba(59,130,246,0.2); }
+    .btn-icon.edit:hover    { background:var(--blue);   color:#fff; }
+    .btn-icon.danger  { background:var(--red-dim);   color:var(--red);   border-color:rgba(239,68,68,0.2); }
+    .btn-icon.danger:hover  { background:var(--red);    color:#fff; }
+    .btn-icon.view    { background:var(--cyan-dim);  color:var(--cyan);  border-color:var(--border); }
+    .btn-icon.view:hover    { background:var(--cyan);   color:var(--teal-dark); }
+
+    /* ════ BUTTONS ════ */
+    .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:var(--radius-md); font-size:0.78rem; font-weight:700; cursor:pointer; transition:all var(--trans); border:1px solid transparent; }
+    .btn-primary { background:linear-gradient(135deg,var(--emerald),var(--emerald-light)); color:#fff; }
+    .btn-primary:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .btn-outline { border:1px solid var(--border); color:var(--text-muted); background:transparent; }
+    .btn-outline:hover { border-color:var(--border-hover); color:var(--text); }
+    .btn-gold { background:linear-gradient(135deg,#a3870a,var(--gold)); color:#fff; }
+    .btn-gold:hover { filter:brightness(1.1); }
+    .btn-danger { background:var(--red-dim); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+    .btn-danger:hover { background:var(--red); color:#fff; }
+    .btn-sm { padding:5px 12px; font-size:0.72rem; }
+    .btn-xs { padding:3px 9px; font-size:0.68rem; }
+
+    /* ════ FORM CONTROLS ════ */
+    .form-group { margin-bottom:16px; }
+    .form-label { display:block; font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+    .form-control { width:100%; background:var(--surface-3); border:1px solid var(--border); border-radius:var(--radius-md); padding:9px 12px; color:var(--text); font-size:0.82rem; font-family:var(--font); outline:none; transition:border var(--trans); }
+    .form-control:focus { border-color:var(--cyan); }
+    .form-control::placeholder { color:var(--text-light); }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+    /* ════ PROGRESS ════ */
+    .progress { height:6px; background:var(--surface-3); border-radius:99px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:99px; transition:width 0.6s ease; }
+
+    /* ════ DONUT (pure CSS) ════ */
+    .donut-wrap { position:relative; display:inline-flex; align-items:center; justify-content:center; }
+    .donut-svg { transform:rotate(-90deg); }
+    .donut-center { position:absolute; text-align:center; }
+    .donut-val { font-family:var(--font-display); font-size:1.4rem; color:var(--text); line-height:1; }
+    .donut-sub { font-size:0.62rem; color:var(--text-muted); font-weight:600; }
+
+    /* ════ SPARKLINE (pure CSS bar chart) ════ */
+    .bar-chart { display:flex; align-items:flex-end; gap:5px; height:80px; }
+    .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .bar { width:100%; border-radius:4px 4px 0 0; transition:height 0.4s ease; cursor:pointer; }
+    .bar:hover { filter:brightness(1.2); }
+    .bar-label { font-size:0.6rem; color:var(--text-light); }
+
+    /* ════ TIMELINE ════ */
+    .timeline { display:flex; flex-direction:column; gap:0; }
+    .timeline-item { display:flex; gap:14px; position:relative; padding-bottom:18px; }
+    .timeline-item:last-child { padding-bottom:0; }
+    .timeline-item:not(:last-child) .timeline-dot::after { content:''; position:absolute; top:24px; left:50%; transform:translateX(-50%); width:1px; height:calc(100% - 12px); background:var(--border); }
+    .timeline-dot { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.65rem; flex-shrink:0; position:relative; z-index:1; }
+    .timeline-content { flex:1; padding-top:2px; }
+    .timeline-title { font-size:0.78rem; font-weight:700; margin-bottom:2px; }
+    .timeline-desc { font-size:0.7rem; color:var(--text-muted); }
+    .timeline-time { font-size:0.65rem; color:var(--text-light); margin-top:3px; }
+
+    /* ════ LIVE FEED ════ */
+    .live-feed { display:flex; flex-direction:column; gap:2px; max-height:320px; overflow-y:auto; }
+    .feed-row { display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:var(--radius-md); transition:background var(--trans); }
+    .feed-row:hover { background:var(--surface-3); }
+    .feed-icon { width:30px; height:30px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0; }
+    .feed-body { flex:1; min-width:0; }
+    .feed-text { font-size:0.75rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .feed-time { font-size:0.63rem; color:var(--text-light); }
+    .feed-row.new { background:rgba(85,214,190,0.06); border-left:2px solid var(--cyan); border-radius:0 var(--radius-md) var(--radius-md) 0; }
+
+    /* ════ FLEET MAP ════ */
+    .fleet-map { background:linear-gradient(145deg,#0a1519,#0f2028); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border); position:relative; }
+    .fleet-map svg { width:100%; height:320px; }
+
+    /* ════ NOTIFICATIONS ════ */
+    .notif-list { display:flex; flex-direction:column; gap:4px; }
+    .notif-item { display:flex; gap:10px; padding:10px 14px; border-radius:var(--radius-md); cursor:pointer; transition:background var(--trans); }
+    .notif-item:hover { background:var(--surface-3); }
+    .notif-item.unread { background:rgba(85,214,190,0.05); border-left:2px solid var(--cyan); border-radius:0 var(--radius-md) var(--radius-md) 0; }
+    .notif-dot-wrap { padding-top:4px; }
+    .notif-info { flex:1; }
+    .notif-title { font-size:0.78rem; font-weight:700; margin-bottom:2px; }
+    .notif-msg   { font-size:0.7rem; color:var(--text-muted); line-height:1.5; }
+    .notif-time  { font-size:0.63rem; color:var(--text-light); margin-top:3px; }
+
+    /* ════ MODAL ════ */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:500; display:flex; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(4px); }
+    .modal-overlay[hidden] { display:none; }
+    .modal-box { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-2xl); width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,0.5); }
+    .modal-header { padding:20px 24px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .modal-title { font-weight:700; font-size:0.95rem; }
+    .modal-close { width:32px; height:32px; border-radius:var(--radius-md); background:var(--surface-3); color:var(--text-muted); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--trans); border:none; font-size:0.9rem; }
+    .modal-close:hover { background:var(--red-dim); color:var(--red); }
+    .modal-body { padding:24px; }
+    .modal-footer { padding:16px 24px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+    /* ════ PAGE TITLE BAR ════ */
+    .page-title-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .page-title { font-family:var(--font-display); font-size:1.5rem; color:var(--text); }
+    .page-subtitle { font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
+
+    /* ════ AVATAR STACK ════ */
+    .avatar-stack { display:flex; }
+    .avatar-stack .av { width:26px; height:26px; border-radius:50%; background:var(--teal-mid); border:2px solid var(--surface-2); margin-left:-8px; font-size:0.6rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .avatar-stack .av:first-child { margin-left:0; }
+
+    /* ════ SWITCH TOGGLE ════ */
+    .switch { width:40px; height:22px; background:var(--surface-3); border-radius:99px; position:relative; cursor:pointer; border:1px solid var(--border); transition:background var(--trans); flex-shrink:0; }
+    .switch.on { background:var(--emerald); border-color:var(--emerald); }
+    .switch-knob { position:absolute; top:2px; left:2px; width:16px; height:16px; background:#fff; border-radius:50%; transition:transform var(--trans); box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+    .switch.on .switch-knob { transform:translateX(18px); }
+
+    /* ════ TABS ════ */
+    .tabs { display:flex; gap:4px; background:var(--surface-3); border-radius:var(--radius-lg); padding:4px; margin-bottom:20px; }
+    .tab-btn { flex:1; padding:7px 12px; border-radius:var(--radius-md); font-size:0.75rem; font-weight:700; color:var(--text-muted); transition:all var(--trans); text-align:center; cursor:pointer; border:none; background:none; }
+    .tab-btn.active { background:var(--surface-2); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+
+    /* ════ ONLINE INDICATOR ════ */
+    .online-dot { width:8px; height:8px; background:var(--green); border-radius:50%; box-shadow:0 0 6px var(--green); animation:blink-dot 2s ease-in-out infinite; }
+    @keyframes blink-dot { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    /* ════ RESPONSIVE ════ */
+    @media(max-width:1200px){ .stat-grid{grid-template-columns:repeat(2,1fr);} .grid-3{grid-template-columns:1fr 1fr;} }
+
+    /* Sidebar stacks / off-canvas at <=1024 */
+    @media(max-width:1024px){
+      .sidebar { transform:translateX(-100%); }
+      .sidebar.open { transform:translateX(0); }
+      .main-content { margin-left:0; }
+      .topbar-hamburger { display:flex; }
+      .topbar-search { display:none; }
+      .grid-2,.grid-12,.grid-21 { grid-template-columns:1fr; }
+      .form-row { grid-template-columns:1fr; }
+      .topbar { flex-wrap:nowrap; height:auto; padding:10px 16px; gap:10px; }
+      .topbar-breadcrumb { min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+      .topbar-spacer { flex:1 1 auto; }
+      .topbar-actions { gap:6px; }
+      .card-header { flex-wrap:wrap; gap:10px; }
+      .card-header > div:last-child { flex-wrap:wrap; }
+    }
+
+    /* Collapse custom inline multi-column layouts to 1 column at <=768 */
+    @media(max-width:768px){
+      [style*="grid-template-columns:repeat(3,1fr)"]{ grid-template-columns:1fr !important; }
+      [style*="grid-template-columns:1fr 1fr"]{ grid-template-columns:1fr !important; }
+      #panel-analytics > div[style*="repeat(4,1fr)"]{ grid-template-columns:1fr !important; }
+      .modal-body [style*="repeat(4,1fr)"]{ grid-template-columns:repeat(2,1fr) !important; }
+      .tabs { flex-wrap:wrap; }
+      .page-title-bar { flex-direction:column; align-items:flex-start; gap:10px; }
+      .page-title-bar > div:last-child { width:100%; display:flex; flex-wrap:wrap; gap:8px; }
+      .page-title-bar > div:last-child .btn { flex:1 1 auto; }
+    }
+
+    /* 1-column stat grids + tighten at <=480 */
+    @media(max-width:600px){ .stat-grid{grid-template-columns:1fr;} .grid-3{grid-template-columns:1fr;} .page-body{padding:16px;} }
+    @media(max-width:480px){
+      .stat-grid{ grid-template-columns:1fr; }
+      .page-body{ padding:12px; }
+      .topbar-breadcrumb{ display:none; }
+      .topbar-profile-name,.topbar-profile-role{ display:none; }
+      .topbar-actions{ gap:4px; }
+      .card-header > div:last-child .form-control{ flex:1 1 100%; }
+      .modal-box{ width:calc(100% - 16px); margin:8px; }
+      .modal-header,.modal-body,.modal-footer{ padding:14px; }
+      .modal-footer{ flex-wrap:wrap; }
+      .modal-footer .btn{ flex:1 1 100%; justify-content:center; }
+    }
+    @media(max-width:360px){
+      .topbar{ padding:8px 12px; }
+      .topbar-icon-btn{ width:32px; height:32px; font-size:0.85rem; }
+      .topbar-actions .topbar-icon-btn:nth-child(n+3){ display:none; }
+      .topbar-profile{ padding:3px 6px; }
+      .page-title{ font-size:1.25rem; }
+      .stat-value{ font-size:1.6rem; }
+      .card-pad,.card-body{ padding:12px; }
+    }
+    @media(max-width:320px){
+      body{ font-size:13.5px; }
+      .page-body{ padding:8px; }
+      .card-pad,.card-body{ padding:10px; }
+      .stat-card{ padding:12px; }
+      .stat-value{ font-size:1.4rem; }
+      .topbar-profile-avatar{ width:24px; height:24px; font-size:0.65rem; }
+      .topbar{ padding:8px 10px; gap:6px; }
+      .topbar-profile{ gap:6px; padding:3px 6px; }
+      .topbar-profile .ph{ display:none; }
+      .topbar-hamburger{ width:32px; height:32px; font-size:0.9rem; }
+      .topbar-actions .topbar-icon-btn:nth-child(n+2){ display:none; }
+      .page-title{ font-size:1.2rem; }
+      .page-title-bar > div:last-child{ gap:6px; }
+      .page-title-bar > div:last-child .btn{ flex:1 1 100%; justify-content:center; }
+      .stat-card-top{ flex-wrap:wrap; gap:8px; }
+      .card-header{ flex-direction:column; align-items:flex-start; }
+      .card-header > div:last-child{ width:100%; flex-wrap:wrap; gap:8px; }
+      .card-header > div:last-child .form-control,
+      .card-header > div:last-child select,
+      .card-header > div:last-child input{ flex:1 1 100%; max-width:none; }
+      .card-header > div:last-child .btn{ flex:1 1 auto; }
+      .grid-2,.grid-3,.grid-12,.grid-21{ gap:12px; }
+      .modal-body [style*="repeat(4,1fr)"]{ grid-template-columns:1fr !important; }
+      .donut-wrap{ align-self:stretch; }
+      .fleet-map svg{ height:220px; }
+      .page-subtitle{ font-size:0.7rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="sidebar-logo-text">SafeRide Schools<small>Admin Console</small></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="#" class="sidebar-link active" data-panel="dashboard"><i class="ph ph-squares-four"></i> Dashboard</a>
+      <a href="#" class="sidebar-link" data-panel="analytics"><i class="ph ph-chart-line-up"></i> Analytics</a>
+
+      <div class="nav-section-label">Operations</div>
+      <a href="#" class="sidebar-link" data-panel="fleet"><i class="ph ph-bus"></i> Fleet Management</a>
+      <a href="#" class="sidebar-link" data-panel="routes"><i class="ph ph-path"></i> Routes &amp; Stops</a>
+      <a href="#" class="sidebar-link" data-panel="live"><i class="ph ph-map-pin"></i> Live Tracking<span class="badge-pill">47</span></a>
+
+      <div class="nav-section-label">People</div>
+      <a href="#" class="sidebar-link" data-panel="drivers"><i class="ph ph-identification-card"></i> Drivers</a>
+      <a href="#" class="sidebar-link" data-panel="students"><i class="ph ph-student"></i> Students</a>
+      <a href="#" class="sidebar-link" data-panel="parents"><i class="ph ph-users"></i> Parents</a>
+
+      <div class="nav-section-label">Finance</div>
+      <a href="#" class="sidebar-link" data-panel="finance"><i class="ph ph-currency-dollar"></i> Revenue &amp; Billing</a>
+      <a href="#" class="sidebar-link" data-panel="payroll"><i class="ph ph-wallet"></i> Driver Payroll</a>
+
+      <div class="nav-section-label">Safety</div>
+      <a href="#" class="sidebar-link" data-panel="incidents"><i class="ph ph-warning-circle"></i> Incidents &amp; Alerts<span class="badge-pill" style="background:var(--orange)">3</span></a>
+      <a href="#" class="sidebar-link" data-panel="cctv"><i class="ph ph-camera"></i> CCTV Monitoring</a>
+
+      <div class="nav-section-label">System</div>
+      <a href="#" class="sidebar-link" data-panel="notifications"><i class="ph ph-bell"></i> Notifications<span class="badge-pill">12</span></a>
+      <a href="#" class="sidebar-link" data-panel="settings"><i class="ph ph-gear"></i> Settings</a>
+      <a href="index.html" class="sidebar-link"><i class="ph ph-arrow-square-out"></i> View Website</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar">AK</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Alex Kim</div>
+        <div class="sidebar-user-role">Super Admin</div>
+      </div>
+      <button class="btn-icon view" title="Logout" onclick="window.location='login.html'"><i class="ph ph-sign-out"></i></button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="topbar-hamburger" id="hamburger-toggle"><i class="ph ph-list"></i></button>
+      <div class="topbar-breadcrumb">
+        <span>Admin</span><span class="sep">/</span><span class="current" id="breadcrumb-current">Dashboard</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        <i class="ph ph-magnifying-glass"></i>
+        <input type="text" placeholder="Search buses, drivers, students…" id="global-search" />
+        <span style="font-size:0.6rem;color:var(--text-light);border:1px solid var(--border);border-radius:4px;padding:1px 5px"><i class="ph ph-command"></i>K</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" title="Refresh data" id="refresh-btn"><i class="ph ph-arrows-clockwise"></i></button>
+        <button class="topbar-icon-btn" title="Notifications" data-panel-trigger="notifications">
+          <i class="ph ph-bell"></i><span class="notif-dot"></span>
+        </button>
+        <button class="topbar-icon-btn" title="Full screen" id="fullscreen-btn"><i class="ph ph-arrows-out"></i></button>
+      </div>
+      <div class="topbar-profile">
+        <div class="topbar-profile-avatar">AK</div>
+        <div>
+          <div class="topbar-profile-name">Alex Kim</div>
+          <div class="topbar-profile-role">Super Admin</div>
+        </div>
+        <i class="ph ph-caret-down" style="font-size:0.75rem;color:var(--text-muted)"></i>
+      </div>
+    </header>
+
+    <!-- ═══════ PAGE PANELS ═══════ -->
+    <div class="page-body">
+
+      <!-- ══════════════════════════════════════
+           PANEL: DASHBOARD
+      ══════════════════════════════════════ -->
+      <div class="panel active panel-fade" id="panel-dashboard">
+        <div class="page-title-bar">
+          <div>
+            <div class="page-title">Operations Dashboard</div>
+            <div class="page-subtitle">Thursday, August 28, 2026 · Morning Run in Progress</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:6px 14px;font-size:0.75rem;">
+              <div class="online-dot"></div><span style="color:var(--green);font-weight:700">System Operational</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="showModal('modal-add-driver')"><i class="ph ph-plus"></i> Add Driver</button>
+            <button class="btn btn-outline btn-sm"><i class="ph ph-download-simple"></i> Export Report</button>
+          </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-grid">
+          <div class="stat-card teal">
+            <div class="stat-card-top">
+              <div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-bus"></i></div>
+              <div class="stat-trend up"><i class="ph ph-trend-up"></i> +3</div>
+            </div>
+            <div class="stat-value" id="stat-buses">47</div>
+            <div class="stat-label">Buses Active Right Now</div>
+            <div class="progress" style="margin-top:12px"><div class="progress-fill" style="width:94%;background:var(--cyan)"></div></div>
+            <div style="font-size:0.62rem;color:var(--text-light);margin-top:4px">50 total fleet · 3 in depot</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-card-top">
+              <div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-student"></i></div>
+              <div class="stat-trend up"><i class="ph ph-trend-up"></i> +142</div>
+            </div>
+            <div class="stat-value" id="stat-students">11,847</div>
+            <div class="stat-label">Students Transported Today</div>
+            <div class="progress" style="margin-top:12px"><div class="progress-fill" style="width:98.7%;background:var(--green)"></div></div>
+            <div style="font-size:0.62rem;color:var(--text-light);margin-top:4px">98.7% on-time · 154 pending afternoon</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-card-top">
+              <div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-currency-dollar"></i></div>
+              <div class="stat-trend up"><i class="ph ph-trend-up"></i> +8.4%</div>
+            </div>
+            <div class="stat-value">$94.2K</div>
+            <div class="stat-label">Monthly Revenue (Aug 2026)</div>
+            <div class="progress" style="margin-top:12px"><div class="progress-fill" style="width:78%;background:var(--gold)"></div></div>
+            <div style="font-size:0.62rem;color:var(--text-light);margin-top:4px">$121K target · $26.8K remaining</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-card-top">
+              <div class="stat-icon" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-warning-circle"></i></div>
+              <div class="stat-trend down" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-trend-down"></i> -2</div>
+            </div>
+            <div class="stat-value" style="color:var(--orange)">3</div>
+            <div class="stat-label">Active Alerts (Requires Attention)</div>
+            <div style="display:flex;flex-direction:column;gap:4px;margin-top:10px">
+              <div style="font-size:0.68rem;color:var(--orange);display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--orange)"></div> Route C — 5 min delay</div>
+              <div style="font-size:0.68rem;color:var(--red);display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--red)"></div> Bus #12 — Maintenance due</div>
+              <div style="font-size:0.68rem;color:var(--orange);display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--orange)"></div> Driver Chen — Late check-in</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN GRID: Map + Activity Feed -->
+        <div class="grid-21 gap-16" style="margin-bottom:16px">
+          <!-- Fleet Map -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-map-pin" style="color:var(--cyan)"></i> Live Fleet Map</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="font-size:0.68rem;color:var(--green);display:flex;align-items:center;gap:4px"><div class="online-dot" style="width:6px;height:6px"></div> 47 buses live</div>
+                <button class="btn btn-outline btn-xs">Expand</button>
+              </div>
+            </div>
+            <div class="fleet-map">
+              <svg viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="grid2" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(85,214,190,0.04)" stroke-width="1"/>
+                  </pattern>
+                  <radialGradient id="busGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="rgba(85,214,190,0.4)"/>
+                    <stop offset="100%" stop-color="rgba(85,214,190,0)"/>
+                  </radialGradient>
+                </defs>
+                <rect width="680" height="280" fill="url(#grid2)"/>
+                <!-- Roads -->
+                <path d="M 0,140 Q 170,100 340,140 Q 510,180 680,140" stroke="rgba(255,255,255,0.06)" stroke-width="12" fill="none"/>
+                <path d="M 0,140 Q 170,100 340,140 Q 510,180 680,140" stroke="rgba(255,255,255,0.03)" stroke-width="2" fill="none"/>
+                <path d="M 340,0 L 340,280" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="none"/>
+                <path d="M 170,0 Q 200,140 170,280" stroke="rgba(255,255,255,0.04)" stroke-width="6" fill="none"/>
+                <path d="M 510,0 Q 480,140 510,280" stroke="rgba(255,255,255,0.04)" stroke-width="6" fill="none"/>
+                <!-- Route lines -->
+                <polyline points="60,50 180,130 300,100 420,160 540,120 620,80" stroke="#55D6BE" stroke-width="2" fill="none" stroke-dasharray="6 3" opacity="0.6"/>
+                <polyline points="60,200 160,170 280,200 400,180 520,210 620,200" stroke="#D6B36A" stroke-width="2" fill="none" stroke-dasharray="6 3" opacity="0.6"/>
+                <polyline points="120,40 200,120 320,180 440,120 560,180 640,150" stroke="#168A72" stroke-width="2" fill="none" stroke-dasharray="6 3" opacity="0.6"/>
+                <!-- Bus stops -->
+                <circle cx="180" cy="130" r="4" fill="rgba(85,214,190,0.2)" stroke="#55D6BE" stroke-width="1.5"/>
+                <circle cx="300" cy="100" r="4" fill="rgba(85,214,190,0.2)" stroke="#55D6BE" stroke-width="1.5"/>
+                <circle cx="420" cy="160" r="4" fill="rgba(85,214,190,0.2)" stroke="#55D6BE" stroke-width="1.5"/>
+                <circle cx="160" cy="170" r="4" fill="rgba(214,179,106,0.2)" stroke="#D6B36A" stroke-width="1.5"/>
+                <circle cx="280" cy="200" r="4" fill="rgba(214,179,106,0.2)" stroke="#D6B36A" stroke-width="1.5"/>
+                <!-- Schools -->
+                <rect x="525" y="108" width="30" height="24" rx="4" fill="rgba(18,60,67,0.9)" stroke="#55D6BE" stroke-width="1.5"/>
+                <text x="540" y="124" text-anchor="middle" fill="#55D6BE" font-size="10"><i class="ph ph-student"></i></text>
+                <rect x="295" y="188" width="30" height="24" rx="4" fill="rgba(18,60,67,0.9)" stroke="#D6B36A" stroke-width="1.5"/>
+                <text x="310" y="204" text-anchor="middle" fill="#D6B36A" font-size="10"><i class="ph ph-student"></i></text>
+                <!-- Live buses with glow -->
+                <circle cx="245" cy="114" r="12" fill="url(#busGlow)"/>
+                <rect x="233" y="108" width="24" height="16" rx="4" fill="#55D6BE"/>
+                <text x="245" y="120" text-anchor="middle" fill="#0d2b30" font-size="9" font-weight="bold">A</text>
+                <text x="245" y="98" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="7">#08</text>
+
+                <circle cx="350" cy="196" r="12" fill="url(#busGlow)" opacity="0.7"/>
+                <rect x="338" y="190" width="24" height="16" rx="4" fill="#D6B36A"/>
+                <text x="350" y="202" text-anchor="middle" fill="#0d2b30" font-size="9" font-weight="bold">B</text>
+                <text x="350" y="182" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="7">#22</text>
+
+                <circle cx="420" cy="148" r="12" fill="url(#busGlow)" opacity="0.6"/>
+                <rect x="408" y="142" width="24" height="16" rx="4" fill="#168A72"/>
+                <text x="420" y="154" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">C</text>
+                <text x="420" y="134" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="7">#31</text>
+
+                <rect x="128" y="46" width="24" height="16" rx="4" fill="#8b5cf6"/>
+                <text x="140" y="58" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">D</text>
+
+                <rect x="490" y="196" width="24" height="16" rx="4" fill="#3b82f6"/>
+                <text x="502" y="208" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">E</text>
+
+                <!-- Legend -->
+                <rect x="10" y="10" width="120" height="70" rx="6" fill="rgba(13,26,29,0.85)" stroke="rgba(85,214,190,0.15)" stroke-width="1"/>
+                <text x="18" y="25" fill="rgba(255,255,255,0.4)" font-size="7" font-weight="bold" letter-spacing="1">LEGEND</text>
+                <rect x="18" y="32" width="8" height="6" rx="2" fill="#55D6BE"/><text x="30" y="38" fill="rgba(255,255,255,0.6)" font-size="7">Route A — North</text>
+                <rect x="18" y="44" width="8" height="6" rx="2" fill="#D6B36A"/><text x="30" y="50" fill="rgba(255,255,255,0.6)" font-size="7">Route B — East</text>
+                <rect x="18" y="56" width="8" height="6" rx="2" fill="#168A72"/><text x="30" y="62" fill="rgba(255,255,255,0.6)" font-size="7">Route C — West</text>
+                <circle cx="138" cy="35" r="4" fill="#55D6BE" opacity="0.4" stroke="#55D6BE" stroke-width="1"/><text x="148" y="38" fill="rgba(255,255,255,0.6)" font-size="7">Stop</text>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-activity" style="color:var(--cyan)"></i> Live Activity Feed</div>
+              <span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> Live</span>
+            </div>
+            <div class="card-body" style="padding:12px">
+              <div class="live-feed" id="live-feed">
+                <div class="feed-row new"><div class="feed-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div><div class="feed-body"><div class="feed-text">Emma Davis boarded Bus #08 — Sunrise Park Stop</div><div class="feed-time">Just now</div></div></div>
+                <div class="feed-row new"><div class="feed-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-map-pin"></i></div><div class="feed-body"><div class="feed-text">Bus #22 arrived at Lincoln Middle School</div><div class="feed-time">1 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-warning"></i></div><div class="feed-body"><div class="feed-text">Route C — 5-min delay due to road construction</div><div class="feed-time">3 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div><div class="feed-body"><div class="feed-text">Marcus Johnson boarded Bus #31 — Valley Sports</div><div class="feed-time">4 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--blue-dim);color:var(--blue)"><i class="ph ph-currency-dollar"></i></div><div class="feed-body"><div class="feed-text">New Premium subscription — Jennifer Walsh</div><div class="feed-time">7 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-map-pin"></i></div><div class="feed-body"><div class="feed-text">Bus #08 departed Sunrise Park — ETA 7:35 AM</div><div class="feed-time">8 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div><div class="feed-body"><div class="feed-text">Driver Sarah Johnson completed pre-trip check</div><div class="feed-time">12 min ago</div></div></div>
+                <div class="feed-row"><div class="feed-icon" style="background:var(--purple-dim);color:var(--purple)"><i class="ph ph-user-plus"></i></div><div class="feed-body"><div class="feed-text">New student enrolled — Aiden Park, Route A</div><div class="feed-time">18 min ago</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM GRID: Revenue chart + Top Routes + Quick Stats -->
+        <div class="grid-3 gap-16" style="margin-bottom:16px">
+          <!-- Weekly Revenue Chart -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-chart-bar" style="color:var(--gold)"></i> Weekly Revenue</div>
+              <span style="font-size:0.7rem;color:var(--gold);font-weight:700">$94.2K Aug</span>
+            </div>
+            <div class="card-body">
+              <div class="bar-chart">
+                <div class="bar-col"><div class="bar" style="height:45%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.6" title="Mon $11.2K"></div><div class="bar-label">M</div></div>
+                <div class="bar-col"><div class="bar" style="height:62%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.7" title="Tue $14.8K"></div><div class="bar-label">T</div></div>
+                <div class="bar-col"><div class="bar" style="height:55%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.75" title="Wed $13.2K"></div><div class="bar-label">W</div></div>
+                <div class="bar-col"><div class="bar" style="height:80%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.85" title="Thu $19.1K"></div><div class="bar-label">T</div></div>
+                <div class="bar-col"><div class="bar" style="height:68%;background:linear-gradient(to top,var(--emerald),var(--cyan))" title="Fri $16.3K"></div><div class="bar-label">F</div></div>
+                <div class="bar-col"><div class="bar" style="height:30%;background:rgba(85,214,190,0.25)" title="Sat $7.2K"></div><div class="bar-label">S</div></div>
+                <div class="bar-col"><div class="bar" style="height:15%;background:rgba(85,214,190,0.2)" title="Sun $3.6K"></div><div class="bar-label">S</div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:0.68rem;color:var(--text-muted)">
+                <span>Basic <strong style="color:var(--text)">$29.1K</strong></span>
+                <span>Premium <strong style="color:var(--text)">$47.8K</strong></span>
+                <span>Family <strong style="color:var(--text)">$17.3K</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subscription Split Donut -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-chart-donut" style="color:var(--purple)"></i> Subscription Mix</div>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px">
+              <div class="donut-wrap">
+                <svg class="donut-svg" width="120" height="120" viewBox="0 0 42 42">
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--surface-3)" stroke-width="5"/>
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--cyan)" stroke-width="5" stroke-dasharray="45 55" stroke-linecap="round"/>
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--emerald)" stroke-width="5" stroke-dasharray="35 65" stroke-linecap="round" stroke-dashoffset="-45"/>
+                  <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--gold)" stroke-width="5" stroke-dasharray="20 80" stroke-linecap="round" stroke-dashoffset="-80"/>
+                </svg>
+                <div class="donut-center"><div class="donut-val">4,218</div><div class="donut-sub">Total Subs</div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem"><div style="display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--cyan)"></div>Basic</div><div><strong>1,898</strong> <span style="color:var(--text-muted)">45%</span></div></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem"><div style="display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--emerald)"></div>Premium</div><div><strong>1,476</strong> <span style="color:var(--text-muted)">35%</span></div></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem"><div style="display:flex;align-items:center;gap:6px"><div class="dot" style="background:var(--gold)"></div>Family</div><div><strong>844</strong> <span style="color:var(--text-muted)">20%</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Route Performance -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-path" style="color:var(--cyan)"></i> Route Performance</div>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+              <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:5px"><span>Route A — North</span><span style="color:var(--green);font-weight:700">99.1%</span></div><div class="progress"><div class="progress-fill" style="width:99.1%;background:var(--green)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:5px"><span>Route B — East</span><span style="color:var(--green);font-weight:700">98.8%</span></div><div class="progress"><div class="progress-fill" style="width:98.8%;background:var(--green)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:5px"><span>Route C — West</span><span style="color:var(--orange);font-weight:700">93.2%</span></div><div class="progress"><div class="progress-fill" style="width:93.2%;background:var(--orange)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:5px"><span>Route D — Central</span><span style="color:var(--green);font-weight:700">99.5%</span></div><div class="progress"><div class="progress-fill" style="width:99.5%;background:var(--cyan)"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:0.72rem;margin-bottom:5px"><span>Route E — South</span><span style="color:var(--green);font-weight:700">97.8%</span></div><div class="progress"><div class="progress-fill" style="width:97.8%;background:var(--emerald)"></div></div></div>
+              <div style="font-size:0.68rem;color:var(--text-muted);padding-top:4px;border-top:1px solid var(--border)">Overall Fleet On-Time Rate: <strong style="color:var(--cyan)">98.7%</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT TABLE + Alerts -->
+        <div class="grid-21 gap-16">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="ph ph-list-checks" style="color:var(--cyan)"></i> Today's Driver Check-Ins</div>
+              <div style="display:flex;gap:8px"><span class="badge badge-green">112 Checked In</span><span class="badge badge-orange">8 Pending</span></div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead><tr><th>Driver</th><th>Bus</th><th>Route</th><th>Check-In</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="td-avatar"><div class="td-avatar-img">MC</div><div><div class="td-name">Michael Chen</div><div class="td-sub">8 yr experience</div></div></div></td>
+                    <td><span style="font-weight:700">#08</span></td>
+                    <td><span class="badge badge-cyan">Route A</span></td>
+                    <td>06:22 AM</td>
+                    <td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> En Route</span></td>
+                    <td><div class="td-action"><button class="btn-icon view" title="Track"><i class="ph ph-map-pin"></i></button><button class="btn-icon edit" title="Message"><i class="ph ph-chat-centered-text"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="td-avatar"><div class="td-avatar-img">SJ</div><div><div class="td-name">Sarah Johnson</div><div class="td-sub">5 yr experience</div></div></div></td>
+                    <td><span style="font-weight:700">#22</span></td>
+                    <td><span class="badge badge-gold">Route B</span></td>
+                    <td>06:18 AM</td>
+                    <td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> At School</span></td>
+                    <td><div class="td-action"><button class="btn-icon view"><i class="ph ph-map-pin"></i></button><button class="btn-icon edit"><i class="ph ph-chat-centered-text"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="td-avatar"><div class="td-avatar-img">DP</div><div><div class="td-name">David Park</div><div class="td-sub">12 yr experience</div></div></div></td>
+                    <td><span style="font-weight:700">#31</span></td>
+                    <td><span class="badge badge-green" style="background:rgba(22,138,114,0.2);color:var(--emerald)">Route C</span></td>
+                    <td>06:31 AM</td>
+                    <td><span class="badge badge-orange"><div class="dot" style="background:var(--orange)"></div> +5min Delay</span></td>
+                    <td><div class="td-action"><button class="btn-icon view"><i class="ph ph-map-pin"></i></button><button class="btn-icon edit"><i class="ph ph-chat-centered-text"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="td-avatar"><div class="td-avatar-img">ML</div><div><div class="td-name">Maria Lopez</div><div class="td-sub">3 yr experience</div></div></div></td>
+                    <td><span style="font-weight:700">#15</span></td>
+                    <td><span class="badge badge-blue">Route D</span></td>
+                    <td>06:25 AM</td>
+                    <td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> En Route</span></td>
+                    <td><div class="td-action"><button class="btn-icon view"><i class="ph ph-map-pin"></i></button><button class="btn-icon edit"><i class="ph ph-chat-centered-text"></i></button></div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="td-avatar"><div class="td-avatar-img">JW</div><div><div class="td-name">James Wilson</div><div class="td-sub">6 yr experience</div></div></div></td>
+                    <td><span style="font-weight:700">#42</span></td>
+                    <td><span class="badge badge-purple">Route E</span></td>
+                    <td>—</td>
+                    <td><span class="badge badge-red"><i class="ph ph-warning"></i> Late Check-In</span></td>
+                    <td><div class="td-action"><button class="btn-icon danger" title="Alert"><i class="ph ph-warning"></i></button><button class="btn-icon edit"><i class="ph ph-chat-centered-text"></i></button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Alerts & Timeline -->
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ph ph-warning-circle" style="color:var(--orange)"></i> Active Alerts</div>
+                <button class="btn btn-outline btn-xs">Dismiss All</button>
+              </div>
+              <div class="card-body" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+                <div style="background:var(--orange-dim);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md);padding:10px 12px">
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--orange);margin-bottom:2px"><i class="ph ph-bus"></i> Route C — 5min Delay</div>
+                  <div style="font-size:0.68rem;color:var(--text-muted)">Road construction on Westfield Dr. Parents notified. ETA recalculated.</div>
+                  <div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-xs btn-outline">View Route</button><button class="btn btn-xs" style="background:var(--orange);color:#fff;border-radius:var(--radius-sm)">Notify Parents</button></div>
+                </div>
+                <div style="background:var(--red-dim);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);padding:10px 12px">
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--red);margin-bottom:2px"><i class="ph ph-wrench"></i> Bus #12 — Maintenance Due</div>
+                  <div style="font-size:0.68rem;color:var(--text-muted)">Monthly mechanical inspection overdue by 2 days. Schedule immediately.</div>
+                  <div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-xs btn-outline">Schedule</button><button class="btn btn-xs btn-danger">Remove from Fleet</button></div>
+                </div>
+                <div style="background:var(--orange-dim);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius-md);padding:10px 12px">
+                  <div style="font-size:0.75rem;font-weight:700;color:var(--orange);margin-bottom:2px"><i class="ph ph-user"></i> James Wilson — Late Check-In</div>
+                  <div style="font-size:0.68rem;color:var(--text-muted)">Assigned driver for Bus #42 (Route E) has not checked in. Backup required.</div>
+                  <div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-xs btn-outline">Contact Driver</button><button class="btn btn-xs btn-primary">Assign Backup</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ph ph-clock-countdown" style="color:var(--cyan)"></i> Today's Timeline</div>
+              </div>
+              <div class="card-body" style="padding:16px">
+                <div class="timeline">
+                  <div class="timeline-item"><div class="timeline-dot" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check"></i></div><div class="timeline-content"><div class="timeline-title">Morning Run Started</div><div class="timeline-desc">47 buses deployed, 120 drivers checked in</div><div class="timeline-time">6:15 AM</div></div></div>
+                  <div class="timeline-item"><div class="timeline-dot" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-bus"></i></div><div class="timeline-content"><div class="timeline-title">First Students Boarded</div><div class="timeline-desc">Route A, B, D departing on schedule</div><div class="timeline-time">6:48 AM</div></div></div>
+                  <div class="timeline-item"><div class="timeline-dot" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-warning"></i></div><div class="timeline-content"><div class="timeline-title">Route C Delay Reported</div><div class="timeline-desc">+5 min, parents auto-notified</div><div class="timeline-time">7:02 AM</div></div></div>
+                  <div class="timeline-item"><div class="timeline-dot" style="background:var(--surface-3);color:var(--text-light)"><i class="ph ph-flag"></i></div><div class="timeline-content"><div class="timeline-title">School Arrivals (Expected)</div><div class="timeline-desc">All buses arrive by 7:45 AM</div><div class="timeline-time">7:45 AM</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL: DRIVERS
+      ══════════════════════════════════════ -->
+      <div class="panel panel-fade" id="panel-drivers">
+        <div class="page-title-bar">
+          <div><div class="page-title">Driver Management</div><div class="page-subtitle">120 verified drivers · 8 pending review · 0 incidents this month</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm"><i class="ph ph-funnel"></i> Filter</button>
+            <button class="btn btn-primary btn-sm" onclick="showModal('modal-add-driver')"><i class="ph ph-plus"></i> Add Driver</button>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-identification-card"></i></div><div class="stat-trend up">+3 this wk</div></div><div class="stat-value">120</div><div class="stat-label">Total Verified Drivers</div></div>
+          <div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div><div class="stat-trend up">98%</div></div><div class="stat-value">117</div><div class="stat-label">Active Today</div></div>
+          <div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-star"></i></div></div><div class="stat-value">4.97</div><div class="stat-label">Avg Parent Rating</div></div>
+          <div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-clock"></i></div></div><div class="stat-value">8</div><div class="stat-label">Renewal Due This Month</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Driver Roster</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="form-control" style="width:100%;max-width:200px;padding:6px 10px;font-size:0.75rem" placeholder="Search drivers…" />
+              <select class="form-control" style="width:100%;max-width:140px;padding:6px 10px;font-size:0.75rem">
+                <option>All Status</option><option>Active</option><option>On Leave</option><option>Training</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead><tr><th>Driver</th><th>License</th><th>Assigned Bus</th><th>Route</th><th>Rating</th><th>Status</th><th>Renewal</th><th>Actions</th></tr></thead>
+              <tbody id="driver-table-body">
+                <tr><td><div class="td-avatar"><div class="td-avatar-img">MC</div><div><div class="td-name">Michael Chen</div><div class="td-sub">8 yr · CDL-B</div></div></div></td><td>CDL-B 5589-AK</td><td>#08</td><td><span class="badge badge-cyan">Route A</span></td><td><span style="color:var(--gold)"><i class="ph ph-star"></i> 4.97</span></td><td><span class="badge badge-green">Active</span></td><td>Mar 2027</td><td><div class="td-action"><button class="btn-icon view" onclick="showModal('modal-driver-detail')"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button><button class="btn-icon danger"><i class="ph ph-trash"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img">SJ</div><div><div class="td-name">Sarah Johnson</div><div class="td-sub">5 yr · CDL-B</div></div></div></td><td>CDL-B 4421-SJ</td><td>#22</td><td><span class="badge badge-gold">Route B</span></td><td><span style="color:var(--gold)"><i class="ph ph-star"></i> 4.99</span></td><td><span class="badge badge-green">Active</span></td><td>Jun 2027</td><td><div class="td-action"><button class="btn-icon view" onclick="showModal('modal-driver-detail')"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button><button class="btn-icon danger"><i class="ph ph-trash"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img">DP</div><div><div class="td-name">David Park</div><div class="td-sub">12 yr · CDL-B</div></div></div></td><td>CDL-B 3301-DP</td><td>#31</td><td><span class="badge badge-green" style="background:rgba(22,138,114,0.2);color:var(--emerald)">Route C</span></td><td><span style="color:var(--gold)"><i class="ph ph-star"></i> 4.95</span></td><td><span class="badge badge-orange">Delay</span></td><td>Aug 2027</td><td><div class="td-action"><button class="btn-icon view" onclick="showModal('modal-driver-detail')"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button><button class="btn-icon danger"><i class="ph ph-trash"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img">ML</div><div><div class="td-name">Maria Lopez</div><div class="td-sub">3 yr · CDL-B</div></div></div></td><td>CDL-B 6612-ML</td><td>#15</td><td><span class="badge badge-blue">Route D</span></td><td><span style="color:var(--gold)"><i class="ph ph-star"></i> 5.00</span></td><td><span class="badge badge-green">Active</span></td><td>Jan 2027</td><td><div class="td-action"><button class="btn-icon view" onclick="showModal('modal-driver-detail')"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button><button class="btn-icon danger"><i class="ph ph-trash"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img">JW</div><div><div class="td-name">James Wilson</div><div class="td-sub">6 yr · CDL-B</div></div></div></td><td>CDL-B 7730-JW</td><td>#42</td><td><span class="badge badge-purple">Route E</span></td><td><span style="color:var(--gold)"><i class="ph ph-star"></i> 4.88</span></td><td><span class="badge badge-red"><i class="ph ph-warning"></i> Missing</span></td><td>Sep 2026 <i class="ph ph-warning"></i></td><td><div class="td-action"><button class="btn-icon danger"><i class="ph ph-warning"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button><button class="btn-icon danger"><i class="ph ph-trash"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL: STUDENTS
+      ══════════════════════════════════════ -->
+      <div class="panel panel-fade" id="panel-students">
+        <div class="page-title-bar">
+          <div><div class="page-title">Student Management</div><div class="page-subtitle">12,000+ enrolled students across 18 schools</div></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm"><i class="ph ph-download-simple"></i> Export</button><button class="btn btn-primary btn-sm" onclick="showModal('modal-add-student')"><i class="ph ph-plus"></i> Add Student</button></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-student"></i></div><div class="stat-trend up">+142</div></div><div class="stat-value">12,000</div><div class="stat-label">Total Enrolled Students</div></div>
+          <div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div></div><div class="stat-value">11,847</div><div class="stat-label">Transported Today</div></div>
+          <div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-card"></i></div></div><div class="stat-value">11,982</div><div class="stat-label">Smart ID Cards Issued</div></div>
+          <div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--red-dim);color:var(--red)"><i class="ph ph-x-circle"></i></div></div><div class="stat-value">153</div><div class="stat-label">Absent Today</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Student Roster</div>
+            <div style="display:flex;gap:8px">
+              <input class="form-control" style="width:100%;max-width:200px;padding:6px 10px;font-size:0.75rem" placeholder="Search students…" />
+              <select class="form-control" style="width:100%;max-width:160px;padding:6px 10px;font-size:0.75rem"><option>All Schools</option><option>Lincoln Middle</option><option>Eastview Academy</option><option>Springfield North</option></select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead><tr><th>Student</th><th>Grade</th><th>School</th><th>Route</th><th>Bus Stop</th><th>Status Today</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">ED</div><div><div class="td-name">Emma Davis</div><div class="td-sub">ID: SR-00824</div></div></div></td><td>7th</td><td>Lincoln Middle</td><td><span class="badge badge-cyan">Route A</span></td><td>Sunrise Park</td><td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> Boarded 7:18</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">MJ</div><div><div class="td-name">Marcus Johnson</div><div class="td-sub">ID: SR-01142</div></div></div></td><td>8th</td><td>Lincoln Middle</td><td><span class="badge badge-green" style="background:rgba(22,138,114,0.2);color:var(--emerald)">Route C</span></td><td>Valley Sports</td><td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> Boarded 7:28</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">AP</div><div><div class="td-name">Aiden Park</div><div class="td-sub">ID: SR-01387</div></div></div></td><td>6th</td><td>Eastview Academy</td><td><span class="badge badge-cyan">Route A</span></td><td>Oak Hill</td><td><span class="badge badge-orange"><i class="ph ph-warning"></i> Not Boarded</span></td><td><div class="td-action"><button class="btn-icon danger"><i class="ph ph-warning"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr>
+                <tr><td><div class="td-avatar"><div class="td-avatar-img" style="background:linear-gradient(135deg,#22c55e,#10b981)">OW</div><div><div class="td-name">Olivia Walsh</div><div class="td-sub">ID: SR-00631</div></div></div></td><td>9th</td><td>Springfield North</td><td><span class="badge badge-gold">Route B</span></td><td>Community Center</td><td><span class="badge badge-green"><div class="dot" style="background:var(--green)"></div> Boarded 7:08</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL: FINANCE
+      ══════════════════════════════════════ -->
+      <div class="panel panel-fade" id="panel-finance">
+        <div class="page-title-bar">
+          <div><div class="page-title">Revenue &amp; Billing</div><div class="page-subtitle">August 2026 · Billing cycle active</div></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm"><i class="ph ph-file-pdf"></i> Export PDF</button><button class="btn btn-primary btn-sm"><i class="ph ph-invoice"></i> Generate Invoice</button></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-currency-dollar"></i></div><div class="stat-trend up">+8.4%</div></div><div class="stat-value">$94.2K</div><div class="stat-label">Revenue This Month</div></div>
+          <div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-trend-up"></i></div></div><div class="stat-value">$26.8K</div><div class="stat-label">Remaining to Target</div></div>
+          <div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-credit-card"></i></div><div class="stat-trend up">4,218</div></div><div class="stat-value">4,218</div><div class="stat-label">Active Subscriptions</div></div>
+          <div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--red-dim);color:var(--red)"><i class="ph ph-x-circle"></i></div><div class="stat-trend down">-12</div></div><div class="stat-value">$3.2K</div><div class="stat-label">Failed Payments (14)</div></div>
+        </div>
+        <div class="grid-21 gap-16">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Transactions</div><button class="btn btn-outline btn-xs">View All</button></div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead><tr><th>Parent / Account</th><th>Plan</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="td-avatar"><div class="td-avatar-img" style="background:linear-gradient(135deg,var(--emerald),var(--teal))">JW</div><div><div class="td-name">Jennifer Walsh</div><div class="td-sub">2 students</div></div></div></td><td><span class="badge badge-emerald" style="background:var(--cyan-dim);color:var(--cyan)">Premium</span></td><td style="color:var(--green);font-weight:700">+$89.00</td><td>Aug 28, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+                  <tr><td><div class="td-avatar"><div class="td-avatar-img">RM</div><div><div class="td-name">Robert Mitchell</div><div class="td-sub">1 student</div></div></div></td><td><span class="badge badge-cyan">Basic</span></td><td style="color:var(--green);font-weight:700">+$49.00</td><td>Aug 28, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+                  <tr><td><div class="td-avatar"><div class="td-avatar-img">LT</div><div><div class="td-name">Lisa Thompson</div><div class="td-sub">4 students</div></div></div></td><td><span class="badge badge-gold">Family</span></td><td style="color:var(--green);font-weight:700">+$129.00</td><td>Aug 27, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+                  <tr><td><div class="td-avatar"><div class="td-avatar-img">KB</div><div><div class="td-name">Kevin Brooks</div><div class="td-sub">1 student</div></div></div></td><td><span class="badge badge-cyan">Basic</span></td><td style="color:var(--red);font-weight:700">-$49.00</td><td>Aug 26, 2026</td><td><span class="badge badge-red">Failed</span></td></tr>
+                  <tr><td><div class="td-avatar"><div class="td-avatar-img">PA</div><div><div class="td-name">Patricia Adams</div><div class="td-sub">3 students</div></div></div></td><td><span class="badge badge-gold">Family</span></td><td style="color:var(--green);font-weight:700">+$129.00</td><td>Aug 26, 2026</td><td><span class="badge badge-green">Paid</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Revenue Breakdown</div></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:6px"><span style="color:var(--text-muted)">Basic Plans (1,898 × $49)</span><span style="font-weight:700;color:var(--text)">$93,002</span></div><div class="progress"><div class="progress-fill" style="width:45%;background:var(--cyan)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:6px"><span style="color:var(--text-muted)">Premium Plans (1,476 × $89)</span><span style="font-weight:700;color:var(--text)">$131,364</span></div><div class="progress"><div class="progress-fill" style="width:55%;background:var(--emerald)"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:6px"><span style="color:var(--text-muted)">Family Plans (844 × $129)</span><span style="font-weight:700;color:var(--text)">$108,876</span></div><div class="progress"><div class="progress-fill" style="width:30%;background:var(--gold)"></div></div></div>
+                <div style="border-top:1px solid var(--border);padding-top:16px">
+                  <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px">Monthly Gross Revenue</div>
+                  <div style="font-family:var(--font-display);font-size:1.8rem;color:var(--text)">$333,242</div>
+                  <div style="font-size:0.7rem;color:var(--emerald);margin-top:4px">+8.4% vs last month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL: SETTINGS
+      ══════════════════════════════════════ -->
+      <div class="panel panel-fade" id="panel-settings">
+        <div class="page-title-bar">
+          <div><div class="page-title">System Settings</div><div class="page-subtitle">Manage platform configuration, integrations, and user roles</div></div>
+          <button class="btn btn-primary btn-sm" id="save-settings-btn"><i class="ph ph-floppy-disk"></i> Save Changes</button>
+        </div>
+        <div class="grid-2 gap-16">
+          <!-- General -->
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ph ph-gear" style="color:var(--cyan)"></i> General Settings</div></div>
+            <div class="card-body">
+              <div class="form-group"><label class="form-label">Company Name</label><input class="form-control" value="SafeRide Schools, Inc." /></div>
+              <div class="form-group"><label class="form-label">Emergency Phone</label><input class="form-control" value="1-800-911-RIDE" /></div>
+              <div class="form-group"><label class="form-label">Support Email</label><input class="form-control" value="hello@saferideschools.com" /></div>
+              <div class="form-group"><label class="form-label">Default Time Zone</label><select class="form-control"><option selected>America/Chicago (CST)</option><option>America/New_York (EST)</option><option>America/Los_Angeles (PST)</option></select></div>
+            </div>
+          </div>
+
+          <!-- Notification Settings -->
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ph ph-bell" style="color:var(--cyan)"></i> Notification Defaults</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">Boarding Confirmations</div><div style="font-size:0.68rem;color:var(--text-muted)">Notify parents when child boards</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">5-Minute ETA Alerts</div><div style="font-size:0.68rem;color:var(--text-muted)">Bus approaching stop warning</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">School Arrival Confirmation</div><div style="font-size:0.68rem;color:var(--text-muted)">Notify on school arrival</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">Delay Notifications</div><div style="font-size:0.68rem;color:var(--text-muted)">Auto-alert on route delays</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">SMS Fallback</div><div style="font-size:0.68rem;color:var(--text-muted)">SMS if push fails</div></div><div class="switch on" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">Weekly Report Emails</div><div style="font-size:0.68rem;color:var(--text-muted)">Send safety summary to admins</div></div><div class="switch" onclick="this.classList.toggle('on')"><div class="switch-knob"></div></div></div>
+            </div>
+          </div>
+
+          <!-- Admin Users -->
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ph ph-users-three" style="color:var(--cyan)"></i> Admin Users</div><button class="btn btn-primary btn-xs"><i class="ph ph-plus"></i> Invite</button></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div class="sidebar-avatar" style="width:32px;height:32px;font-size:0.75rem">AK</div><div><div style="font-size:0.8rem;font-weight:700">Alex Kim</div><div style="font-size:0.65rem;color:var(--cyan)">Super Admin</div></div></div><span class="badge badge-cyan">You</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div class="sidebar-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,#8b5cf6,#3b82f6)">SC</div><div><div style="font-size:0.8rem;font-weight:700">Sarah Chen</div><div style="font-size:0.65rem;color:var(--text-muted)">CEO</div></div></div><span class="badge badge-purple">Admin</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div class="sidebar-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,var(--gold),#a3870a)">DK</div><div><div style="font-size:0.8rem;font-weight:700">David Kim</div><div style="font-size:0.65rem;color:var(--text-muted)">Fleet Manager</div></div></div><span class="badge badge-gold">Manager</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:10px"><div class="sidebar-avatar" style="width:32px;height:32px;font-size:0.75rem;background:linear-gradient(135deg,var(--emerald-light),var(--teal))">MR</div><div><div style="font-size:0.8rem;font-weight:700">Maria Rodriguez</div><div style="font-size:0.65rem;color:var(--text-muted)">Support Lead</div></div></div><span class="badge badge-green">Support</span></div>
+            </div>
+          </div>
+
+          <!-- Security Settings -->
+          <div class="card">
+            <div class="card-header"><div class="card-title"><i class="ph ph-lock" style="color:var(--cyan)"></i> Security &amp; Compliance</div></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">Two-Factor Authentication</div><div style="font-size:0.68rem;color:var(--text-muted)">Required for all admin accounts</div></div><div class="switch on"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">Session Timeout (30 min)</div><div style="font-size:0.68rem;color:var(--text-muted)">Auto-logout after inactivity</div></div><div class="switch on"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">CCTV Encryption at Rest</div><div style="font-size:0.68rem;color:var(--text-muted)">256-bit AES — cannot disable</div></div><div class="switch on" style="opacity:0.5;pointer-events:none"><div class="switch-knob"></div></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:0.8rem;font-weight:600">COPPA Compliance Mode</div><div style="font-size:0.68rem;color:var(--text-muted)">Child data protection active</div></div><div class="switch on" style="opacity:0.5;pointer-events:none"><div class="switch-knob"></div></div></div>
+              <div style="background:var(--green-dim);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-md);padding:10px 12px;font-size:0.72rem;color:var(--green)">
+                <i class="ph ph-check"></i> System is fully SOC 2 Type II compliant · Last audit: Jun 2026
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════
+           PANEL: NOTIFICATIONS
+      ══════════════════════════════════════ -->
+      <div class="panel panel-fade" id="panel-notifications">
+        <div class="page-title-bar">
+          <div><div class="page-title">Notifications</div><div class="page-subtitle">12 unread · 3 require action</div></div>
+          <div style="display:flex;gap:8px"><button class="btn btn-outline btn-sm" id="mark-all-read">Mark All Read</button></div>
+        </div>
+        <div class="tabs" style="max-width:400px">
+          <button class="tab-btn active" data-notif-tab="all">All (12)</button>
+          <button class="tab-btn" data-notif-tab="alerts">Alerts (3)</button>
+          <button class="tab-btn" data-notif-tab="system">System (9)</button>
+        </div>
+        <div class="card">
+          <div class="card-body" style="padding:12px">
+            <div class="notif-list">
+              <div class="notif-item unread"><div class="notif-dot-wrap"><div class="dot" style="background:var(--red)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-warning"></i> Bus #12 — Maintenance Overdue</div><div class="notif-msg">Monthly mechanical inspection is 2 days overdue. Schedule immediately or remove from active fleet.</div><div class="notif-time">8 min ago · Alerts</div></div><button class="btn-icon danger btn-sm"><i class="ph ph-x"></i></button></div>
+              <div class="notif-item unread"><div class="notif-dot-wrap"><div class="dot" style="background:var(--orange)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-clock"></i> Route C Delay — Parent Alerts Sent</div><div class="notif-msg">5-minute delay on Route C. 247 parents have been automatically notified via push notification.</div><div class="notif-time">12 min ago · Operations</div></div><button class="btn-icon view"><i class="ph ph-eye"></i></button></div>
+              <div class="notif-item unread"><div class="notif-dot-wrap"><div class="dot" style="background:var(--red)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-siren"></i> Driver James Wilson — Missed Check-In</div><div class="notif-msg">James Wilson (Bus #42, Route E) has not completed morning check-in. Route may be unserviced.</div><div class="notif-time">18 min ago · Safety</div></div><button class="btn-icon danger"><i class="ph ph-phone"></i></button></div>
+              <div class="notif-item"><div class="notif-dot-wrap"><div class="dot" style="background:var(--blue)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-credit-card"></i> New Subscription — Jennifer Walsh</div><div class="notif-msg">Jennifer Walsh subscribed to the Premium plan. $89/month recurring. 2 students enrolled.</div><div class="notif-time">22 min ago · Billing</div></div></div>
+              <div class="notif-item"><div class="notif-dot-wrap"><div class="dot" style="background:var(--purple)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-user"></i> New Student Enrolled — Aiden Park</div><div class="notif-msg">Aiden Park (Grade 6, Eastview Academy) enrolled via parent Robert Park. Assigned Route A, Smart ID pending.</div><div class="notif-time">35 min ago · Students</div></div></div>
+              <div class="notif-item"><div class="notif-dot-wrap"><div class="dot" style="background:var(--green)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-check-circle"></i> Morning Fleet Deployment Complete</div><div class="notif-msg">47 buses deployed, 120 drivers checked in. Fleet operational at 94% capacity. 3 buses in depot.</div><div class="notif-time">1 hr ago · System</div></div></div>
+              <div class="notif-item"><div class="notif-dot-wrap"><div class="dot" style="background:var(--cyan)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-arrows-clockwise"></i> AI Route Optimization Complete</div><div class="notif-msg">Nightly AI analysis of 47 routes completed. 3 routes optimized, estimated 18-minute total savings today.</div><div class="notif-time">5 hr ago · System</div></div></div>
+              <div class="notif-item"><div class="notif-dot-wrap"><div class="dot" style="background:var(--gold)"></div></div><div class="notif-info"><div class="notif-title"><i class="ph ph-chart-bar"></i> Weekly Performance Report Ready</div><div class="notif-msg">August Week 4 report is ready. On-time rate: 98.7%, Revenue: $23.4K, Subscriptions: 4,218.</div><div class="notif-time">Yesterday · Reports</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fallback empty panels for remaining links -->
+      <div class="panel panel-fade" id="panel-analytics">
+        <div class="page-title-bar"><div><div class="page-title">Analytics &amp; Reporting</div><div class="page-subtitle">Deep insights into fleet, safety, and financial performance</div></div><button class="btn btn-outline btn-sm"><i class="ph ph-download-simple"></i> Export</button></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+          <div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-chart-line-up"></i></div><div class="stat-trend up">+8.4%</div></div><div class="stat-value">$333K</div><div class="stat-label">Monthly Gross Revenue</div></div>
+          <div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-clock"></i></div></div><div class="stat-value">98.7%</div><div class="stat-label">Overall On-Time Rate</div></div>
+          <div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-star"></i></div></div><div class="stat-value">4.97</div><div class="stat-label">Avg Driver Rating</div></div>
+          <div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-shield-check"></i></div></div><div class="stat-value" style="color:var(--green)">0</div><div class="stat-label">Major Incidents (Aug)</div></div>
+        </div>
+        <div class="card"><div class="card-header"><div class="card-title">Monthly Revenue Trend (Aug 2025 – Aug 2026)</div></div>
+          <div class="card-body"><div class="bar-chart" style="height:160px;gap:8px">
+            <div class="bar-col"><div class="bar" style="height:60%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.5"></div><div class="bar-label">Sep</div></div>
+            <div class="bar-col"><div class="bar" style="height:63%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.55"></div><div class="bar-label">Oct</div></div>
+            <div class="bar-col"><div class="bar" style="height:58%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.55"></div><div class="bar-label">Nov</div></div>
+            <div class="bar-col"><div class="bar" style="height:62%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.6"></div><div class="bar-label">Dec</div></div>
+            <div class="bar-col"><div class="bar" style="height:68%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.65"></div><div class="bar-label">Jan</div></div>
+            <div class="bar-col"><div class="bar" style="height:70%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.7"></div><div class="bar-label">Feb</div></div>
+            <div class="bar-col"><div class="bar" style="height:74%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.75"></div><div class="bar-label">Mar</div></div>
+            <div class="bar-col"><div class="bar" style="height:78%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.8"></div><div class="bar-label">Apr</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.85"></div><div class="bar-label">May</div></div>
+            <div class="bar-col"><div class="bar" style="height:82%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.9"></div><div class="bar-label">Jun</div></div>
+            <div class="bar-col"><div class="bar" style="height:86%;background:linear-gradient(to top,var(--emerald),var(--cyan));opacity:0.95"></div><div class="bar-label">Jul</div></div>
+            <div class="bar-col"><div class="bar" style="height:94%;background:linear-gradient(to top,var(--emerald),var(--cyan))"></div><div class="bar-label" style="color:var(--cyan);font-weight:700">Aug <i class="ph ph-star"></i></div></div>
+          </div></div>
+        </div>
+      </div>
+      <div class="panel panel-fade" id="panel-fleet"><div class="page-title-bar"><div><div class="page-title">Fleet Management</div><div class="page-subtitle">50 buses · 47 active · 3 in depot</div></div><button class="btn btn-primary btn-sm"><i class="ph ph-plus"></i> Add Bus</button></div><div class="stat-grid"><div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-bus"></i></div></div><div class="stat-value">50</div><div class="stat-label">Total Fleet</div></div><div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-check-circle"></i></div></div><div class="stat-value">47</div><div class="stat-label">Active Today</div></div><div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-lightning"></i></div></div><div class="stat-value">15</div><div class="stat-label">Electric Buses</div></div><div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--red-dim);color:var(--red)"><i class="ph ph-wrench"></i></div></div><div class="stat-value">1</div><div class="stat-label">Maintenance Needed</div></div></div><div class="card"><div class="card-header"><div class="card-title">Fleet Roster</div></div><div class="table-responsive"><table class="data-table"><thead><tr><th>Bus ID</th><th>Type</th><th>Year</th><th>Driver</th><th>Route</th><th>Last Inspection</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td><strong>#08</strong></td><td>Standard</td><td>2023</td><td>Michael Chen</td><td><span class="badge badge-cyan">Route A</span></td><td>Jul 2026</td><td><span class="badge badge-green"><i class="ph ph-check"></i> Active</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr><tr><td><strong>#22</strong></td><td>Premium</td><td>2024</td><td>Sarah Johnson</td><td><span class="badge badge-gold">Route B</span></td><td>Aug 2026</td><td><span class="badge badge-green"><i class="ph ph-check"></i> Active</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr><tr><td><strong>#12</strong></td><td>Standard</td><td>2021</td><td>Unassigned</td><td>—</td><td><span style="color:var(--red)">Jun 2026 <i class="ph ph-warning"></i></span></td><td><span class="badge badge-red">Maintenance</span></td><td><div class="td-action"><button class="btn-icon danger"><i class="ph ph-wrench"></i></button></div></td></tr></tbody></table></div></div></div>
+      <div class="panel panel-fade" id="panel-routes"><div class="page-title-bar"><div><div class="page-title">Routes &amp; Stops</div></div><button class="btn btn-primary btn-sm"><i class="ph ph-plus"></i> Add Route</button></div><div class="card"><div class="card-header"><div class="card-title">Route Overview</div></div><div class="table-responsive"><table class="data-table"><thead><tr><th>Route</th><th>Stops</th><th>Students</th><th>Distance</th><th>On-Time %</th><th>Status</th></tr></thead><tbody><tr><td><span class="badge badge-cyan">Route A — North</span></td><td>5</td><td>247</td><td>14.2 mi</td><td><span style="color:var(--green);font-weight:700">99.1%</span></td><td><span class="badge badge-green">Active</span></td></tr><tr><td><span class="badge badge-gold">Route B — East</span></td><td>4</td><td>198</td><td>11.8 mi</td><td><span style="color:var(--green);font-weight:700">98.8%</span></td><td><span class="badge badge-green">Active</span></td></tr><tr><td><span class="badge badge-green" style="background:rgba(22,138,114,0.2);color:var(--emerald)">Route C — West</span></td><td>5</td><td>213</td><td>16.5 mi</td><td><span style="color:var(--orange);font-weight:700">93.2%</span></td><td><span class="badge badge-orange">Delayed</span></td></tr><tr><td><span class="badge badge-blue">Route D — Central</span></td><td>6</td><td>301</td><td>9.4 mi</td><td><span style="color:var(--green);font-weight:700">99.5%</span></td><td><span class="badge badge-green">Active</span></td></tr></tbody></table></div></div></div>
+      <div class="panel panel-fade" id="panel-live"><div class="page-title-bar"><div><div class="page-title">Live Tracking</div><div class="page-subtitle">47 buses active · All positions updating every 5s</div></div></div><div class="fleet-map" style="height:500px"><svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:500px"><defs><pattern id="g3" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(85,214,190,0.04)" stroke-width="1"/></pattern><radialGradient id="bg2" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#0f2028"/><stop offset="100%" stop-color="#0a1519"/></radialGradient></defs><rect width="800" height="500" fill="url(#bg2)"/><rect width="800" height="500" fill="url(#g3)"/><path d="M0,250 Q200,180 400,250 Q600,320 800,250" stroke="rgba(255,255,255,0.05)" stroke-width="16" fill="none"/><path d="M400,0 L400,500" stroke="rgba(255,255,255,0.04)" stroke-width="10" fill="none"/><path d="M200,0 Q230,250 200,500" stroke="rgba(255,255,255,0.03)" stroke-width="8" fill="none"/><polyline points="80,80 220,200 360,160 500,240 640,180 760,120" stroke="#55D6BE" stroke-width="2.5" fill="none" stroke-dasharray="8 4" opacity="0.7"/><polyline points="80,340 200,300 320,340 460,310 580,350 720,330" stroke="#D6B36A" stroke-width="2.5" fill="none" stroke-dasharray="8 4" opacity="0.7"/><polyline points="140,60 260,180 380,260 500,180 620,260 740,220" stroke="#168A72" stroke-width="2.5" fill="none" stroke-dasharray="8 4" opacity="0.7"/><circle cx="290" cy="180" r="16" fill="rgba(85,214,190,0.12)"/><rect x="278" y="174" width="24" height="16" rx="4" fill="#55D6BE"/><text x="290" y="186" text-anchor="middle" fill="#0d2b30" font-size="10" font-weight="bold">A</text><circle cx="430" cy="316" r="16" fill="rgba(214,179,106,0.12)"/><rect x="418" y="310" width="24" height="16" rx="4" fill="#D6B36A"/><text x="430" y="322" text-anchor="middle" fill="#0d2b30" font-size="10" font-weight="bold">B</text><circle cx="500" cy="196" r="16" fill="rgba(22,138,114,0.12)"/><rect x="488" y="190" width="24" height="16" rx="4" fill="#168A72"/><text x="500" y="202" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">C</text><rect x="128" y="66" width="24" height="16" rx="4" fill="#8b5cf6"/><text x="140" y="78" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">D</text><rect x="608" y="346" width="24" height="16" rx="4" fill="#3b82f6"/><text x="620" y="358" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">E</text></svg></div></div>
+      <div class="panel panel-fade" id="panel-parents"><div class="page-title-bar"><div><div class="page-title">Parent Accounts</div><div class="page-subtitle">4,218 active parent accounts</div></div><button class="btn btn-outline btn-sm"><i class="ph ph-download-simple"></i> Export</button></div><div class="card"><div class="card-header"><div class="card-title">Parent Directory</div></div><div class="table-responsive"><table class="data-table"><thead><tr><th>Parent</th><th>Children</th><th>Plan</th><th>Joined</th><th>Last Login</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td><div class="td-avatar"><div class="td-avatar-img">JW</div><div><div class="td-name">Jennifer Walsh</div><div class="td-sub">jennifer@email.com</div></div></div></td><td>2</td><td><span class="badge badge-cyan">Premium</span></td><td>Aug 28, 2026</td><td>Today</td><td><span class="badge badge-green">Active</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr><tr><td><div class="td-avatar"><div class="td-avatar-img">SM</div><div><div class="td-name">Sarah Mitchell</div><div class="td-sub">sarah.m@email.com</div></div></div></td><td>1</td><td><span class="badge badge-cyan">Basic</span></td><td>Jan 2024</td><td>Today</td><td><span class="badge badge-green">Active</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr><tr><td><div class="td-avatar"><div class="td-avatar-img">AR</div><div><div class="td-name">Amanda Rodriguez</div><div class="td-sub">amanda.r@email.com</div></div></div></td><td>3</td><td><span class="badge badge-gold">Family</span></td><td>Sep 2022</td><td>Yesterday</td><td><span class="badge badge-green">Active</span></td><td><div class="td-action"><button class="btn-icon view"><i class="ph ph-eye"></i></button><button class="btn-icon edit"><i class="ph ph-pencil"></i></button></div></td></tr></tbody></table></div></div></div>
+      <div class="panel panel-fade" id="panel-incidents"><div class="page-title-bar"><div><div class="page-title">Incidents &amp; Alerts</div><div class="page-subtitle">3 active · 0 major incidents in 2026</div></div><button class="btn btn-primary btn-sm"><i class="ph ph-plus"></i> Log Incident</button></div><div class="stat-grid"><div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-shield-check"></i></div></div><div class="stat-value" style="color:var(--green)">0</div><div class="stat-label">Major Incidents (2026)</div></div><div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-warning"></i></div></div><div class="stat-value" style="color:var(--orange)">3</div><div class="stat-label">Active Minor Alerts</div></div><div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-clock-countdown"></i></div></div><div class="stat-value">&lt;3min</div><div class="stat-label">Avg Emergency Response</div></div><div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-file-text"></i></div></div><div class="stat-value">12</div><div class="stat-label">Reports Filed This Year</div></div></div></div>
+      <div class="panel panel-fade" id="panel-cctv"><div class="page-title-bar"><div><div class="page-title">CCTV Monitoring</div><div class="page-subtitle">47 buses · 376 cameras live</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"><div class="card" style="overflow:hidden"><div style="height:180px;background:linear-gradient(135deg,#0a1519,#0f2028);position:relative;display:flex;align-items:center;justify-content:center"><img src="assets/images/bus-interior.jpg" alt="Bus #08 Cam 1" style="width:100%;height:100%;object-fit:cover;opacity:0.85"/><div style="position:absolute;top:8px;left:8px;font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.06em">CAM — BUS #08 INT</div><div style="position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:4px;font-size:0.65rem;font-weight:700;color:#22c55e"><div class="online-dot" style="width:5px;height:5px"></div>LIVE</div><div style="position:absolute;bottom:8px;left:8px;font-size:0.62rem;color:rgba(255,255,255,0.5)">07:18:42 AM</div></div><div class="card-body" style="padding:10px 14px"><div style="font-size:0.75rem;font-weight:700">Bus #08 — Route A Interior</div><div style="font-size:0.65rem;color:var(--text-muted)">Driver: Michael Chen · 23 students onboard</div></div></div><div class="card" style="overflow:hidden"><div style="height:180px;background:linear-gradient(135deg,#0a1519,#0f2028);position:relative;display:flex;align-items:center;justify-content:center"><img src="assets/images/children-boarding.jpg" alt="Bus #22 boarding" style="width:100%;height:100%;object-fit:cover;opacity:0.85"/><div style="position:absolute;top:8px;left:8px;font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.06em">CAM — BUS #22 DOOR</div><div style="position:absolute;top:8px;right:8px;display:flex;align-items:center;gap:4px;font-size:0.65rem;font-weight:700;color:#22c55e"><div class="online-dot" style="width:5px;height:5px"></div>LIVE</div><div style="position:absolute;bottom:8px;left:8px;font-size:0.62rem;color:rgba(255,255,255,0.5)">07:18:42 AM</div></div><div class="card-body" style="padding:10px 14px"><div style="font-size:0.75rem;font-weight:700">Bus #22 — Route B Door Cam</div><div style="font-size:0.65rem;color:var(--text-muted)">Driver: Sarah Johnson · At Lincoln School</div></div></div><div class="card" style="overflow:hidden"><div style="height:180px;background:#0a1519;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:2rem"><i class="ph ph-camera"></i></div><div style="font-size:0.7rem;color:var(--text-muted)">Bus #42 — No Signal</div></div><div class="card-body" style="padding:10px 14px"><div style="font-size:0.75rem;font-weight:700;color:var(--red)">Bus #42 — Route E <i class="ph ph-warning"></i></div><div style="font-size:0.65rem;color:var(--text-muted)">Driver not checked in · Camera offline</div></div></div></div></div>
+      <div class="panel panel-fade" id="panel-payroll"><div class="page-title-bar"><div><div class="page-title">Driver Payroll</div><div class="page-subtitle">August 2026 · Payroll processing on Aug 31</div></div><button class="btn btn-primary btn-sm"><i class="ph ph-currency-dollar"></i> Process Payroll</button></div><div class="stat-grid"><div class="stat-card gold"><div class="stat-card-top"><div class="stat-icon" style="background:var(--gold-dim);color:var(--gold)"><i class="ph ph-wallet"></i></div></div><div class="stat-value">$248K</div><div class="stat-label">Total Payroll (Aug)</div></div><div class="stat-card teal"><div class="stat-card-top"><div class="stat-icon" style="background:var(--cyan-dim);color:var(--cyan)"><i class="ph ph-users"></i></div></div><div class="stat-value">120</div><div class="stat-label">Drivers on Payroll</div></div><div class="stat-card green"><div class="stat-card-top"><div class="stat-icon" style="background:var(--green-dim);color:var(--green)"><i class="ph ph-clock"></i></div></div><div class="stat-value">26.4K</div><div class="stat-label">Total Hours Logged</div></div><div class="stat-card red"><div class="stat-card-top"><div class="stat-icon" style="background:var(--orange-dim);color:var(--orange)"><i class="ph ph-clock"></i></div></div><div class="stat-value">$27/hr</div><div class="stat-label">Avg Hourly Rate</div></div></div></div>
+
+    </div><!-- end page-body -->
+  </div><!-- end main-content -->
+</div><!-- end admin-wrap -->
+
+<!-- ═══════════════════════════════════════
+     MODALS
+═══════════════════════════════════════ -->
+<!-- Add Driver Modal -->
+<div class="modal-overlay" id="modal-add-driver" hidden>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Add New Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-add-driver')"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">First Name *</label><input class="form-control" placeholder="First name" /></div>
+        <div class="form-group"><label class="form-label">Last Name *</label><input class="form-control" placeholder="Last name" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Email *</label><input class="form-control" type="email" placeholder="driver@email.com" /></div>
+        <div class="form-group"><label class="form-label">Phone *</label><input class="form-control" type="tel" placeholder="+1 (555) 000-0000" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">CDL License # *</label><input class="form-control" placeholder="CDL-B XXXX-XX" /></div>
+        <div class="form-group"><label class="form-label">License Expiry *</label><input class="form-control" type="date" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Assign Bus</label><select class="form-control"><option>Select bus…</option><option>Bus #03</option><option>Bus #07</option><option>Bus #19</option></select></div>
+        <div class="form-group"><label class="form-label">Assign Route</label><select class="form-control"><option>Select route…</option><option>Route A — North</option><option>Route B — East</option><option>Route C — West</option><option>Route D — Central</option><option>Route E — South</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Years of Experience</label><input class="form-control" type="number" placeholder="0" min="0" /></div>
+      <div style="background:var(--cyan-dim);border:1px solid var(--border-hover);border-radius:var(--radius-md);padding:12px;font-size:0.72rem;color:var(--cyan)">
+        <i class="ph ph-info"></i> After adding, a verification link will be emailed to the driver to complete the 7-stage certification process.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-driver')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-add-driver');showToast('Driver added! Verification email sent.','success')"><i class="ph ph-check"></i> Add Driver &amp; Send Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- Driver Detail Modal -->
+<div class="modal-overlay" id="modal-driver-detail" hidden>
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title">Driver Profile — Michael Chen</div>
+      <button class="modal-close" onclick="closeModal('modal-driver-detail')"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--emerald),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0">MC</div>
+        <div><div style="font-size:1rem;font-weight:700">Michael Chen</div><div style="font-size:0.75rem;color:var(--cyan);font-weight:600">CDL-B 5589-AK · 8 Years Experience</div><div style="display:flex;gap:6px;margin-top:6px"><span class="badge badge-green">Active</span><span class="badge badge-cyan">CDL-B</span><span class="badge badge-emerald" style="background:rgba(85,214,190,0.15);color:var(--cyan)">First Aid</span><span class="badge badge-gold">Safe Driver</span></div></div>
+        <div style="margin-left:auto;text-align:right"><div style="font-size:1.4rem;color:var(--gold);font-weight:700"><i class="ph ph-star"></i> 4.97</div><div style="font-size:0.65rem;color:var(--text-muted)">Parent Rating</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.78rem">
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">Assigned Bus</div><div style="font-weight:700">Bus #08</div></div>
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">Route</div><div style="font-weight:700;color:var(--cyan)">Route A — North</div></div>
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">Today's Check-In</div><div style="font-weight:700;color:var(--green)">6:22 AM <i class="ph ph-check"></i></div></div>
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">License Renewal</div><div style="font-weight:700">March 2027</div></div>
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">Incidents (2026)</div><div style="font-weight:700;color:var(--green)">0</div></div>
+        <div style="background:var(--surface-3);border-radius:var(--radius-md);padding:10px 14px"><div style="color:var(--text-muted);font-size:0.65rem;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em">Total Trips (2026)</div><div style="font-weight:700">1,847</div></div>
+      </div>
+      <div style="margin-top:16px"><div style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Verification Status</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Background</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>CDL Valid</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Medical</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Drug Screen</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Child Safety</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Road Test</div>
+          <div style="text-align:center;background:var(--green-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--green)"><i class="ph ph-check"></i><br/>Retraining</div>
+          <div style="text-align:center;background:var(--cyan-dim);border-radius:var(--radius-md);padding:8px 4px;font-size:0.62rem;color:var(--cyan)"><i class="ph ph-star"></i><br/>Certified</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="closeModal('modal-driver-detail')"><i class="ph ph-trash"></i> Remove Driver</button>
+      <button class="btn btn-outline" onclick="closeModal('modal-driver-detail')">Close</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-driver-detail')"><i class="ph ph-pencil"></i> Edit Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-overlay" id="modal-add-student" hidden>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Enroll New Student</div>
+      <button class="modal-close" onclick="closeModal('modal-add-student')"><i class="ph ph-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Student First Name *</label><input class="form-control" placeholder="First name" /></div>
+        <div class="form-group"><label class="form-label">Student Last Name *</label><input class="form-control" placeholder="Last name" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Grade *</label><select class="form-control"><option>Select grade…</option><option>Kindergarten</option><option>1st Grade</option><option>2nd Grade</option><option>3rd Grade</option><option>4th Grade</option><option>5th Grade</option><option>6th Grade</option><option>7th Grade</option><option>8th Grade</option><option>9th Grade</option><option>10th Grade</option><option>11th Grade</option><option>12th Grade</option></select></div>
+        <div class="form-group"><label class="form-label">School *</label><select class="form-control"><option>Select school…</option><option>Lincoln Middle School</option><option>Eastview Academy</option><option>Springfield North</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Assign Route *</label><select class="form-control"><option>Select route…</option><option>Route A — North</option><option>Route B — East</option><option>Route C — West</option></select></div>
+        <div class="form-group"><label class="form-label">Bus Stop *</label><select class="form-control"><option>Select stop…</option><option>Sunrise Park</option><option>Oak Hill Residential</option><option>Maple Grove Ave</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Parent Account Email *</label><input class="form-control" type="email" placeholder="Parent's registered email" /></div>
+      <div class="form-group"><label class="form-label">Special Needs / Notes</label><textarea class="form-control" rows="2" placeholder="Any special requirements or notes for the driver…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-student')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-add-student');showToast('Student enrolled! Smart ID card will be dispatched within 48 hours.','success')"><i class="ph ph-check"></i> Enroll Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" style="position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+
+<!-- Mobile overlay -->
+<div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;backdrop-filter:blur(2px)" onclick="closeSidebar()"></div>
+
+<script>
+  /* ═══════ PANEL NAVIGATION ═══════ */
+  const panelLinks = document.querySelectorAll('[data-panel]');
+  const panels     = document.querySelectorAll('.panel');
+  const breadcrumb = document.getElementById('breadcrumb-current');
+
+  function switchPanel(panelId, label) {
+    panels.forEach(p => p.classList.remove('active'));
+    panelLinks.forEach(l => l.classList.remove('active'));
+    const target = document.getElementById('panel-' + panelId);
+    if(target) { target.classList.add('active'); }
+    panelLinks.forEach(l => { if(l.dataset.panel === panelId) l.classList.add('active'); });
+    if(breadcrumb) breadcrumb.textContent = label || panelId.charAt(0).toUpperCase() + panelId.slice(1);
+    // Close sidebar on mobile
+    if(window.innerWidth <= 1023) closeSidebar();
+  }
+
+  panelLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const panel = link.dataset.panel;
+      const label = link.textContent.trim().replace(/\d+$/, '').trim();
+      switchPanel(panel, label);
+    });
+  });
+
+  // Notification link triggers
+  document.querySelectorAll('[data-panel-trigger]').forEach(el => {
+    el.addEventListener('click', () => switchPanel(el.dataset.panelTrigger, 'Notifications'));
+  });
+
+  /* ═══════ SIDEBAR MOBILE ═══════ */
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  document.getElementById('hamburger-toggle')?.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+  });
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  }
+
+  /* ═══════ MODALS ═══════ */
+  function showModal(id) { document.getElementById(id).hidden = false; }
+  function closeModal(id) { document.getElementById(id).hidden = true; }
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', (e) => { if(e.target === m) m.hidden = true; });
+  });
+
+  /* ═══════ TOAST ═══════ */
+  function showToast(msg, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const colors = { success:'#22c55e', error:'#ef4444', info:'#55D6BE', warning:'#f59e0b' };
+    toast.style.cssText = `background:var(--surface-2);border:1px solid ${colors[type]}33;border-left:3px solid ${colors[type]};border-radius:12px;padding:12px 16px;font-size:0.78rem;color:var(--text);max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,0.4);animation:slideIn 0.3s ease;pointer-events:all;`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.animation = 'slideOut 0.3s ease forwards'; setTimeout(() => toast.remove(), 300); }, 4000);
+  }
+
+  /* ═══════ LIVE FEED SIMULATION ═══════ */
+  const feedMessages = [
+    { icon:'<i class="ph ph-check-circle"></i>', color:'var(--green-dim)', icolor:'var(--green)', text:'Oliver Kim boarded Bus #15 — Maple Grove Ave', time:'Just now' },
+    { icon:'<i class="ph ph-map-pin"></i>', color:'var(--cyan-dim)', icolor:'var(--cyan)', text:'Bus #08 ETA 2 min — Lincoln Middle School', time:'Just now' },
+    { icon:'<i class="ph ph-check-circle"></i>', color:'var(--green-dim)', icolor:'var(--green)', text:'Sophie Adams boarded Bus #22 — Community Center', time:'Just now' },
+    { icon:'<i class="ph ph-credit-card"></i>', color:'var(--blue-dim)', icolor:'var(--blue)', text:'New Family plan subscription — David Brooks', time:'Just now' },
+    { icon:'<i class="ph ph-bell"></i>', color:'var(--cyan-dim)', icolor:'var(--cyan)', text:'Bus #31 departure from Valley Sports Center', time:'Just now' },
+  ];
+  let fi = 0;
+  setInterval(() => {
+    const feed = document.getElementById('live-feed');
+    if(!feed) return;
+    const m = feedMessages[fi % feedMessages.length]; fi++;
+    const row = document.createElement('div');
+    row.className = 'feed-row new';
+    row.innerHTML = `<div class="feed-icon" style="background:${m.color};color:${m.icolor};font-size:0.9rem">${m.icon}</div><div class="feed-body"><div class="feed-text">${m.text}</div><div class="feed-time">${m.time}</div></div>`;
+    feed.insertBefore(row, feed.firstChild);
+    if(feed.children.length > 12) feed.removeChild(feed.lastChild);
+    setTimeout(() => row.classList.remove('new'), 3000);
+  }, 6000);
+
+  /* ═══════ STAT COUNTERS ANIMATION ═══════ */
+  function animateCounter(el, target, decimals = 0, suffix = '') {
+    let start = 0; const dur = 1200;
+    const step = ts => {
+      if(!start) start = ts;
+      const p = Math.min((ts - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * ease).toFixed(decimals) + suffix;
+      if(p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) {
+        e.target.querySelectorAll('[data-counter]').forEach(el => {
+          animateCounter(el, +el.dataset.counter, +(el.dataset.decimals||0), el.dataset.suffix||'');
+        });
+        io.unobserve(e.target);
+      }
+    });
+  });
+  document.querySelectorAll('.stat-grid').forEach(g => io.observe(g));
+
+  /* ═══════ REFRESH BTN ═══════ */
+  document.getElementById('refresh-btn')?.addEventListener('click', function() {
+    this.style.animation = 'none';
+    this.querySelector('i').style.transform = 'rotate(360deg)';
+    this.querySelector('i').style.transition = 'transform 0.6s ease';
+    setTimeout(() => { this.querySelector('i').style.transform = ''; showToast('Dashboard refreshed', 'success'); }, 600);
+  });
+
+  /* ═══════ FULLSCREEN ═══════ */
+  document.getElementById('fullscreen-btn')?.addEventListener('click', () => {
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  });
+
+  /* ═══════ MARK NOTIFICATIONS READ ═══════ */
+  document.getElementById('mark-all-read')?.addEventListener('click', function() {
+    document.querySelectorAll('.notif-item.unread').forEach(n => n.classList.remove('unread'));
+    showToast('All notifications marked as read', 'success');
+  });
+
+  /* ═══════ SAVE SETTINGS ═══════ */
+  document.getElementById('save-settings-btn')?.addEventListener('click', () => showToast('Settings saved successfully!', 'success'));
+
+  /* ═══════ TOAST ANIMATION STYLES ═══════ */
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes slideOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(20px)} }
+  `;
+  document.head.appendChild(style);
+
+  /* ═══════ STAT PULSE SIMULATION ═══════ */
+  setInterval(() => {
+    const el = document.getElementById('stat-students');
+    if(el && document.getElementById('panel-dashboard').classList.contains('active')) {
+      const curr = parseInt(el.textContent.replace(',',''));
+      const next = curr + Math.floor(Math.random() * 3);
+      el.textContent = next.toLocaleString();
+    }
+  }, 8000);
+
+  /* ═══════ KEYBOARD SHORTCUT ═══════ */
+  document.addEventListener('keydown', e => {
+    if((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('global-search')?.focus();
+    }
+    if(e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.hidden = true);
+    }
+  });
+</script>
+</body></html>

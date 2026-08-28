@@ -1,0 +1,420 @@
+/* ============================================================
+   SafeRide Schools — animations.css
+   Keyframes · Scroll Reveal · Page Transitions · Micro-animations
+   ============================================================ */
+
+/* ── Core Keyframes ──────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(1deg); }
+  66%       { transform: translateY(-4px) rotate(-1deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(0.5); }
+  60%  { opacity: 1; transform: scale(1.1); }
+  80%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(85,214,190,0.2); }
+  50%       { box-shadow: 0 0 40px rgba(85,214,190,0.5); }
+}
+
+@keyframes borderRotate {
+  to { --border-angle: 360deg; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes busRide {
+  0%   { transform: translateX(-30px); }
+  100% { transform: translateX(calc(100% + 60px)); }
+}
+
+@keyframes pingRipple {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ── Scroll Reveal Classes ───────────────────────────────────── */
+/* Elements start hidden — JS IntersectionObserver adds .revealed */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+
+[data-reveal="fade"]       { transform: none; }
+[data-reveal="up"]         { transform: translateY(40px); }
+[data-reveal="down"]       { transform: translateY(-30px); }
+[data-reveal="left"]       { transform: translateX(-40px); }
+[data-reveal="right"]      { transform: translateX(40px); }
+[data-reveal="scale"]      { transform: scale(0.88); }
+[data-reveal="zoom"]       { transform: scale(0.9) translateY(20px); }
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Staggered children */
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+[data-stagger].revealed > *:nth-child(1) { transition-delay: 0.05s; }
+[data-stagger].revealed > *:nth-child(2) { transition-delay: 0.12s; }
+[data-stagger].revealed > *:nth-child(3) { transition-delay: 0.19s; }
+[data-stagger].revealed > *:nth-child(4) { transition-delay: 0.26s; }
+[data-stagger].revealed > *:nth-child(5) { transition-delay: 0.33s; }
+[data-stagger].revealed > *:nth-child(6) { transition-delay: 0.40s; }
+[data-stagger].revealed > *:nth-child(7) { transition-delay: 0.47s; }
+[data-stagger].revealed > *:nth-child(8) { transition-delay: 0.54s; }
+
+[data-stagger].revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Page Transition ─────────────────────────────────────────── */
+#page-transition {
+  position: fixed;
+  inset: 0;
+  background: var(--teal);
+  z-index: 9998;
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  transition: clip-path 0.5s var(--ease-out);
+}
+
+#page-transition.in {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+#page-transition.out {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+}
+
+/* ── Hero Slider Animations ──────────────────────────────────── */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.hero-slide.active { opacity: 1; }
+
+.hero-slide-content > * {
+  opacity: 0;
+  transform: translateY(25px);
+}
+
+.hero-slide.active .hero-slide-content > *:nth-child(1) {
+  animation: fadeInUp 0.8s var(--ease-out) 0.3s forwards;
+}
+.hero-slide.active .hero-slide-content > *:nth-child(2) {
+  animation: fadeInUp 0.8s var(--ease-out) 0.5s forwards;
+}
+.hero-slide.active .hero-slide-content > *:nth-child(3) {
+  animation: fadeInUp 0.8s var(--ease-out) 0.7s forwards;
+}
+.hero-slide.active .hero-slide-content > *:nth-child(4) {
+  animation: fadeInUp 0.8s var(--ease-out) 0.9s forwards;
+}
+
+/* ── Counter Animation ───────────────────────────────────────── */
+.counter-value {
+  display: inline-block;
+  animation: countUp 0.5s var(--ease-out) forwards;
+}
+
+/* ── Hover Micro-Animations ──────────────────────────────────── */
+.hover-lift {
+  transition: transform var(--trans-base), box-shadow var(--trans-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.hover-scale {
+  transition: transform var(--trans-base);
+}
+
+.hover-scale:hover { transform: scale(1.05); }
+
+.hover-glow {
+  transition: all var(--trans-base);
+}
+
+.hover-glow:hover { box-shadow: var(--shadow-glow); }
+
+/* Shine Effect */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.15) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+
+.shine:hover::after { left: 150%; }
+
+/* ── Floating Elements ───────────────────────────────────────── */
+.float-1 { animation: float 4s ease-in-out infinite; }
+.float-2 { animation: float 5s ease-in-out infinite 1s; }
+.float-3 { animation: float 6s ease-in-out infinite 2s; }
+.float-slow { animation: floatSlow 8s ease-in-out infinite; }
+
+/* ── Marquee ─────────────────────────────────────────────────── */
+.marquee-track {
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-inner {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+  gap: var(--space-10);
+}
+
+.marquee-track:hover .marquee-inner { animation-play-state: paused; }
+
+/* ── Bus Moving Animation ────────────────────────────────────── */
+.bus-moving {
+  animation: busRide 8s linear infinite;
+}
+
+/* ── GPS Ping ────────────────────────────────────────────────── */
+.gps-ping {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gps-ping::before, .gps-ping::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(85,214,190,0.4);
+  animation: pingRipple 2s ease-out infinite;
+}
+
+.gps-ping::after { animation-delay: 0.8s; }
+
+/* ── Shimmer Loading ─────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-2) 0%,
+    var(--color-border) 50%,
+    var(--color-surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ── Progress Bar ────────────────────────────────────────────── */
+.progress-bar {
+  height: 6px;
+  background: var(--color-surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--emerald) 0%, var(--cyan) 100%);
+  border-radius: 3px;
+  transition: width 1.5s var(--ease-out);
+  width: 0;
+}
+
+/* ── Animated Underline ──────────────────────────────────────── */
+.anim-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.anim-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--cyan);
+  border-radius: 2px;
+  transition: width 0.4s var(--ease-out);
+}
+
+.anim-underline:hover::after { width: 100%; }
+
+/* ── Spin Animations ─────────────────────────────────────────── */
+.spin     { animation: spin 1s linear infinite; }
+.spin-slow{ animation: spinSlow 6s linear infinite; }
+
+/* ── Glow Animation ──────────────────────────────────────────── */
+.animate-glow { animation: glow 3s ease-in-out infinite; }
+
+/* ── Timeline ────────────────────────────────────────────────── */
+.timeline {
+  position: relative;
+  padding-left: 42px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--emerald) 0%, var(--cyan) 100%);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: var(--space-10);
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -30px;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--emerald);
+  border: 3px solid var(--color-bg);
+  box-shadow: 0 0 0 3px rgba(22,138,114,0.25);
+  z-index: 1;
+  transition: all var(--trans-base);
+}
+
+.timeline-item:hover .timeline-dot {
+  background: var(--cyan);
+  transform: scale(1.2);
+}
+
+.timeline-content h4 {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.timeline-content p {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,236 @@
+/* ============================================================
+   SafeRide Schools — dark-mode.css
+   Dark Mode Overrides · High Contrast Elements
+   ============================================================ */
+
+/* ── Core Dark Mode Overrides ────────────────────────────────── */
+[data-theme="dark"] body {
+  background-color: #111518;
+  color: #e8f0ef;
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .card:hover {
+  border-color: rgba(85,214,190,0.3);
+}
+
+[data-theme="dark"] .stat-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .blog-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .faq-item {
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .faq-question {
+  background: #1a2023;
+  color: #e8f0ef;
+}
+
+[data-theme="dark"] .faq-question:hover,
+[data-theme="dark"] .faq-item.open .faq-question {
+  background: #222b2e;
+}
+
+[data-theme="dark"] .testimonial-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Headings and text */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #e8f0ef;
+}
+
+[data-theme="dark"] .section-title { color: #e8f0ef; }
+[data-theme="dark"] .blog-card-title { color: #e8f0ef; }
+[data-theme="dark"] .icon-card .card-title { color: #e8f0ef; }
+[data-theme="dark"] .testimonial-name { color: #e8f0ef; }
+[data-theme="dark"] .faq-item.open .faq-question { color: var(--cyan); }
+
+/* Sections */
+[data-theme="dark"] .section-muted {
+  background: #1a2023;
+}
+
+/* Form Controls */
+[data-theme="dark"] .form-control {
+  background: #1a2023;
+  border-color: #2a3a3e;
+  color: #e8f0ef;
+}
+
+[data-theme="dark"] .form-control:focus {
+  border-color: var(--emerald);
+  background: #222b2e;
+}
+
+[data-theme="dark"] .form-label { color: #e8f0ef; }
+
+/* Table */
+[data-theme="dark"] table { color: #e8f0ef; }
+
+[data-theme="dark"] th {
+  background: #1a2023 !important;
+  border-color: #2a3a3e !important;
+  color: var(--cyan) !important;
+}
+
+[data-theme="dark"] td {
+  border-color: #2a3a3e !important;
+}
+
+[data-theme="dark"] tr:nth-child(even) td {
+  background: #1a2023 !important;
+}
+
+/* Dropdowns */
+[data-theme="dark"] .nav-dropdown {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .dropdown-link {
+  color: #e8f0ef;
+}
+
+[data-theme="dark"] .dropdown-link:hover {
+  background: #222b2e;
+  color: var(--cyan);
+}
+
+[data-theme="dark"] .dropdown-link .icon {
+  background: #222b2e;
+}
+
+/* Pricing Cards */
+[data-theme="dark"] .pricing-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+[data-theme="dark"] .pricing-card.featured {
+  background: var(--teal);
+  border-color: var(--emerald);
+}
+
+/* Dashboard */
+[data-theme="dark"] .dash-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-track { background: #1a2023; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--teal-light); }
+
+/* Page hero stays the same in dark mode (already dark) */
+
+/* Stat numbers stay teal brand color */
+[data-theme="dark"] .stat-number { color: var(--cyan); }
+
+/* Section divider wave fill */
+[data-theme="dark"] .wave-fill-bg { fill: #111518; }
+[data-theme="dark"] .wave-fill-surface { fill: #1a2023; }
+
+/* Partner/Logo section */
+[data-theme="dark"] .partners-strip {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Notification cards */
+[data-theme="dark"] .notif-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Timeline */
+[data-theme="dark"] .timeline-dot {
+  border-color: #111518;
+}
+
+[data-theme="dark"] .timeline-content h4 { color: #e8f0ef; }
+
+/* Back to top */
+[data-theme="dark"] #back-to-top {
+  background: var(--emerald);
+}
+
+/* Process Steps */
+[data-theme="dark"] .process-step {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Route cards */
+[data-theme="dark"] .route-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Input wrapper icon */
+[data-theme="dark"] .input-icon { color: var(--color-text-light); }
+
+/* Badges in dark mode */
+[data-theme="dark"] .badge-emerald { background: rgba(22,138,114,0.2); color: var(--cyan); }
+[data-theme="dark"] .badge-teal    { background: rgba(85,214,190,0.15); color: var(--cyan); }
+
+/* Comparison table */
+[data-theme="dark"] .comparison-table {
+  background: #1a2023;
+}
+
+[data-theme="dark"] .comparison-table th {
+  background: #222b2e !important;
+}
+
+/* Map UI */
+[data-theme="dark"] .map-container {
+  background: #0d1417;
+  border-color: #2a3a3e;
+}
+
+/* Login card */
+[data-theme="dark"] .login-panel {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Blog sidebar */
+[data-theme="dark"] .sidebar-widget {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Driver cards */
+[data-theme="dark"] .driver-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
+/* Cookie bar */
+[data-theme="dark"] #cookie-bar {
+  background: #0d1417;
+}
+
+/* Footer stays dark regardless */
+[data-theme="dark"] .footer {
+  background: #0d1417;
+}

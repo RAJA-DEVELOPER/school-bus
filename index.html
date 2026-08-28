@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeRide Schools — Premium School Bus & Student Transport Service</title>
+  <meta name="description" content="SafeRide Schools delivers safe, technology-powered school bus transport with real-time GPS tracking, verified drivers, and instant parent notifications." />
+  <meta name="keywords" content="school bus, student transport, GPS tracking, safe transport, school bus service" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    /* ─ Page-specific styles ─ */
+    /* ── HERO ── */
+    .hero { position:relative; height:100vh; min-height:600px; overflow:hidden; }
+    .hero-slider { position:relative; width:100%; height:100%; }
+    .hero-slide { position:absolute; inset:0; }
+    .hero-slide-bg { position:absolute; inset:0; }
+    .hero-slide-bg img { width:100%; height:100%; object-fit:cover; }
+    .hero-slide-content {
+      position:relative; z-index:2; height:100%;
+      display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
+      padding: calc(var(--nav-height) + 2rem) var(--space-8) var(--space-16);
+      max-width:800px; margin:0 auto;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:var(--space-2);
+      background:rgba(85,214,190,0.18); border:1px solid rgba(85,214,190,0.4);
+      backdrop-filter:blur(10px); color:var(--cyan);
+      padding:6px 16px; border-radius:var(--radius-full);
+      font-size:var(--text-xs); font-weight:700; letter-spacing:0.08em;
+      text-transform:uppercase; width:fit-content;
+    }
+    .hero-title {
+      font-family:var(--font-display); font-size:var(--text-5xl);
+      color:#fff; line-height:1.1; margin:var(--space-5) 0 var(--space-4);
+    }
+    .hero-title em { color:var(--cyan); font-style:normal; }
+    .hero-subtitle { font-size:var(--text-lg); color:rgba(255,255,255,0.8); margin-bottom:var(--space-8); max-width:550px; }
+    .hero-actions { display:flex; gap:var(--space-4); flex-wrap:wrap; margin-bottom:var(--space-10); }
+    .hero-trust {
+      display:flex; align-items:center; gap:var(--space-6); flex-wrap:wrap;
+      padding-top:var(--space-8); border-top:1px solid rgba(255,255,255,0.15);
+    }
+    .hero-trust-item { display:flex; align-items:center; gap:var(--space-2); color:rgba(255,255,255,0.75); font-size:var(--text-sm); }
+    .hero-trust-item .icon { color:var(--cyan); }
+
+    /* Slider Controls */
+    .slider-controls { position:absolute; bottom:var(--space-8); left:50%; transform:translateX(-50%); z-index:10; display:flex; align-items:center; gap:var(--space-4); }
+    .slider-dots { display:flex; gap:var(--space-2); }
+    .slider-dot { width:8px; height:8px; border-radius:4px; background:rgba(255,255,255,0.4); cursor:pointer; transition:all var(--trans-base); border:none; }
+    .slider-dot.active { width:28px; background:var(--cyan); }
+    .slider-prev,.slider-next { width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.25); color:#fff; font-size:1.1rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--trans-base); }
+    .slider-prev:hover,.slider-next:hover { background:rgba(255,255,255,0.25); }
+    .slider-progress { width:120px; height:2px; background:rgba(255,255,255,0.2); border-radius:2px; overflow:hidden; }
+    .slider-progress-fill { height:100%; background:var(--cyan); border-radius:2px; width:0; transition:width linear; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip { background:var(--teal); padding:var(--space-10) 0; }
+    .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,0.1); }
+    .stat-item { background:transparent; padding:var(--space-8); text-align:center; position:relative; }
+    .stat-value { font-family:var(--font-display); font-size:var(--text-4xl); color:#fff; line-height:1; margin-bottom:var(--space-2); }
+    .stat-value sup { font-size:0.5em; vertical-align:super; }
+    .stat-label-text { font-size:var(--text-sm); color:rgba(255,255,255,0.65); font-weight:500; }
+
+    /* ── SERVICES PREVIEW ── */
+    .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-6); }
+
+    /* ── WHY US SPLIT ── */
+    .why-us { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-16); align-items:center; }
+    .why-us-image { position:relative; border-radius:var(--radius-2xl); overflow:hidden; }
+    .why-us-image img { width:100%; height:500px; object-fit:cover; border-radius:var(--radius-2xl); }
+    .why-us-badge {
+      position:absolute; bottom:var(--space-6); left:var(--space-6); right:var(--space-6);
+      background:rgba(18,60,67,0.9); backdrop-filter:blur(12px);
+      border-radius:var(--radius-lg); padding:var(--space-5);
+      border:1px solid rgba(85,214,190,0.25); display:flex; gap:var(--space-4); align-items:center;
+    }
+    .feature-list { display:flex; flex-direction:column; gap:var(--space-5); }
+    .feature-item { display:flex; gap:var(--space-4); align-items:flex-start; }
+    .feature-icon { width:44px; height:44px; border-radius:var(--radius-md); background:rgba(22,138,114,0.12); display:flex; align-items:center; justify-content:center; font-size:1.2rem; color:var(--emerald); flex-shrink:0; }
+    .feature-text h4 { font-family:var(--font-body); font-size:var(--text-base); font-weight:700; color:var(--color-text); margin-bottom:4px; }
+    .feature-text p  { font-size:var(--text-sm); color:var(--color-text-muted); }
+
+    /* ── TRACKING SHOWCASE ── */
+    .tracking-showcase { background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 100%); }
+    .tracking-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-12); align-items:center; }
+    .tracking-image { border-radius:var(--radius-2xl); overflow:hidden; box-shadow:var(--shadow-xl), var(--shadow-glow); position:relative; }
+    .tracking-image img { width:100%; height:420px; object-fit:cover; }
+    .tracking-features { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); margin-top:var(--space-8); }
+    .tracking-feat { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:var(--radius-lg); padding:var(--space-5); }
+    .tracking-feat .icon { font-size:1.5rem; margin-bottom:var(--space-2); }
+    .tracking-feat h4 { font-family:var(--font-body); font-size:var(--text-sm); font-weight:700; color:#fff; margin-bottom:4px; }
+    .tracking-feat p { font-size:var(--text-xs); color:rgba(255,255,255,0.6); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonial-slider { position:relative; overflow:hidden; padding-bottom:var(--space-8); }
+    .testimonial-track { display:flex; gap:var(--space-6); transition:transform 0.5s var(--ease-smooth); }
+    .testimonial-track .testimonial-card { min-width:calc(33.333% - var(--space-4)); flex:0 0 calc(33.333% - var(--space-4)); }
+    .ts-controls { display:flex; align-items:center; justify-content:center; gap:var(--space-4); margin-top:var(--space-8); }
+    .ts-btn { width:42px; height:42px; border-radius:50%; background:var(--color-surface-2); border:1px solid var(--color-border); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all var(--trans-base); }
+    .ts-btn:hover { background:var(--emerald); color:#fff; }
+    .ts-dots { display:flex; gap:var(--space-2); }
+    .ts-dot { width:8px; height:8px; border-radius:50%; background:var(--color-border); cursor:pointer; transition:all var(--trans-base); border:none; }
+    .ts-dot.active { background:var(--emerald); transform:scale(1.2); }
+
+    /* ── CTA SECTION ── */
+    .cta-section { background:linear-gradient(135deg,var(--emerald) 0%,var(--teal) 100%); }
+    .cta-inner { display:flex; align-items:center; justify-content:space-between; gap:var(--space-8); flex-wrap:wrap; }
+
+    @media(max-width:1024px) {
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .services-grid { grid-template-columns:repeat(2,1fr); }
+      .why-us, .tracking-grid { grid-template-columns:1fr; }
+      .testimonial-track .testimonial-card { min-width:calc(50% - var(--space-3)); flex:0 0 calc(50% - var(--space-3)); }
+    }
+    @media(max-width:768px) {
+      .hero-title { font-size:var(--text-3xl); }
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .services-grid { grid-template-columns:1fr; }
+      .tracking-features { grid-template-columns:1fr; }
+      .testimonial-track .testimonial-card { min-width:100%; flex:0 0 100%; }
+      .cta-inner { flex-direction:column; text-align:center; }
+      .hero-trust { justify-content:center; }
+      .why-us-image img { height:380px; }
+      .tracking-image img { height:320px; }
+    }
+    @media(max-width:480px) {
+      .hero-slide-content { padding-left:var(--space-3); padding-right:var(--space-3); }
+      .hero-title { font-size:clamp(1.75rem, 8vw, 2.25rem); }
+      .hero-actions { flex-direction:column; width:100%; }
+      .hero-actions .btn { width:100%; justify-content:center; }
+      .hero-trust { gap:var(--space-3); justify-content:center; }
+      .hero-trust-item { font-size:var(--text-xs); }
+      .stats-grid { grid-template-columns:1fr; }
+      .stat-item { padding:var(--space-5); }
+      .why-us-badge { position:static; margin-top:var(--space-4); border-radius:var(--radius-lg); }
+      .why-us-image img { height:260px; }
+      .tracking-image img { height:240px; }
+      .slider-progress { width:70px; }
+    }
+    @media(max-width:360px) {
+      .hero-title { font-size:clamp(1.5rem, 7.5vw, 1.85rem); }
+      .hero-subtitle { font-size:var(--text-sm); }
+      .stat-value { font-size:var(--text-3xl); }
+      .slider-prev, .slider-next { width:36px; height:36px; font-size:0.9rem; }
+      .slider-progress { width:50px; }
+      .why-us-image img { height:220px; }
+      .tracking-image img { height:210px; }
+      .ts-btn { width:36px; height:36px; }
+    }
+    @media(max-width:320px) {
+      .hero-title { font-size:1.4rem; }
+      .hero-badge { padding:4px 10px; font-size:0.65rem; }
+      .slider-controls { gap:var(--space-2); }
+      .why-us-image img { height:180px; }
+      .tracking-image img { height:180px; }
+      .stat-item { padding:var(--space-4); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Page Loader -->
+<div id="page-loader" aria-hidden="true">
+  <div class="loader-logo">Safe<span>Ride</span> Schools</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- Page Transition -->
+<div id="page-transition" aria-hidden="true"></div>
+
+<!-- Back to Top -->
+<button id="back-to-top" aria-label="Back to top"><i class="ph ph-arrow-up"></i></button>
+
+<!-- Cookie Bar -->
+<div id="cookie-bar" role="alert">
+  <p> We use cookies to improve your experience. <a href="privacy-policy.html">Learn more</a></p>
+  <div style="display:flex;gap:12px;flex-shrink:0;">
+    <button id="cookie-accept" class="btn btn-primary btn-sm">Accept All</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ NAVBAR ════════════════════════════════ -->
+<header class="navbar transparent" role="banner">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+    </a>
+
+    <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="home2.html" class="nav-link">Home 2</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button id="theme-toggle" class="nav-toggle-btn" aria-label="Toggle dark mode" title="Dark Mode">
+        <i class="ph ph-moon"></i>
+      </button>
+      <button id="rtl-toggle" class="nav-toggle-btn" aria-label="Toggle RTL" title="Switch to RTL">
+        <i class="ph ph-text-align-right"></i>
+      </button>
+      <div class="nav-item profile-menu" id="profile-menu">
+        <button class="nav-toggle-btn" id="profile-btn" aria-label="Profile" title="Profile" aria-expanded="false"><i class="ph ph-user-circle"></i></button>
+        <div class="nav-dropdown profile-dropdown" id="profile-dropdown">
+          <a href="login.html" class="dropdown-link"><i class="ph ph-sign-in"></i> Login / Sign Up</a>
+          <a href="parent-dashboard.html" class="dropdown-link"><i class="ph ph-chart-line-up"></i> User Dashboard</a>
+          <a href="admin-dashboard.html" class="dropdown-link"><i class="ph ph-gear"></i> Admin Dashboard</a>
+        </div>
+      </div>
+    </div>
+
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html" class="nav-link active"><i class="ph ph-house"></i> Home</a>
+  <a href="home2.html" class="nav-link"><i class="ph ph-house-line"></i> Home 2</a>
+  <a href="about.html" class="nav-link"><i class="ph ph-info"></i> About Us</a>
+  <a href="services.html" class="nav-link"><i class="ph ph-bus"></i> Services</a>
+  <a href="blog.html" class="nav-link"><i class="ph ph-newspaper"></i> Blog</a>
+  <a href="contact.html" class="nav-link"><i class="ph ph-phone"></i> Contact</a>
+</nav>
+
+<!-- ════════════════════════════════ SECTION 1: HERO SLIDER ════════════════════════════════ -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-slider" id="hero-slider">
+
+    <!-- Slide 1 -->
+    <div class="hero-slide active">
+      <div class="hero-slide-bg">
+        <img src="https://plus.unsplash.com/premium_photo-1783219367913-c429ad2b80b1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjQ4fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="Premium school bus on suburban road" />
+        <div class="overlay overlay-teal"></div>
+      </div>
+      <div class="hero-slide-content container">
+        <div class="hero-badge"><span class="status-dot status-active"></span> Live GPS Tracking Active</div>
+        <h1 class="hero-title">Every Journey.<br><em>Every Child.</em><br>Every Day.</h1>
+        <p class="hero-subtitle">Premium school bus transport powered by real-time GPS, verified drivers, and instant parent notifications. Your child's safety — guaranteed.</p>
+        <div class="hero-actions">
+          <a href="parent-dashboard.html" class="btn btn-primary btn-lg shine">
+            <i class="ph ph-map-pin"></i> Track Bus Live
+          </a>
+
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item"><i class="ph ph-shield-check icon"></i> 100% Verified Drivers</div>
+          <div class="hero-trust-item"><i class="ph ph-gps icon"></i> Real-time GPS</div>
+          <div class="hero-trust-item"><i class="ph ph-bell icon"></i> Instant Alerts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide">
+      <div class="hero-slide-bg">
+        <img src="https://images.unsplash.com/photo-1766371900970-a47e1812526f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjU3fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="Children safely boarding school bus" />
+        <div class="overlay overlay-teal"></div>
+      </div>
+      <div class="hero-slide-content container">
+        <div class="hero-badge"><i class="ph ph-star"></i> Trusted by 12,000+ Families</div>
+        <h1 class="hero-title">Safe Boarding.<br><em>Smart Routes.</em><br>Happy Families.</h1>
+        <p class="hero-subtitle">From doorstep pickup to school drop-off — every step monitored, every child accounted for with our advanced boarding confirmation system.</p>
+        <div class="hero-actions">
+          <a href="services.html" class="btn btn-primary btn-lg shine">Explore Services</a>
+          <a href="about.html" class="btn btn-secondary btn-lg">Our Story</a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item"><i class="ph ph-users icon"></i> 12,000+ Students</div>
+          <div class="hero-trust-item"><i class="ph ph-path icon"></i> 45+ Routes</div>
+          <div class="hero-trust-item"><i class="ph ph-medal icon"></i> Award Winning</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide">
+      <div class="hero-slide-bg">
+        <img src="https://plus.unsplash.com/premium_photo-1783219367861-bb5fc1bb1085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjU2fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="Parent tracking child on smartphone app" />
+        <div class="overlay overlay-teal"></div>
+      </div>
+      <div class="hero-slide-content container">
+        <div class="hero-badge"><i class="ph ph-device-mobile"></i> Parent App — Always Connected</div>
+        <h1 class="hero-title">Track. Alert.<br><em>Confirm.</em><br>Relax.</h1>
+        <p class="hero-subtitle">The SafeRide parent portal gives you real-time visibility into your child's journey — boarding, location, ETA, and safe arrival confirmations.</p>
+        <div class="hero-actions">
+          <a href="login.html" class="btn btn-primary btn-lg shine">Access Dashboard</a>
+          
+        </div>
+        <div class="hero-trust">
+          <div class="hero-trust-item"><i class="ph ph-clock icon"></i> Live Updates</div>
+          <div class="hero-trust-item"><i class="ph ph-check-circle icon"></i> Boarding Confirm</div>
+          <div class="hero-trust-item"><i class="ph ph-warning icon"></i> Emergency Alerts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slider Controls -->
+    <div class="slider-controls">
+      <button class="slider-prev" aria-label="Previous slide"><i class="ph ph-caret-left"></i></button>
+      <div class="slider-dots" role="tablist">
+        <button class="slider-dot active" role="tab" aria-label="Slide 1"></button>
+        <button class="slider-dot" role="tab" aria-label="Slide 2"></button>
+        <button class="slider-dot" role="tab" aria-label="Slide 3"></button>
+      </div>
+      <div class="slider-progress"><div class="slider-progress-fill"></div></div>
+      <button class="slider-next" aria-label="Next slide"><i class="ph ph-caret-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 2: STATS ════════════════════════════════ -->
+<section class="stats-strip stats-section" aria-label="Key statistics">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item" data-reveal="up">
+        <div class="stat-value"><span data-counter="12500" data-suffix="+">0</span></div>
+        <div class="stat-label-text">Students Transported Daily</div>
+      </div>
+      <div class="stat-item" data-reveal="up">
+        <div class="stat-value"><span data-counter="47">0</span></div>
+        <div class="stat-label-text">Active Routes</div>
+      </div>
+      <div class="stat-item" data-reveal="up">
+        <div class="stat-value"><span data-counter="98" data-suffix="%">0</span></div>
+        <div class="stat-label-text">On-Time Arrival Rate</div>
+      </div>
+      <div class="stat-item" data-reveal="up">
+        <div class="stat-value"><span data-counter="2400000" data-suffix="+">0</span></div>
+        <div class="stat-label-text">Safe Trips Completed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 3: SERVICES PREVIEW ════════════════════════════════ -->
+<section class="section" aria-labelledby="services-heading">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">What We Offer</span>
+      <h2 class="section-title" id="services-heading">Comprehensive Transport Solutions for Modern Families</h2>
+      <p class="section-subtitle">From GPS-powered live tracking to verified drivers and flexible plans — everything your family needs, built into one platform.</p>
+    </div>
+
+    <div class="services-grid" data-stagger>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-map-pin"></i></div>
+        <h3 class="card-title">Live GPS Tracking</h3>
+        <p class="card-desc">Watch your child's bus move in real-time on an interactive map. Accurate to within 10 meters, updated every 5 seconds.</p>
+        
+      </div>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-shield-check"></i></div>
+        <h3 class="card-title">Verified Drivers</h3>
+        <p class="card-desc">Every driver undergoes criminal background checks, medical fitness tests, CDL verification, and annual retraining programs.</p>
+        
+      </div>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-bell-ringing"></i></div>
+        <h3 class="card-title">Smart Notifications</h3>
+        <p class="card-desc">Receive push alerts when your child boards, when the bus is 5 minutes away, and when they safely arrive at school.</p>
+        
+      </div>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-path"></i></div>
+        <h3 class="card-title">Optimized Routes</h3>
+        <p class="card-desc">AI-powered route planning minimizes travel time, reduces fuel consumption, and ensures the safest path for every student.</p>
+        
+      </div>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-camera"></i></div>
+        <h3 class="card-title">360° CCTV Monitoring</h3>
+        <p class="card-desc">HD cameras cover every angle inside and outside the bus. Footage is securely stored and accessible to authorized parents.</p>
+        
+      </div>
+      <div class="card icon-card hover-lift">
+        <div class="card-icon"><i class="ph ph-credit-card"></i></div>
+        <h3 class="card-title">Flexible Subscription Plans</h3>
+        <p class="card-desc">Monthly, termly, and annual plans tailored for single students, siblings, and schools. Online payment with downloadable receipts.</p>
+        
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:var(--space-10)" data-reveal="up">
+      <a href="services.html" class="btn btn-teal btn-lg">View All Services <i class="ph ph-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 4: WHY CHOOSE US ════════════════════════════════ -->
+<section class="section section-muted" aria-labelledby="why-heading">
+  <div class="container">
+    <div class="why-us">
+      <div class="why-us-image" data-reveal="left">
+        <img src="https://plus.unsplash.com/premium_photo-1783219367950-4d0bb34c6915?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjY4fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="Children safely boarding school bus with driver" loading="lazy" />
+        <div class="why-us-badge">
+          <div style="font-size:2rem"><i class="ph ph-trophy"></i></div>
+          <div>
+            <div style="color:#fff;font-weight:700;font-size:var(--text-sm)">Award Winning Service</div>
+            <div style="color:var(--cyan);font-size:var(--text-xs)">Best School Transport 2025 · National Safety Board</div>
+          </div>
+        </div>
+      </div>
+
+      <div data-reveal="right">
+        <span class="section-label">Why SafeRide</span>
+        <h2 class="section-title" id="why-heading">Built on a Foundation of Trust & Technology</h2>
+        <p class="section-subtitle" style="margin-bottom:var(--space-8)">We combine 15 years of student transport experience with cutting-edge GPS and AI technology to deliver the safest, most transparent school bus service available.</p>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-lock-key"></i></div>
+            <div class="feature-text">
+              <h4>Industry-Leading Safety Standards</h4>
+              <p>Our fleet exceeds all DOT safety requirements, with monthly inspections, emergency drills, and seatbelt mandates on every bus.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-device-mobile-camera"></i></div>
+            <div class="feature-text">
+              <h4>Real-Time Parent App</h4>
+              <p>Our mobile dashboard gives parents full visibility with live tracking, stop notifications, boarding confirmation, and one-tap emergency support.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-headset"></i></div>
+            <div class="feature-text">
+              <h4>24/7 Emergency Support Line</h4>
+              <p>Our dedicated transport coordinators are available around the clock to assist parents, schools, and drivers with any situation.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="ph ph-leaf"></i></div>
+            <div class="feature-text">
+              <h4>Eco-Friendly Fleet Transition</h4>
+              <p>30% of our fleet now runs on electric power. We're committed to zero-emission school transport by 2030.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--space-8);display:flex;gap:var(--space-4);flex-wrap:wrap;">
+          <a href="about.html" class="btn btn-primary btn-lg">About Our Mission</a>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 5: TRACKING SHOWCASE ════════════════════════════════ -->
+<section class="section tracking-showcase" aria-labelledby="tracking-heading">
+  <div class="container">
+    <div class="tracking-grid">
+      <div data-reveal="left">
+        <span class="section-label" style="color:var(--cyan)">Live Technology</span>
+        <h2 class="section-title" id="tracking-heading" style="color:#fff">Real-Time GPS Tracking. Total Parent Peace of Mind.</h2>
+        <p class="section-subtitle" style="color:rgba(255,255,255,0.7);margin-bottom:var(--space-6)">Our military-grade GPS system updates every 5 seconds. See exactly where your child's bus is, how fast it's going, and when it will arrive.</p>
+
+        <div class="tracking-features">
+          <div class="tracking-feat" data-reveal="up">
+            <div class="icon"><i class="ph ph-wifi-high"></i></div>
+            <h4>5-Second Updates</h4>
+            <p>GPS refreshes 12× per minute for pinpoint accuracy</p>
+          </div>
+          <div class="tracking-feat" data-reveal="up">
+            <div class="icon"><i class="ph ph-bell"></i></div>
+            <h4>Stop Alerts</h4>
+            <p>Notification 5 min before bus reaches your stop</p>
+          </div>
+          <div class="tracking-feat" data-reveal="up">
+            <div class="icon"><i class="ph ph-check-circle"></i></div>
+            <h4>Boarding Confirm</h4>
+            <p>ID card scan confirms your child is on board</p>
+          </div>
+          <div class="tracking-feat" data-reveal="up">
+            <div class="icon"><i class="ph ph-chart-bar"></i></div>
+            <h4>Journey History</h4>
+            <p>Full trip history and boarding logs accessible anytime</p>
+          </div>
+        </div>
+
+        <div style="margin-top:var(--space-8)">
+          <a href="parent-dashboard.html" class="btn btn-gold btn-lg shine">
+            <i class="ph ph-map-pin"></i> Open Live Tracker
+          </a>
+        </div>
+      </div>
+
+      <div class="tracking-image" data-reveal="right">
+        <img src="https://images.unsplash.com/photo-1662377088324-43d7eb696dc6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjg5fHxzY2hvb2wlMjBidXN8ZW58MHx8MHx8fDA%3D" alt="GPS tracking dashboard showing live bus routes" loading="lazy" />
+        <div style="position:absolute;top:var(--space-4);left:var(--space-4);background:rgba(18,60,67,0.9);backdrop-filter:blur(12px);border:1px solid rgba(85,214,190,0.3);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-2);">
+          <span class="status-dot status-transit"></span>
+          <span style="color:#fff;font-size:var(--text-xs);font-weight:600;">Bus #24 — En Route · 32 km/h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ SECTION 6: TESTIMONIALS ════════════════════════════════ -->
+<section class="section" aria-labelledby="testimonials-heading">
+  <div class="container">
+    <div class="section-header centered" data-reveal="up">
+      <span class="section-label">Parent Stories</span>
+      <h2 class="section-title" id="testimonials-heading">What Families Say About SafeRide</h2>
+      <p class="section-subtitle">Thousands of parents trust us every day. Here's what they have to say about the SafeRide experience.</p>
+    </div>
+
+    <div class="testimonial-slider">
+      <div class="testimonial-track">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i>
+          </div>
+          <p class="testimonial-text">"I used to worry every morning until I got the 'Emma boarded' notification. SafeRide completely changed my mornings. I can finally have my coffee in peace!"</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sarah Mitchell</div>
+              <div class="testimonial-role">Parent · Oakwood District · 2 years</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i>
+          </div>
+          <p class="testimonial-text">"The driver verification process gave me incredible confidence. Knowing Michael goes through background checks, training, and regular reviews is reassuring as a father."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">J</div>
+            <div>
+              <div class="testimonial-name">James Patel</div>
+              <div class="testimonial-role">Parent · Riverside Heights · 3 years</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i>
+          </div>
+          <p class="testimonial-text">"Three kids, three different schools, three different routes — all managed in one app. The family plan is incredible value. SafeRide saved us both money and stress."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Amanda Rodriguez</div>
+              <div class="testimonial-role">Parent · North Suburbs · 4 years</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            <i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i><i class="ph ph-star-fill star"></i>
+          </div>
+          <p class="testimonial-text">"When there was a school delay last winter, I got a notification before the school even called me. The proactive communication is what sets SafeRide apart from every other service."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">M</div>
+            <div>
+              <div class="testimonial-name">Michael Torres</div>
+              <div class="testimonial-role">Parent · East District · 1 year</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ts-controls">
+        <button class="ts-btn ts-prev" aria-label="Previous testimonial"><i class="ph ph-caret-left"></i></button>
+        <div class="ts-dots" role="tablist">
+          <button class="ts-dot active" role="tab"></button>
+          <button class="ts-dot" role="tab"></button>
+        </div>
+        <button class="ts-btn ts-next" aria-label="Next testimonial"><i class="ph ph-caret-right"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ CTA SECTION ════════════════════════════════ -->
+<section class="section-sm cta-section" aria-label="Call to action">
+  <div class="container">
+    <div class="cta-inner">
+      <div>
+        <h2 style="font-family:var(--font-display);font-size:var(--text-3xl);color:#fff;margin-bottom:var(--space-2)">Ready to Give Your Child the Safest Ride?</h2>
+        <p style="color:rgba(255,255,255,0.8);font-size:var(--text-lg)">Join 12,000+ families who trust SafeRide Schools every single day.</p>
+      </div>
+      <div style="display:flex;gap:var(--space-4);flex-shrink:0;flex-wrap:wrap;">
+        <a href="parent-dashboard.html" class="btn btn-gold btn-xl shine"><i class="ph ph-map-pin"></i> Live GPS Demo</a>
+        <a href="contact.html" class="btn btn-secondary btn-xl"><i class="ph ph-chat-circle"></i> Talk to Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
+          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-text">SafeRide <span>Schools</span></div>
+        </a>
+        <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="index.html" class="footer-link"><i class="ph ph-caret-right"></i> Home</a></li>
+          <li><a href="home2.html" class="footer-link"><i class="ph ph-caret-right"></i> Home 2</a></li>
+          <li><a href="about.html" class="footer-link"><i class="ph ph-caret-right"></i> About Us</a></li>
+          <li><a href="services.html" class="footer-link"><i class="ph ph-caret-right"></i> Services</a></li>
+          <li><a href="blog.html" class="footer-link"><i class="ph ph-caret-right"></i> Blog &amp; News</a></li>
+          <li><a href="contact.html" class="footer-link"><i class="ph ph-caret-right"></i> Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal &amp; Support</h4>
+        <ul class="footer-links">
+          <li><a href="privacy-policy.html" class="footer-link"><i class="ph ph-caret-right"></i> Privacy Policy</a></li>
+          <li><a href="terms-conditions.html" class="footer-link"><i class="ph ph-caret-right"></i> Terms &amp; Conditions</a></li>
+          <li><a href="sitemap.html" class="footer-link"><i class="ph ph-caret-right"></i> Sitemap</a></li>
+          <li><a href="parent-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Parent Dashboard</a></li>
+          <li><a href="admin-dashboard.html" class="footer-link"><i class="ph ph-caret-right"></i> Admin Console</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>24/7 Contact</h4>
+        <div class="footer-contact-item">
+          <i class="ph ph-map-pin icon"></i>
+          <span>1234 Transport Way, Suite 500<br>Springfield, IL 62701</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="ph ph-phone icon"></i>
+          <span>+1 (800) SAFERIDE</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="ph ph-envelope icon"></i>
+          <span>hello@saferideschools.com</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="ph ph-warning-circle icon"></i>
+          <span style="color:var(--cyan);font-weight:600">Emergency: 1-800-911-RIDE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 SafeRide Schools Inc. All rights reserved. Committed to safe student transport.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-conditions.html">Terms &amp; Conditions</a>
+        <a href="sitemap.html">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/forms.js"></script>
+</body>
+</html>

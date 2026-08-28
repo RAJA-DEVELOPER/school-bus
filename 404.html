@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" dir="ltr">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found · SafeRide Schools</title>
+  <meta name="description" content="The page you're looking for doesn't exist. Navigate back to SafeRide Schools' home or use the links below." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" /><link rel="stylesheet" href="assets/css/components.css" /><link rel="stylesheet" href="assets/css/layout.css" /><link rel="stylesheet" href="assets/css/animations.css" /><link rel="stylesheet" href="assets/css/dark-mode.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <style>
+    body { min-height:100vh; display:flex; flex-direction:column; background:linear-gradient(145deg,var(--teal-dark) 0%,var(--teal) 60%,#1a6b56 100%); }
+    .error-page { flex:1; display:flex; align-items:center; justify-content:center; padding:var(--space-10); text-align:center; position:relative; overflow-x:hidden; }
+    @media(max-width:768px){
+      .error-actions .btn{width:100%; justify-content:center;}
+      .search-row{flex-direction:column;}
+      .search-row .btn{width:100%; justify-content:center;}
+    }
+    @media(max-width:480px){
+      .error-page{padding:var(--space-6);}
+      .error-title{font-size:var(--text-2xl);}
+      .error-code{font-size:3.5rem;}
+      .error-desc{font-size:var(--text-base); margin-bottom:var(--space-6);}
+    }
+    @media(max-width:360px){
+      .error-page{padding:var(--space-4);}
+      .error-links{gap:var(--space-3);}
+      .error-link{font-size:var(--text-xs);}
+    }
+    @media(max-width:320px){
+      .error-page{padding:12px;}
+      .error-title{font-size:1.35rem;}
+      .error-code{font-size:2.8rem;}
+    }
+  </style>
+</head>
+<body>
+<div id="page-loader"><div class="loader-logo">Safe<span>Ride</span> Schools</div><div class="loader-bar"></div></div>
+
+<main class="error-page" aria-label="404 error page">
+  <div class="error-inner" data-reveal="up">
+    <span class="error-bus" role="img" aria-label="Bus illustration"><i class="ph ph-bus"></i></span>
+    <div class="error-code">404</div>
+    <h1 class="error-title">Looks Like This Bus Route Doesn't Exist</h1>
+    <p class="error-desc">The page you're looking for has moved, been removed, or never existed. Let us get you back on the right route.</p>
+
+    <!-- Search -->
+    <div class="search-row">
+      <input class="form-control" id="error-search" placeholder="Search SafeRide…" type="search" />
+      <button class="btn btn-gold" onclick="window.location.href='index.html'"><i class="ph ph-magnifying-glass"></i></button>
+    </div>
+
+    <div class="error-actions">
+      <a href="index.html" class="btn btn-gold btn-lg shine"><i class="ph ph-house"></i> Back to Home</a>
+      <a href="contact.html" class="btn btn-secondary btn-lg"><i class="ph ph-headset"></i> Get Help</a>
+      <a href="parent-dashboard.html" class="btn btn-secondary btn-lg"><i class="ph ph-map-pin"></i> Dashboard</a>
+    </div>
+
+    <div class="error-links">
+      <a href="services.html" class="error-link">Services</a>
+      <a href="about.html" class="error-link">About</a>
+      <a href="blog.html" class="error-link">Blog</a>
+      <a href="contact.html" class="error-link">Contact</a>
+      <a href="sitemap.html" class="error-link">Sitemap</a>
+    </div>
+  </div>
+</main>
+
+<!-- Auto-redirect countdown -->
+<script>
+  let count = 15;
+  const cd = document.createElement('div');
+  cd.style.cssText = 'position:fixed;bottom:24px;right:24px;background:rgba(18,60,67,0.9);border:1px solid rgba(85,214,190,0.3);color:rgba(255,255,255,0.75);font-size:0.75rem;padding:10px 16px;border-radius:12px;backdrop-filter:blur(10px);z-index:1000';
+  cd.innerHTML = 'Redirecting to home in <strong id="cd-num">15</strong>s…';
+  document.body.appendChild(cd);
+  const interval = setInterval(() => {
+    count--;
+    const el = document.getElementById('cd-num');
+    if(el) el.textContent = count;
+    if(count <= 0){ clearInterval(interval); window.location.href = 'index.html'; }
+  }, 1000);
+  // Cancel redirect on user interaction
+  ['click','keydown','touchstart'].forEach(evt =>
+    document.addEventListener(evt, () => { clearInterval(interval); cd.remove(); }, { once:true })
+  );
+</script>
+<script src="assets/js/main.js"></script><script src="assets/js/animations.js"></script>
+</body></html>
