@@ -70,6 +70,38 @@
     /* ── SERVICES PREVIEW ── */
     .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-6); }
 
+    /* ── WHAT WE OFFER: FLEET + SERVICE CARDS WITH IMAGES ── */
+    .offer-subhead { display:flex; align-items:center; gap:var(--space-4); margin:var(--space-10) 0 var(--space-6); }
+    .offer-subhead:first-of-type { margin-top:var(--space-8); }
+    .offer-subhead h3 { font-family:var(--font-body); font-size:var(--text-xl); font-weight:800; color:var(--color-text); white-space:nowrap; }
+    .offer-subhead .rule { flex:1; height:1px; background:var(--color-border); }
+    .offer-subhead .count-pill { flex-shrink:0; font-size:var(--text-xs); font-weight:700; color:var(--teal); background:rgba(22,138,114,0.1); border:1px solid rgba(22,138,114,0.25); padding:4px 14px; border-radius:var(--radius-full); white-space:nowrap; }
+    .fleet-offer-grid, .service-offer-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-6); }
+    .offer-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); overflow:hidden; display:flex; flex-direction:column; transition:transform var(--trans-base), box-shadow var(--trans-base), border-color var(--trans-base); }
+    .offer-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-xl); border-color:rgba(85,214,190,0.35); }
+    .offer-card-img { height:190px; position:relative; overflow:hidden; flex-shrink:0; background:var(--color-surface-2); }
+    .service-offer-grid .offer-card-img { height:150px; }
+    .offer-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s ease; }
+    .offer-card:hover .offer-card-img img { transform:scale(1.06); }
+    .offer-count { position:absolute; top:12px; left:12px; background:rgba(11,38,43,0.85); backdrop-filter:blur(8px); border:1px solid rgba(214,179,106,0.45); color:#fff; font-size:var(--text-xs); font-weight:700; padding:4px 12px; border-radius:var(--radius-full); }
+    .offer-icon { position:absolute; left:20px; bottom:-22px; width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); color:#fff; font-size:1.2rem; display:flex; align-items:center; justify-content:center; border:3px solid var(--color-surface); box-shadow:var(--shadow-md); }
+    .offer-body { padding:var(--space-6); padding-top:calc(var(--space-6) + 14px); flex:1; display:flex; flex-direction:column; }
+    .offer-title { font-family:var(--font-body); font-size:var(--text-md); font-weight:800; color:var(--color-text); margin-bottom:var(--space-2); }
+    .offer-desc { font-size:var(--text-sm); color:var(--color-text-muted); line-height:1.7; }
+    .offer-specs { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-2); margin-top:auto; padding-top:var(--space-4); }
+    .offer-spec { background:var(--color-surface-2); border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); text-align:center; }
+    .offer-spec-val { font-weight:800; font-size:var(--text-base); color:var(--teal); }
+    [data-theme="dark"] .offer-spec-val { color:var(--cyan); }
+    .offer-spec-key { font-size:var(--text-xs); color:var(--color-text-muted); }
+    .offer-timing { display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-3); padding-top:var(--space-3); border-top:1px solid var(--color-border); font-size:var(--text-xs); font-weight:600; color:var(--color-text-muted); }
+    .offer-timing i { color:var(--emerald); font-size:0.95rem; flex-shrink:0; }
+    /* Daily schedule strip */
+    .schedule-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-3); margin-top:var(--space-6); }
+    .schedule-item { background:var(--color-surface-2); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:var(--space-4); text-align:center; }
+    .schedule-time { font-weight:800; font-size:var(--text-base); color:var(--teal); }
+    [data-theme="dark"] .schedule-time { color:var(--cyan); }
+    .schedule-label { font-size:var(--text-xs); color:var(--color-text-muted); margin-top:2px; }
+
     /* ── WHY US SPLIT ── */
     .why-us { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-16); align-items:center; }
     .why-us-image { position:relative; border-radius:var(--radius-2xl); overflow:hidden; }
@@ -115,6 +147,8 @@
     @media(max-width:1024px) {
       .stats-grid { grid-template-columns:repeat(2,1fr); }
       .services-grid { grid-template-columns:repeat(2,1fr); }
+      .fleet-offer-grid, .service-offer-grid { grid-template-columns:repeat(2,1fr); }
+      .schedule-strip { grid-template-columns:repeat(2,1fr); }
       .why-us, .tracking-grid { grid-template-columns:1fr; }
       .testimonial-track .testimonial-card { min-width:calc(50% - var(--space-3)); flex:0 0 calc(50% - var(--space-3)); }
     }
@@ -122,6 +156,8 @@
       .hero-title { font-size:var(--text-3xl); }
       .stats-grid { grid-template-columns:repeat(2,1fr); }
       .services-grid { grid-template-columns:1fr; }
+      .fleet-offer-grid, .service-offer-grid { grid-template-columns:1fr; }
+      .offer-subhead h3 { white-space:normal; }
       .tracking-features { grid-template-columns:1fr; }
       .testimonial-track .testimonial-card { min-width:100%; flex:0 0 100%; }
       .cta-inner { flex-direction:column; text-align:center; }
@@ -138,6 +174,9 @@
       .hero-trust-item { font-size:var(--text-xs); }
       .stats-grid { grid-template-columns:1fr; }
       .stat-item { padding:var(--space-5); }
+      .offer-card-img { height:170px; }
+      .service-offer-grid .offer-card-img { height:140px; }
+      .offer-body { padding:var(--space-5); padding-top:calc(var(--space-5) + 14px); }
       .why-us-badge { position:static; margin-top:var(--space-4); border-radius:var(--radius-lg); }
       .why-us-image img { height:260px; }
       .tracking-image img { height:240px; }
@@ -151,6 +190,9 @@
       .slider-progress { width:50px; }
       .why-us-image img { height:220px; }
       .tracking-image img { height:210px; }
+      .offer-card-img { height:160px; }
+      .service-offer-grid .offer-card-img { height:130px; }
+      .offer-specs { grid-template-columns:1fr 1fr; }
       .ts-btn { width:36px; height:36px; }
     }
     @media(max-width:320px) {
@@ -160,6 +202,10 @@
       .why-us-image img { height:180px; }
       .tracking-image img { height:180px; }
       .stat-item { padding:var(--space-4); }
+      .offer-card-img { height:140px; }
+      .service-offer-grid .offer-card-img { height:120px; }
+      .schedule-strip { grid-template-columns:1fr; }
+      .offer-body { padding:var(--space-4); padding-top:calc(var(--space-4) + 14px); }
     }
   </style>
 </head>
@@ -189,7 +235,7 @@
 <header class="navbar transparent" role="banner">
   <div class="navbar-inner">
     <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
-      <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+      <div class="nav-logo-icon"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 3.5 40.2 9.7v13.9c0 9.3-6.7 15.9-16.2 20.4C14.5 39.5 7.8 32.9 7.8 23.6V9.7L24 3.5Z" fill="none" stroke="#fff" stroke-width="2.8" stroke-linejoin="round"/><rect x="15" y="16.5" width="18" height="13" rx="3.2" fill="#fff"/><rect x="17.6" y="19" width="12.8" height="5.4" rx="1.4" fill="#0B262B"/><rect x="23.3" y="19" width="1.4" height="5.4" fill="#fff"/><rect x="15" y="25.7" width="18" height="2.1" fill="#D6B36A"/><circle cx="19.3" cy="28.1" r="1.2" fill="#0B262B"/><circle cx="28.7" cy="28.1" r="1.2" fill="#0B262B"/><path d="M19.6 29.5v2.8M28.4 29.5v2.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
       <div class="nav-logo-text">SafeRide <span>Schools</span></div>
     </a>
 
@@ -255,6 +301,7 @@
           <a href="parent-dashboard.html" class="btn btn-primary btn-lg shine">
             <i class="ph ph-map-pin"></i> Track Bus Live
           </a>
+          <a href="services.html" class="btn btn-secondary btn-lg">Explore Services</a>
 
         </div>
         <div class="hero-trust">
@@ -299,6 +346,7 @@
         <p class="hero-subtitle">The SafeRide parent portal gives you real-time visibility into your child's journey — boarding, location, ETA, and safe arrival confirmations.</p>
         <div class="hero-actions">
           <a href="login.html" class="btn btn-primary btn-lg shine">Access Dashboard</a>
+          <a href="services.html" class="btn btn-secondary btn-lg">Explore Services</a>
           
         </div>
         <div class="hero-trust">
@@ -352,51 +400,157 @@
   <div class="container">
     <div class="section-header centered" data-reveal="up">
       <span class="section-label">What We Offer</span>
-      <h2 class="section-title" id="services-heading">Comprehensive Transport Solutions for Modern Families</h2>
-      <p class="section-subtitle">From GPS-powered live tracking to verified drivers and flexible plans — everything your family needs, built into one platform.</p>
+      <h2 class="section-title" id="services-heading">Buses, Routes & Services for Modern Families</h2>
+      <p class="section-subtitle">A 50-bus fleet across 47 daily routes — three bus types running morning pickups from 6:45 AM and afternoon returns from 3:45 PM, backed by six safety-first transport services.</p>
     </div>
 
-    <div class="services-grid" data-stagger>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-map-pin"></i></div>
-        <h3 class="card-title">Live GPS Tracking</h3>
-        <p class="card-desc">Watch your child's bus move in real-time on an interactive map. Accurate to within 10 meters, updated every 5 seconds.</p>
-        
+    <div class="offer-subhead" data-reveal="up">
+      <h3>Our School Bus Fleet</h3>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="count-pill">50 buses · 47 active daily</span>
+    </div>
+
+    <div class="fleet-offer-grid" data-stagger>
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/hero-bus-main.jpg" alt="Standard SafeRide school bus on its morning route" loading="lazy" />
+          <span class="offer-count">27 buses</span>
+          <span class="offer-icon"><i class="ph ph-bus"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Standard Route Bus</h3>
+          <p class="offer-desc">The backbone of our network — dependable daily transport with full GPS tracking, CCTV coverage, and 3-point seatbelts on every seat.</p>
+          <div class="offer-specs">
+            <div class="offer-spec"><div class="offer-spec-val">35</div><div class="offer-spec-key">Seats per bus</div></div>
+            <div class="offer-spec"><div class="offer-spec-val">27</div><div class="offer-spec-key">Buses in fleet</div></div>
+          </div>
+          <div class="offer-timing"><i class="ph ph-clock"></i> Morning 6:45–7:35 AM · Afternoon 3:45–4:15 PM</div>
+        </div>
       </div>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-shield-check"></i></div>
-        <h3 class="card-title">Verified Drivers</h3>
-        <p class="card-desc">Every driver undergoes criminal background checks, medical fitness tests, CDL verification, and annual retraining programs.</p>
-        
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/bus-interior.jpg" alt="Comfortable interior of a Premium SafeRide bus" loading="lazy" />
+          <span class="offer-count">8 buses</span>
+          <span class="offer-icon"><i class="ph ph-snowflake"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Premium Comfort Bus</h3>
+          <p class="offer-desc">Extra comfort for longer routes — padded seats, air conditioning, and onboard WiFi keep students relaxed and connected.</p>
+          <div class="offer-specs">
+            <div class="offer-spec"><div class="offer-spec-val">28</div><div class="offer-spec-key">Seats per bus</div></div>
+            <div class="offer-spec"><div class="offer-spec-val">8</div><div class="offer-spec-key">Buses in fleet</div></div>
+          </div>
+          <div class="offer-timing"><i class="ph ph-clock"></i> Morning 6:45–7:35 AM · Afternoon 3:45–4:15 PM</div>
+        </div>
       </div>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-bell-ringing"></i></div>
-        <h3 class="card-title">Smart Notifications</h3>
-        <p class="card-desc">Receive push alerts when your child boards, when the bus is 5 minutes away, and when they safely arrive at school.</p>
-        
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/children-boarding.jpg" alt="Students boarding an electric SafeRide bus" loading="lazy" />
+          <span class="offer-count">15 buses</span>
+          <span class="offer-icon"><i class="ph ph-lightning"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Electric Zero-Emission Bus</h3>
+          <p class="offer-desc">Silent, zero-emission buses serving 12 pilot routes — 250-mile range per charge with the same full safety technology.</p>
+          <div class="offer-specs">
+            <div class="offer-spec"><div class="offer-spec-val">32</div><div class="offer-spec-key">Seats per bus</div></div>
+            <div class="offer-spec"><div class="offer-spec-val">250mi</div><div class="offer-spec-key">Range per charge</div></div>
+          </div>
+          <div class="offer-timing"><i class="ph ph-leaf"></i> 12 pilot routes · Zero emissions</div>
+        </div>
       </div>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-path"></i></div>
-        <h3 class="card-title">Optimized Routes</h3>
-        <p class="card-desc">AI-powered route planning minimizes travel time, reduces fuel consumption, and ensures the safest path for every student.</p>
-        
+    </div>
+
+    <div class="schedule-strip" data-reveal="up">
+      <div class="schedule-item"><div class="schedule-time">6:45 – 7:35 AM</div><div class="schedule-label">Morning pickup window</div></div>
+      <div class="schedule-item"><div class="schedule-time">7:35 AM</div><div class="schedule-label">School arrival bell</div></div>
+      <div class="schedule-item"><div class="schedule-time">3:45 PM</div><div class="schedule-label">Afternoon pickup</div></div>
+      <div class="schedule-item"><div class="schedule-time">~4:12 PM</div><div class="schedule-label">Est. home drop-off</div></div>
+    </div>
+
+    <div class="offer-subhead" data-reveal="up">
+      <h3>Student Transport Services</h3>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="count-pill">6 core services</span>
+    </div>
+
+    <div class="service-offer-grid" data-stagger>
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/gps-tracking.jpg" alt="Live GPS tracking of a SafeRide bus" loading="lazy" />
+          <span class="offer-count">47 routes</span>
+          <span class="offer-icon"><i class="ph ph-map-pin"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Live GPS Tracking</h3>
+          <p class="offer-desc">Watch your child's bus move in real-time on an interactive map. Accurate to within 10 meters, updated every 5 seconds.</p>
+          <div class="offer-timing"><i class="ph ph-wifi-high"></i> 5-second updates · 10 m accuracy</div>
+        </div>
       </div>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-camera"></i></div>
-        <h3 class="card-title">360° CCTV Monitoring</h3>
-        <p class="card-desc">HD cameras cover every angle inside and outside the bus. Footage is securely stored and accessible to authorized parents.</p>
-        
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/driver-portrait.jpg" alt="Verified SafeRide school bus driver" loading="lazy" />
+          <span class="offer-count">120 drivers</span>
+          <span class="offer-icon"><i class="ph ph-shield-check"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Verified Drivers</h3>
+          <p class="offer-desc">Every driver undergoes criminal background checks, medical fitness tests, CDL verification, and annual retraining programs.</p>
+          <div class="offer-timing"><i class="ph ph-identification-card"></i> 7-stage verification · CDL licensed</div>
+        </div>
       </div>
-      <div class="card icon-card hover-lift">
-        <div class="card-icon"><i class="ph ph-credit-card"></i></div>
-        <h3 class="card-title">Flexible Subscription Plans</h3>
-        <p class="card-desc">Monthly, termly, and annual plans tailored for single students, siblings, and schools. Online payment with downloadable receipts.</p>
-        
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/parent-mobile-tracking.jpg" alt="Parent receiving SafeRide notifications on a phone" loading="lazy" />
+          <span class="offer-count">Instant alerts</span>
+          <span class="offer-icon"><i class="ph ph-bell-ringing"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Smart Notifications</h3>
+          <p class="offer-desc">Receive push alerts when your child boards, when the bus is 5 minutes away, and when they safely arrive at school.</p>
+          <div class="offer-timing"><i class="ph ph-bell"></i> Boarding · 5-min warning · Arrival</div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/hero-bus.jpg" alt="SafeRide bus on an optimized route" loading="lazy" />
+          <span class="offer-count">47 routes</span>
+          <span class="offer-icon"><i class="ph ph-path"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Optimized Routes</h3>
+          <p class="offer-desc">AI-powered route planning minimizes travel time, reduces fuel consumption, and ensures the safest path for every student.</p>
+          <div class="offer-timing"><i class="ph ph-route"></i> Re-optimized nightly for traffic & weather</div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/safety-tech.jpg" alt="CCTV safety monitoring inside a SafeRide bus" loading="lazy" />
+          <span class="offer-count">6–8 cameras</span>
+          <span class="offer-icon"><i class="ph ph-camera"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">360° CCTV Monitoring</h3>
+          <p class="offer-desc">HD cameras cover every angle inside and outside the bus. Footage is securely stored and accessible to authorized parents.</p>
+          <div class="offer-timing"><i class="ph ph-lock-key"></i> Encrypted · 30-day secure storage</div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-card-img">
+          <img src="assets/images/student-boarding-morning.jpg" alt="Student boarding a SafeRide bus in the morning" loading="lazy" />
+          <span class="offer-count">3 plans</span>
+          <span class="offer-icon"><i class="ph ph-credit-card"></i></span>
+        </div>
+        <div class="offer-body">
+          <h3 class="offer-title">Flexible Subscription Plans</h3>
+          <p class="offer-desc">Monthly, termly, and annual plans tailored for single students, siblings, and schools. Online payment with downloadable receipts.</p>
+          <div class="offer-timing"><i class="ph ph-wallet"></i> Monthly · Termly · Annual</div>
+        </div>
       </div>
     </div>
 
     <div style="text-align:center;margin-top:var(--space-10)" data-reveal="up">
-      <a href="services.html" class="btn btn-teal btn-lg">View All Services <i class="ph ph-arrow-right"></i></a>
+      <a href="services.html" class="btn btn-primary btn-lg">View All Services <i class="ph ph-arrow-right"></i></a>
     </div>
   </div>
 </section>
@@ -597,8 +751,8 @@
         <p style="color:rgba(255,255,255,0.8);font-size:var(--text-lg)">Join 12,000+ families who trust SafeRide Schools every single day.</p>
       </div>
       <div style="display:flex;gap:var(--space-4);flex-shrink:0;flex-wrap:wrap;">
-        <a href="parent-dashboard.html" class="btn btn-gold btn-xl shine"><i class="ph ph-map-pin"></i> Live GPS Demo</a>
-        <a href="contact.html" class="btn btn-secondary btn-xl"><i class="ph ph-chat-circle"></i> Talk to Us</a>
+        <a href="parent-dashboard.html" class="btn btn-gold btn-lg shine"><i class="ph ph-map-pin"></i> Live GPS Demo</a>
+        <a href="contact.html" class="btn btn-secondary btn-lg"><i class="ph ph-chat-circle"></i> Talk to Us</a>
       </div>
     </div>
   </div>
@@ -610,7 +764,7 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo" aria-label="SafeRide Schools Home">
-          <div class="nav-logo-icon"><i class="ph ph-bus"></i></div>
+          <div class="nav-logo-icon"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 3.5 40.2 9.7v13.9c0 9.3-6.7 15.9-16.2 20.4C14.5 39.5 7.8 32.9 7.8 23.6V9.7L24 3.5Z" fill="none" stroke="#fff" stroke-width="2.8" stroke-linejoin="round"/><rect x="15" y="16.5" width="18" height="13" rx="3.2" fill="#fff"/><rect x="17.6" y="19" width="12.8" height="5.4" rx="1.4" fill="#0B262B"/><rect x="23.3" y="19" width="1.4" height="5.4" fill="#fff"/><rect x="15" y="25.7" width="18" height="2.1" fill="#D6B36A"/><circle cx="19.3" cy="28.1" r="1.2" fill="#0B262B"/><circle cx="28.7" cy="28.1" r="1.2" fill="#0B262B"/><path d="M19.6 29.5v2.8M28.4 29.5v2.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
           <div class="nav-logo-text">SafeRide <span>Schools</span></div>
         </a>
         <p class="footer-desc">Powering safe, smart school transport for modern families. GPS-tracked, driver-verified, and parent-empowered.</p>

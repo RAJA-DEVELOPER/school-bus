@@ -14,12 +14,14 @@
   <style>
     /* ── Dashboard Layout ── */
     body { overflow-x:hidden; }
+    .dashboard-wrapper { padding-top:0; }
     .dash-topbar { position:fixed; top:0; left:260px; right:0; height:64px; background:var(--color-surface); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 var(--space-8); z-index:var(--z-raised); box-shadow:var(--shadow-sm); transition:left var(--trans-slow); }
     .dash-topbar.expanded { left:72px; }
     .dash-header-left { display:flex; align-items:center; gap:var(--space-4); }
     .dash-page-title { font-size:var(--text-lg); font-weight:700; color:var(--color-text); }
     .dash-header-right { display:flex; align-items:center; gap:var(--space-4); }
     .dash-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:var(--text-sm); cursor:pointer; }
+    .sidebar-brand { padding:var(--space-5) var(--space-5) var(--space-4); border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:var(--space-4); }
     /* ── Overview Cards ── */
     .overview-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-5); margin-bottom:var(--space-8); }
     .ov-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl); padding:var(--space-6); display:flex; align-items:flex-start; gap:var(--space-4); }
@@ -82,8 +84,13 @@
     .toggle-switch input:checked + .toggle-slider { background:var(--emerald); }
     .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
     /* ── Responsive ── */
+    @media(max-width:1279px){
+      .overview-grid { grid-template-columns:repeat(2,1fr); }
+    }
     @media(max-width:1024px){
-      .dashboard-sidebar { position:relative; transform:none; width:100%; min-height:auto; top:0; }
+      .dashboard-sidebar { position:relative; transform:none; width:100%; min-height:auto; top:0; align-items:center; }
+      .dashboard-sidebar .sidebar-brand { flex:0 0 100%; padding:0 0 var(--space-3); margin-bottom:var(--space-3); border-bottom:1px solid rgba(255,255,255,0.1); }
+      .dashboard-sidebar .sidebar-nav-item { white-space:nowrap; }
       .dashboard-main { margin-left:0; padding-top:var(--space-8); }
       .dash-topbar { position:static; left:0; right:0; flex-wrap:wrap; gap:var(--space-3); padding:0 var(--space-5); }
       .overview-grid { grid-template-columns:repeat(2,1fr); }
@@ -129,8 +136,8 @@
 
   <!-- ── SIDEBAR ── -->
   <aside class="dashboard-sidebar" role="navigation" aria-label="Dashboard navigation">
-    <div style="padding:var(--space-5) var(--space-5) var(--space-4);border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:var(--space-4);">
-      <a href="index.html" class="nav-logo"><div class="nav-logo-icon"><i class="ph ph-bus"></i></div><div class="nav-logo-text">SafeRide <span>Schools</span></div></a>
+    <div class="sidebar-brand">
+      <a href="index.html" class="nav-logo"><div class="nav-logo-icon"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 3.5 40.2 9.7v13.9c0 9.3-6.7 15.9-16.2 20.4C14.5 39.5 7.8 32.9 7.8 23.6V9.7L24 3.5Z" fill="none" stroke="#fff" stroke-width="2.8" stroke-linejoin="round"/><rect x="15" y="16.5" width="18" height="13" rx="3.2" fill="#fff"/><rect x="17.6" y="19" width="12.8" height="5.4" rx="1.4" fill="#0B262B"/><rect x="23.3" y="19" width="1.4" height="5.4" fill="#fff"/><rect x="15" y="25.7" width="18" height="2.1" fill="#D6B36A"/><circle cx="19.3" cy="28.1" r="1.2" fill="#0B262B"/><circle cx="28.7" cy="28.1" r="1.2" fill="#0B262B"/><path d="M19.6 29.5v2.8M28.4 29.5v2.8" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div><div class="nav-logo-text">SafeRide <span>Schools</span></div></a>
     </div>
 
     <div class="sidebar-section-label">Overview</div>
