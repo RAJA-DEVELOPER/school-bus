@@ -171,8 +171,9 @@
 .profile-dropdown { min-width: 220px; }
 .profile-dropdown .dropdown-link .icon { font-size: 1.1rem; }
 
-/* Keep profile dropdown anchored to the icon's right edge so it never overflows the viewport */
+/* Keep profile dropdown anchored to the icon's edge so it never overflows the viewport */
 .nav-item.profile-menu .nav-dropdown { left: auto; right: 0; transform: translateY(-8px); }
+[dir="rtl"] .nav-item.profile-menu .nav-dropdown { left: 0; right: auto; }
 .nav-item.profile-menu:hover .nav-dropdown,
 .nav-item.profile-menu.open .nav-dropdown { transform: translateY(0); }
 
@@ -192,6 +193,7 @@
   color: var(--color-accent-text);
   padding-left: var(--space-5);
 }
+[dir="rtl"] .dropdown-link:hover { padding-left: var(--space-4); padding-right: var(--space-5); }
 
 .dropdown-link .icon {
   width: 32px;
@@ -231,6 +233,10 @@
   background: rgba(255,255,255,0.2);
   transform: scale(1.05);
 }
+
+/* RTL toggle — text-only direction name */
+#rtl-toggle { width:auto; min-width:52px; padding:0 12px; gap:0; justify-content:center; }
+#rtl-toggle .rtl-label { font-size:0.7rem; font-weight:700; letter-spacing:0.04em; }
 
 /* Hamburger */
 .hamburger {
@@ -284,6 +290,10 @@
   display: flex;
   transform: translateX(0);
 }
+/* RTL: panel slides from the other side, links read right-aligned */
+[dir="rtl"] .nav-mobile { transform: translateX(-100%); }
+[dir="rtl"] .nav-mobile.open { transform: translateX(0); }
+[dir="rtl"] .nav-mobile .nav-link { text-align: right; }
 
 .nav-mobile .nav-link {
   font-size: var(--text-base);

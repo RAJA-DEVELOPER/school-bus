@@ -17,10 +17,20 @@
     .dashboard-wrapper { padding-top:0; }
     .dash-topbar { position:fixed; top:0; left:260px; right:0; height:64px; background:var(--color-surface); border-bottom:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; padding:0 var(--space-8); z-index:var(--z-raised); box-shadow:var(--shadow-sm); transition:left var(--trans-slow); }
     .dash-topbar.expanded { left:72px; }
+    /* RTL: topbar offset mirrors the sidebar side */
+    [dir="rtl"] .dash-topbar { left:0; right:260px; transition:right var(--trans-slow); }
+    [dir="rtl"] .dash-topbar.expanded { left:0; right:72px; }
     .dash-header-left { display:flex; align-items:center; gap:var(--space-4); }
     .dash-page-title { font-size:var(--text-lg); font-weight:700; color:var(--color-text); }
     .dash-header-right { display:flex; align-items:center; gap:var(--space-4); }
     .dash-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--emerald),var(--teal)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:var(--text-sm); cursor:pointer; }
+    /* ── Welcome note ── */
+    .dash-welcome { background:linear-gradient(135deg,var(--teal) 0%,var(--emerald) 100%); border-radius:var(--radius-xl); padding:var(--space-5) var(--space-6); color:#fff; display:flex; align-items:center; gap:var(--space-4); margin-top:var(--space-6); margin-bottom:var(--space-6); box-shadow:var(--shadow-md); flex-wrap:wrap; }
+    .dash-welcome-icon { width:48px; height:48px; border-radius:50%; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:var(--cyan); flex-shrink:0; }
+    .dash-welcome-body { flex:1; min-width:220px; }
+    .dash-welcome-title { font-size:var(--text-md); font-weight:800; color:#fff; margin-bottom:2px; }
+    .dash-welcome-sub { font-size:var(--text-sm); color:rgba(255,255,255,0.8); }
+    .dash-welcome .btn { flex-shrink:0; }
     .sidebar-brand { padding:var(--space-5) var(--space-5) var(--space-4); border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:var(--space-4); }
     /* ── Overview Cards ── */
     .overview-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-5); margin-bottom:var(--space-8); }
@@ -52,6 +62,8 @@
     .notif-card { display:flex; gap:var(--space-4); padding:var(--space-5); border:1px solid var(--color-border); border-radius:var(--radius-lg); background:var(--color-surface); margin-bottom:var(--space-3); cursor:pointer; transition:all var(--trans-fast); position:relative; }
     .notif-card.unread { border-left:3px solid var(--emerald); background:rgba(22,138,114,0.04); }
     .notif-card:hover { box-shadow:var(--shadow-md); transform:translateX(4px); }
+    [dir="rtl"] .notif-card.unread { border-left:none; border-right:3px solid var(--emerald); }
+    [dir="rtl"] .notif-card:hover { transform:translateX(-4px); }
     .notif-icon { width:44px; height:44px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
     .notif-title { font-weight:700; font-size:var(--text-sm); color:var(--color-text); }
     .notif-time  { font-size:var(--text-xs); color:var(--color-text-light); }
@@ -170,14 +182,23 @@
         <div style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);color:var(--color-text-muted);">
           <span class="status-dot status-active"></span> Bus #24 On Route
         </div>
-        <button id="theme-toggle" class="nav-toggle-btn" style="display:none;background:var(--color-surface-2);color:var(--color-text);" title="Dark Mode"><i class="ph ph-moon"></i></button>
-        <button id="rtl-toggle" class="nav-toggle-btn" style="display:none;background:var(--color-surface-2);color:var(--color-text);" title="RTL"><i class="ph ph-text-align-right"></i></button>
+        <button id="theme-toggle" class="nav-toggle-btn" style="background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);" aria-label="Toggle dark mode" title="Dark Mode"><i class="ph ph-moon"></i></button>
+        <button id="rtl-toggle" class="nav-toggle-btn" style="background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);" aria-label="Toggle RTL" title="Switch to RTL"><span class="rtl-label">LTR</span></button>
         <div class="dash-avatar" title="Emma Thompson's Parent Account">EP</div>
       </div>
     </div>
 
     <!-- ─── PANEL: OVERVIEW ─── -->
     <div id="panel-overview" class="dash-panel" style="padding-top:var(--space-6);">
+      <!-- Welcome note -->
+      <div class="dash-welcome" role="status" aria-live="polite">
+        <div class="dash-welcome-icon"><i class="ph ph-hand-waving"></i></div>
+        <div class="dash-welcome-body">
+          <div class="dash-welcome-title">Welcome back, Thompson family!</div>
+          <div class="dash-welcome-sub">Emma boarded Bus #24 safely at 7:18 AM · Arriving at Lincoln Middle School ~7:35 AM. Have a great day!</div>
+        </div>
+        <button class="btn btn-gold btn-sm" onclick="document.querySelector('[data-panel=panel-tracking]').click();return false"><i class="ph ph-map-pin"></i> Track Live</button>
+      </div>
       <div class="overview-grid" id="child-info-card">
         <div class="ov-card">
           <div class="ov-card-icon teal"><i class="ph ph-student"></i></div>

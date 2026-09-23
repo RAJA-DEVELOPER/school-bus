@@ -147,7 +147,9 @@ function applyDir(dir) {
   document.body.setAttribute('dir', dir);
   const btn = document.getElementById('rtl-toggle');
   if (btn) {
-    btn.innerHTML = dir === 'rtl' ? 'RTL' : 'LTR';
+    // Text-only toggle: just the direction name, no icon
+    btn.innerHTML = '<span class="rtl-label">' + (dir === 'rtl' ? 'RTL' : 'LTR') + '</span>';
+    btn.setAttribute('aria-label', dir === 'rtl' ? 'Switch to LTR' : 'Switch to RTL');
     btn.setAttribute('title', dir === 'rtl' ? 'Switch to LTR' : 'Switch to RTL');
   }
 }

@@ -44,6 +44,31 @@
       --trans:150ms ease;
     }
 
+    /* Light theme — toggled via #theme-toggle, persisted in localStorage */
+    [data-theme="light"] {
+      --bg:#F7FAF8;
+      --surface-1:#ffffff;
+      --surface-2:#f0f5f3;
+      --surface-3:#e2ecea;
+      --border:#d8e6e2;
+      --border-hover:rgba(20,128,107,0.45);
+      --text:#202629;
+      --text-muted:#36474c;
+      --text-light:#4a5d63;
+      --shadow-card:0 2px 16px rgba(18,60,67,0.08), 0 0 0 1px var(--border);
+    }
+
+    /* RTL: mirror fixed sidebar + content offset + active indicator */
+    [dir="rtl"] .sidebar { left:auto; right:0; border-right:none; border-left:1px solid var(--border); }
+    [dir="rtl"] .main-content { margin-left:0; margin-right:var(--sidebar-w); }
+    [dir="rtl"] .sidebar-link.active::before { left:auto; right:-12px; border-radius:4px 0 0 4px; }
+    [dir="rtl"] .topbar-search input { text-align:right; }
+    @media(max-width:1024px){
+      [dir="rtl"] .sidebar { transform:translateX(100%); }
+      [dir="rtl"] .sidebar.open { transform:translateX(0); }
+      [dir="rtl"] .main-content { margin-left:0; margin-right:0; }
+    }
+
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     html { scroll-behavior:smooth; }
     body { font-family:var(--font); background:var(--bg); color:var(--text); font-size:14px; line-height:1.6; overflow-x:hidden; }
@@ -116,6 +141,9 @@
     .topbar-search input::placeholder { color:var(--text-light); }
     .topbar-search i { color:var(--text-light); font-size:0.9rem; }
     .topbar-actions { display:flex; align-items:center; gap:8px; }
+    /* RTL toggle — text-only direction name */
+    #rtl-toggle { width:auto; min-width:52px; padding:0 12px; gap:0; justify-content:center; }
+    #rtl-toggle .rtl-label { font-size:0.68rem; font-weight:700; letter-spacing:0.04em; }
     .topbar-icon-btn { width:36px; height:36px; border-radius:var(--radius-md); background:var(--surface-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:1rem; transition:all var(--trans); position:relative; cursor:pointer; }
     .topbar-icon-btn:hover { background:var(--surface-3); color:var(--text); border-color:var(--border-hover); }
     .notif-dot { position:absolute; top:6px; right:6px; width:7px; height:7px; background:var(--red); border-radius:50%; border:2px solid var(--surface-1); }
@@ -295,6 +323,12 @@
     .page-title-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
     .page-title { font-family:var(--font-display); font-size:1.5rem; color:var(--text); }
     .page-subtitle { font-size:0.75rem; color:var(--text-muted); margin-top:2px; }
+
+    /* ════ WELCOME NOTE ════ */
+    .admin-welcome { background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 50%,var(--emerald) 100%); border:1px solid var(--border-hover); border-radius:var(--radius-xl); padding:16px 20px; color:#e8f4f1; display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap; }    .admin-welcome-icon { width:44px; height:44px; border-radius:50%; background:rgba(85,214,190,0.15); border:1px solid rgba(85,214,190,0.35); display:flex; align-items:center; justify-content:center; font-size:1.3rem; color:var(--cyan); flex-shrink:0; }
+    .admin-welcome-body { flex:1; min-width:220px; }
+    .admin-welcome-title { font-size:0.95rem; font-weight:800; color:#fff; margin-bottom:2px; }
+    .admin-welcome-sub { font-size:0.75rem; color:rgba(232,244,241,0.75); }
 
     /* ════ AVATAR STACK ════ */
     .avatar-stack { display:flex; }
@@ -479,6 +513,8 @@
       </div>
       <div class="topbar-actions">
         <button class="topbar-icon-btn" title="Refresh data" id="refresh-btn"><i class="ph ph-arrows-clockwise"></i></button>
+        <button class="topbar-icon-btn" id="theme-toggle" title="Dark Mode" aria-label="Toggle dark mode"><i class="ph ph-moon"></i></button>
+        <button class="topbar-icon-btn" id="rtl-toggle" title="Switch to RTL" aria-label="Toggle RTL"><span class="rtl-label">LTR</span></button>
         <button class="topbar-icon-btn" title="Notifications" data-panel-trigger="notifications">
           <i class="ph ph-bell"></i><span class="notif-dot"></span>
         </button>
@@ -501,6 +537,14 @@
            PANEL: DASHBOARD
       ══════════════════════════════════════ -->
       <div class="panel active panel-fade" id="panel-dashboard">
+        <div class="admin-welcome" role="status" aria-live="polite">
+          <div class="admin-welcome-icon"><i class="ph ph-hand-waving"></i></div>
+          <div class="admin-welcome-body">
+            <div class="admin-welcome-title">Welcome back, Alex!</div>
+            <div class="admin-welcome-sub">47 buses are live on morning routes · 3 alerts need your attention · Have a safe and productive day.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" data-panel-trigger="live"><i class="ph ph-map-pin"></i> View Live Map</button>
+        </div>
         <div class="page-title-bar">
           <div>
             <div class="page-title">Operations Dashboard</div>
@@ -1316,6 +1360,51 @@
     if(!document.fullscreenElement) document.documentElement.requestFullscreen();
     else document.exitFullscreen();
   });
+
+  /* ═══════ THEME TOGGLE (dark / light) ═══════ */
+  (function initAdminTheme() {
+    const btn = document.getElementById('theme-toggle');
+    const stored = localStorage.getItem('saferide-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = stored || document.documentElement.getAttribute('data-theme') || (prefersDark ? 'dark' : 'light');
+    applyAdminTheme(initial);
+    function applyAdminTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (btn) {
+        btn.innerHTML = theme === 'dark' ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
+        btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+        btn.setAttribute('title', theme === 'dark' ? 'Light Mode' : 'Dark Mode');
+      }
+    }
+    btn?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyAdminTheme(next);
+      localStorage.setItem('saferide-theme', next);
+    });
+  })();
+
+  /* ═══════ RTL TOGGLE ═══════ */
+  (function initAdminRTL() {
+    const btn = document.getElementById('rtl-toggle');
+    const stored = localStorage.getItem('saferide-dir') || document.documentElement.getAttribute('dir') || 'ltr';
+    applyAdminDir(stored);
+    function applyAdminDir(dir) {
+      document.documentElement.setAttribute('dir', dir);
+      if (document.body) document.body.setAttribute('dir', dir);
+      if (btn) {
+        btn.innerHTML = '<span class="rtl-label">' + (dir === 'rtl' ? 'RTL' : 'LTR') + '</span>';
+        btn.setAttribute('aria-label', dir === 'rtl' ? 'Switch to LTR' : 'Switch to RTL');
+        btn.setAttribute('title', dir === 'rtl' ? 'Switch to LTR' : 'Switch to RTL');
+      }
+    }
+    btn?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('dir') || 'ltr';
+      const next = current === 'rtl' ? 'ltr' : 'rtl';
+      applyAdminDir(next);
+      localStorage.setItem('saferide-dir', next);
+    });
+  })();
 
   /* ═══════ MARK NOTIFICATIONS READ ═══════ */
   document.getElementById('mark-all-read')?.addEventListener('click', function() {

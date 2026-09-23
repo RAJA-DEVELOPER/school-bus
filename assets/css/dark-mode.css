@@ -145,6 +145,13 @@
 /* Stat numbers stay teal brand color */
 [data-theme="dark"] .stat-number { color: var(--cyan); }
 
+/* Fleet spec numbers — var(--teal) (#123C43) is unreadable on dark surface */
+[data-theme="dark"] .fleet-spec-val { color: var(--cyan); }
+[data-theme="dark"] .fleet-card {
+  background: #1a2023;
+  border-color: #2a3a3e;
+}
+
 /* Section divider wave fill */
 [data-theme="dark"] .wave-fill-bg { fill: #111518; }
 [data-theme="dark"] .wave-fill-surface { fill: #1a2023; }

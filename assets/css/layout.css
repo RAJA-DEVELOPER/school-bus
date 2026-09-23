@@ -606,12 +606,14 @@ table { width: 100%; border-collapse: collapse; }
 .table-responsive table { min-width: 520px; }
 
 /* ── RTL Adjustments ─────────────────────────────────────────── */
-[dir="rtl"] .navbar { flex-direction: row-reverse; }
+/* NOTE: .navbar-inner is flex — it mirrors automatically with dir="rtl",
+   so do NOT add row-reverse here (it would double-flip the order back). */
 [dir="rtl"] .nav-logo-text span { text-align: right; }
 [dir="rtl"] .section-label::before { order: 1; }
 [dir="rtl"] .footer-link:hover { padding-left: 0; padding-right: var(--space-2); }
 [dir="rtl"] .dashboard-sidebar { left: auto; right: 0; }
 [dir="rtl"] .dashboard-main { margin-left: 0; margin-right: 260px; }
+[dir="rtl"] .dashboard-main.expanded { margin-left: 0; margin-right: 72px; }
 [dir="rtl"] .sidebar-nav-item { border-left: none; border-right: 3px solid transparent; }
 [dir="rtl"] .sidebar-nav-item:hover { border-left-color: transparent; border-right-color: rgba(85,214,190,0.5); }
 [dir="rtl"] .sidebar-nav-item.active { border-left-color: transparent; border-right-color: var(--cyan); }
@@ -619,4 +621,13 @@ table { width: 100%; border-collapse: collapse; }
 [dir="rtl"] .timeline { padding-left: 0; padding-right: var(--space-8); }
 [dir="rtl"] .timeline::before { left: auto; right: 11px; }
 [dir="rtl"] .timeline-dot { left: auto; right: calc(-1 * var(--space-8) + 3px); }
+
+/* RTL + tablet/mobile: .nav-actions uses margin-left:auto to push right in LTR —
+   mirror it so the header stays balanced when the menu collapses */
+@media (max-width:1024px) {
+  [dir="rtl"] .navbar-inner { justify-content: flex-start; }
+  [dir="rtl"] .nav-actions { margin-left: 0; margin-right: auto; }
+  [dir="rtl"] .dashboard-main,
+  [dir="rtl"] .dashboard-main.expanded { margin-left: 0; margin-right: 0; }
+}
 
